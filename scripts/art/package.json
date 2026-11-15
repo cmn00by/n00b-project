@@ -1,0 +1,9 @@
+{
+  "name": "n00b-art-tools",
+  "private": true,
+  "type": "module",
+  "description": "Outils de génération et de pixelisation des visuels (voir docs/style.md)",
+  "dependencies": {
+    "sharp": "^0.35.5"
+  }
+}
