@@ -61,15 +61,15 @@ Chaque bloc donne :
 **Objectif** : un projet qui se lance, se teste et se déploie, sur lequel tout le reste se branche.
 
 **V0**
-- [ ] Projet Vite + TypeScript + Phaser 3, `npm run dev` affiche une scène vide
-- [ ] Vitest configuré, un premier test qui passe
-- [ ] Prettier configuré (style du `CLAUDE.md`)
-- [ ] Structure des dossiers `src/sim`, `src/game`, `src/data` (voir `CLAUDE.md`)
-- [ ] `Rng` déterministe (`src/sim/rng.ts`) avec ses tests
-- [ ] Boucle à pas fixe : `step(world, commands, dt)`, affichage interpolé
-- [ ] Système de commandes (`src/sim/commands.ts`) et lecture clavier → commandes
-- [ ] `TUNING` (`src/sim/config.ts`)
-- [ ] Caméra qui suit une cible, zoom pixel art net
+- [ ] Projet Vite + TypeScript + Phaser 3, `npm run dev` affiche une scène vide (#2)
+- [ ] Vitest configuré, un premier test qui passe (#2)
+- [ ] Prettier configuré (style du `CLAUDE.md`) (#2)
+- [ ] Structure des dossiers `src/sim`, `src/game`, `src/data` (voir `CLAUDE.md`) (#2)
+- [ ] `Rng` déterministe (`src/sim/rng.ts`) avec ses tests (#3)
+- [ ] Boucle à pas fixe : `step(world, commands, dt)`, affichage interpolé (#3)
+- [ ] Système de commandes (`src/sim/commands.ts`) et lecture clavier → commandes (#3)
+- [ ] `TUNING` (`src/sim/config.ts`) (#3)
+- [ ] Caméra qui suit une cible, zoom pixel art net (#3)
 
 **Plus tard**
 - [ ] Mode debug : afficher les collisions, les chemins des PNJ, les FPS (touche F3)
@@ -84,9 +84,9 @@ Chaque bloc donne :
 **Objectif** : se déplacer dans la ville doit être agréable et réactif.
 
 **V0**
-- [ ] Marcher dans 8 directions, courir (touche maintenue)
-- [ ] Collisions avec les murs et bâtiments de la carte
-- [ ] Animation de marche et de course (4 directions minimum)
+- [ ] Marcher dans 8 directions, courir (touche maintenue) (#7)
+- [ ] Collisions avec les murs et bâtiments de la carte (#7)
+- [ ] Animation de marche et de course (4 directions minimum) (#7)
 
 **V1**
 - [ ] Frapper (coup de poing cartoon), recevoir des coups, santé
@@ -106,10 +106,10 @@ Chaque bloc donne :
 **Objectif** : une ville petite mais dense, lisible, pleine de détails drôles.
 
 **V0**
-- [ ] Choix du jeu de tuiles (voir bloc 14) et de la taille (16×16 ou 32×32)
-- [ ] Un quartier dans **Tiled** : routes, trottoirs, bâtiments, calques de collision
-- [ ] Chargement de la carte Tiled dans Phaser, collisions branchées sur la simulation
-- [ ] Calques d'objets dans Tiled : points d'apparition, zones, portes
+- [ ] Choix du jeu de tuiles (voir bloc 14) et de la taille (16×16 ou 32×32) (#4)
+- [ ] Un quartier dans **Tiled** : routes, trottoirs, bâtiments, calques de collision (#5)
+- [ ] Chargement de la carte Tiled dans Phaser, collisions branchées sur la simulation (#6)
+- [ ] Calques d'objets dans Tiled : points d'apparition, zones, portes (#5)
 
 **V1**
 - [ ] Les 4 quartiers : Centre, Docks, Zone Pavillonnaire, Colline
@@ -132,10 +132,10 @@ Chaque bloc donne :
 **Objectif** : conduire doit être **fun avant d'être réaliste** : dérapages, chocs, chaos.
 
 **V0**
-- [ ] Monter et descendre d'une voiture (bouton d'interaction)
-- [ ] Physique arcade : accélération, freinage, marche arrière, direction, frein à main, dérapage
-- [ ] Collisions voiture / bâtiments / objets / autres voitures
-- [ ] Caméra qui recule avec la vitesse
+- [ ] Monter et descendre d'une voiture (bouton d'interaction) (#8)
+- [ ] Physique arcade : accélération, freinage, marche arrière, direction, frein à main, dérapage (#8)
+- [ ] Collisions voiture / bâtiments / objets / autres voitures (#8)
+- [ ] Caméra qui recule avec la vitesse (#8)
 
 **V1**
 - [ ] 5 ou 6 modèles avec des réglages différents (en données : `src/data/vehicles.ts`) : voiture de mamie, camionnette, sportive, voiturette de golf, bus, police
@@ -158,9 +158,9 @@ Chaque bloc donne :
 **Objectif** : la ville a l'air vivante et **réagit** à ce que fait le joueur.
 
 **V0**
-- [ ] Piétons qui apparaissent autour du joueur et disparaissent hors champ (pas de PNJ simulés partout)
-- [ ] Marche sur les trottoirs, d'un point à un autre
-- [ ] Machine à états simple : se promener, s'arrêter, fuir
+- [ ] Piétons qui apparaissent autour du joueur et disparaissent hors champ (pas de PNJ simulés partout) (#10)
+- [ ] Marche sur les trottoirs, d'un point à un autre (#10)
+- [ ] Machine à états simple : se promener, s'arrêter, fuir (#10)
 
 **V1**
 - [ ] Réactions : peur (fuir), colère (insulter, frapper), curiosité (s'approcher), filmer avec son téléphone
@@ -240,9 +240,9 @@ Chaque bloc donne :
 **Objectif** : des objectifs variés et absurdes, **écrits en données** pour en ajouter sans coder.
 
 **V0**
-- [ ] Moteur de missions : étapes, objectifs, conditions de réussite et d'échec
-- [ ] Format de mission en données (`src/data/missions/`), documenté dans `docs/missions.md`
-- [ ] Une mission de livraison complète : prendre un colis, aller à un point, chrono
+- [ ] Moteur de missions : étapes, objectifs, conditions de réussite et d'échec (#9)
+- [ ] Format de mission en données (`src/data/missions/`), documenté dans `docs/missions.md` (#9)
+- [ ] Une mission de livraison complète : prendre un colis, aller à un point, chrono (#13)
 
 **V1**
 - [ ] Briques d'objectifs : aller à, livrer, poursuivre, semer, récupérer un véhicule, provoquer N dégâts, survivre X secondes, parler à
@@ -283,8 +283,8 @@ Chaque bloc donne :
 **Objectif** : une interface claire, discrète et dans le ton.
 
 **V0**
-- [ ] HUD : santé, argent, jauge de recherche
-- [ ] Indication d'interaction (« E : monter »)
+- [ ] HUD : santé, argent, jauge de recherche (#11)
+- [ ] Indication d'interaction (« E : monter ») (#11)
 
 **V1**
 - [ ] Mini-carte et carte complète avec marqueurs
@@ -356,8 +356,8 @@ Chaque bloc donne :
 **Objectif** : un style cohérent, sans bloquer le développement.
 
 **V0**
-- [ ] Choisir les packs CC0 de base (Kenney : ville, véhicules et personnages en vue de dessus) et noter leurs licences dans `docs/credits.md`
-- [ ] Organisation de `public/assets/` et chargement centralisé des clés
+- [ ] Choisir les packs CC0 de base (Kenney : ville, véhicules et personnages en vue de dessus) et noter leurs licences dans `docs/credits.md` (#4)
+- [ ] Organisation de `public/assets/` et chargement centralisé des clés (#4)
 
 **V1**
 - [ ] Palette et charte visuelle dans `docs/style.md`
@@ -377,8 +377,8 @@ Chaque bloc donne :
 **Objectif** : chaque merge sur `main` met le jeu en ligne, et on peut le régler sans redéployer.
 
 **V0**
-- [ ] Worker Cloudflare qui sert le jeu, connecté au repo (déploiement au merge, preview par PR)
-- [ ] `docs/deploiement.md`
+- [ ] Worker Cloudflare qui sert le jeu, connecté au repo (déploiement au merge, preview par PR) (#12)
+- [ ] `docs/deploiement.md` (#12)
 
 **V1**
 - [ ] Assets lourds servis depuis R2
@@ -430,10 +430,10 @@ Chaque bloc donne :
 
 | Phase | cmn00by | Baghorror12 |
 |---|---|---|
-| 1 | **0. Socle technique** | **14. Choix des assets** + **2. Premier quartier dans Tiled** |
-| 2 | **3. Conduite** (V0) | **1. Déplacement à pied** (bon premier bloc de code) |
-| 3 | **8. Moteur de missions** | **4. Piétons** (V0) + **10. HUD** (V0) |
-| 4 | **15. Mise en ligne** | **8. Écrire la première mission** en données |
+| 1 | **0. Socle technique** (#2, #3) | **14. Choix des assets** (#4) + **2. Premier quartier dans Tiled** (#5) |
+| 2 | **3. Conduite** (#8) + **2. Chargement de la carte** (#6) | **1. Déplacement à pied** (#7, bon premier bloc de code) |
+| 3 | **8. Moteur de missions** (#9) | **4. Piétons** (#10) + **10. HUD** (#11) |
+| 4 | **15. Mise en ligne** (#12) | **8. Écrire la première mission** en données (#13) |
 
 Cette répartition donne à chacun des fichiers différents à chaque phase, donc peu de conflits.
 À ajuster ensemble : c'est une proposition, pas une obligation.
