@@ -54,8 +54,8 @@ Le jeu tourne avec des formes de couleur, sans visuels.
 
 ## ⏳ V0.5 : visuels du prototype
 
-- [ ] #15 Scripts de génération et de pixelisation
-- [ ] #4 Identité visuelle : planches bible
+- [x] #15 Scripts de génération et de pixelisation
+- [x] #4 Identité visuelle : planches bible
 - [ ] #5 Premier quartier dans Tiled
 - [ ] Remplacer les formes de couleur par les visuels
 

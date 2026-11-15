@@ -394,9 +394,9 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 
 **V0**
 
-- [ ] Reprendre et adapter les scripts de GRINTA (`scripts/art/gen-image.mjs`, `pixelize.mjs`), `assets/raw/` dans `.gitignore`
+- [x] Reprendre et adapter les scripts de GRINTA (`scripts/art/gen-image.mjs`, `pixelize.mjs`), `assets/raw/` dans `.gitignore` (#15)
 - [ ] Confirmer la grille de 32 × 32 px et la palette (#4)
-- [ ] Générer et valider les **planches bible** : personnages, portraits, véhicules, sol, bâtiments, scène (#4)
+- [x] Générer et valider les **planches bible** : personnages, portraits, véhicules, sol, bâtiments, scène (#4)
 - [ ] Tuiles du premier quartier (Centre) et quelques objets, pour le premier quartier dans Tiled
 - [ ] Sprite du joueur (4 directions, marche) et une voiture
 

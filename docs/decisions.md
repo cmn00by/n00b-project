@@ -5,6 +5,17 @@ Une nouvelle décision s'ajoute **en haut**. Une décision remise en cause n'est
 
 ---
 
+## 2026-11-15 : Perspective 3/4 confirmée, Gemini 3 Pro pour les visuels
+
+**Choix** : personnages et bâtiments en vue **3/4**, avec **3 directions dessinées** (face, dos, profil gauche) et la droite en **miroir** ;
+véhicules en vue **strictement du dessus**, que le jeu fait pivoter. Modèle de génération par défaut : **Gemini 3 Pro Image**.
+
+**Alternatives testées et écartées** : la vraie vue du dessus pour tout (le modèle n'arrive pas à dessiner un personnage vu d'en haut) ;
+Gemini 3.1 Flash Image (moitié prix, mais consignes mal suivies : isométrique, véhicules à l'envers).
+
+**Raison** : un test de feuille d'animation 4 × 4 en Gemini 3 Pro garde le personnage identique sur les 16 poses : le 3/4 est produisible.
+Détails et coûts dans [registre-visuels.md](registre-visuels.md).
+
 ## 2026-11-15 : Architecture modulaire « LEGO » et conventions de nommage
 
 **Choix** : un noyau stable (`src/sim/core`) et des briques qui s'y enregistrent : systèmes (un dossier, une ligne dans `SYSTEMS`),
