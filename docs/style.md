@@ -409,11 +409,11 @@ Reprise de la chaîne de GRINTA, qui a fait ses preuves.
 ```
 
 1. **Prompt** : assemblé à partir des blocs (section 4), avec les références (section 8).
-2. **Génération** : `node scripts/art/gen-image.mjs --out assets/raw/<nom>.png --prompt "..." --ref <ref1> --ref <ref2> --aspect 1:1`
+2. **Génération** : `node scripts/art/gen-image.mjs --out assets/raw/<nom>.png --prompt-file assets/raw/<nom>.txt --ref <ref1> --ref <ref2> --aspect 1:1`
    - Modèle par défaut : celui de GRINTA (`google/gemini-3.1-flash-image`).
    - La clé `OPENROUTER_API_KEY` est dans `.env` (non versionné), **jamais affichée ni commitée**.
-   - Le script affiche le **coût** de chaque image : le noter dans le registre (section 11).
-3. **Pixelisation** : `node scripts/art/pixelize.mjs <tâche>`
+   - Le script affiche le **coût** de chaque image et la note dans `assets/raw/journal.tsv`, pour remplir le registre (section 11).
+3. **Pixelisation** : `node scripts/art/pixelize.mjs --in <planche> --grid 4x4 --size 32x32 --colors 32 --mode sprite --out <dossier> --names a,b,c…`
    - détoure le fond magenta (et le liseré rose) ;
    - découpe la planche selon sa grille ;
    - réduit chaque case à sa **taille finale** (section 5) ;
@@ -422,7 +422,7 @@ Reprise de la chaîne de GRINTA, qui a fait ses preuves.
 4. **Retouches** : dans Aseprite ou Piskel, si le contrôle qualité l'exige (alignement, raccords, détails).
 5. **Intégration** : l'asset rejoint `public/assets/`, la page **Identité visuelle** du jeu (à créer, comme dans GRINTA) et le registre.
 
-> Les scripts `gen-image.mjs` et `pixelize.mjs` seront repris de GRINTA et adaptés dans une issue dédiée.
+> Mode d'emploi complet des deux scripts (installation, options, exemples par catégorie) : [scripts/art/README.md](../scripts/art/README.md).
 
 ## 8. Les références (« la bible »)
 
