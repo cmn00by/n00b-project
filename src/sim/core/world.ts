@@ -4,6 +4,8 @@
 // le sauvegarder, le rejouer à partir d'une graine, et le faire tourner dans Node ou sur un serveur pour la coop.
 
 import type { Entity, EntityId } from './components'
+import { createEventBus } from './events'
+import type { EventBus, GameEvents } from './events'
 import { createRng } from './rng'
 import type { Rng } from './rng'
 
@@ -13,6 +15,8 @@ export interface World {
   seed: number
   /** Le hasard de la simulation : jamais Math.random(). */
   rng: Rng
+  /** Le bus d'événements : c'est par lui que les systèmes se parlent. Ce n'est pas de l'état à sauvegarder. */
+  events: EventBus<GameEvents>
   /** Le nombre de pas de simulation écoulés depuis le début : c'est la seule horloge de la simulation. */
   stepCount: number
   /** Les entités par id. Un dictionnaire (et non une Map) pour se sauvegarder tel quel ; les ids croissent, l'ordre est donc stable. */
@@ -26,6 +30,7 @@ export function createWorld(seed: number): World {
   return {
     seed,
     rng: createRng(seed),
+    events: createEventBus<GameEvents>(),
     stepCount: 0,
     entities: {},
     nextEntityId: 1,

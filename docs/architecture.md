@@ -116,7 +116,7 @@ src/sim/core/
   world.ts         World : l'état complet du jeu, createWorld(), createTestWorld()
   entities.ts      créer, supprimer, retrouver des entités ; requêtes par composants
   components.ts    la liste des types de composants (section 6)
-  systems.ts       le contrat System et l'ordre d'exécution
+  system.ts        le contrat System et l'ordre d'exécution
   events.ts        le bus d'événements typé (section 7)
   commands.ts      les commandes des joueurs
   registry.ts      les registres de contenus (section 8)
@@ -137,7 +137,7 @@ Un **système** est une brique de règles du jeu : il s'exécute à chaque pas d
 Tout système respecte la même forme :
 
 ```ts
-// src/sim/core/systems.ts
+// src/sim/core/system.ts
 export interface System {
   id: string // identifiant unique, en kebab-case : 'wanted'
   order: number // ordre d'exécution (voir le tableau ci-dessous)

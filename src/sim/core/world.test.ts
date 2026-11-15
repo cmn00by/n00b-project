@@ -10,6 +10,15 @@ describe('createWorld', () => {
     expect(world.nextEntityId).toBe(1)
   })
 
+  it("donne à chaque monde son propre bus d'événements", () => {
+    const first = createWorld(7)
+    const second = createWorld(7)
+    let received = 0
+    second.events.on('world:stepped', () => (received += 1))
+    first.events.emit('world:stepped', { stepCount: 1 })
+    expect(received).toBe(0)
+  })
+
   it('donne le même hasard à deux mondes de même graine', () => {
     expect(createWorld(7).rng.nextFloat()).toBe(createWorld(7).rng.nextFloat())
   })
