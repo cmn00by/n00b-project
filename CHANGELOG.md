@@ -19,11 +19,13 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 
 ### Ajouté
 
+- Un carré jaune se déplace dans la ville : flèches, ZQSD ou WASD pour marcher, Maj pour courir, la caméra le suit (#3)
 - Bible visuelle en Gemini 3 Pro : 7 planches de référence (personnages, animation, portraits, véhicules, sol, bâtiments, scène) et leurs prompts (#4)
 
 ### Technique
 
 - Scripts de génération et de pixelisation des visuels, repris de GRINTA (#15)
+- Noyau de la simulation : `Rng` déterministe, `TUNING`, monde et entités à composants, bus d'événements, registres, commandes, boucle à pas fixe avec affichage interpolé, première brique `walking` (#3)
 
 - Initialisation du projet : Vite, TypeScript strict, Phaser 3, Vitest, Prettier (#2)
 - Garde-fous de l'architecture en briques : règles d'imports ESLint, détection des dépendances circulaires avec madge (#2)

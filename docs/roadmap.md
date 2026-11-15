@@ -31,7 +31,7 @@ Le jeu tourne avec des formes de couleur, sans visuels.
 **Phase 1 : les fondations**
 
 - [x] #2 Initialiser le projet (cmn00by)
-- [ ] #3 Le noyau (Baghorror12)
+- [x] #3 Le noyau (Baghorror12)
 
 **Phase 2 : bouger dans la ville**
 

@@ -68,12 +68,12 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 - [x] Prettier configuré (style du `CLAUDE.md`) (#2)
 - [x] Structure des dossiers selon `docs/architecture.md` (#2)
 - [x] ESLint (règles d'imports), madge (cycles) et GitHub Action de vérification des PR (#2)
-- [ ] Noyau `src/sim/core` : monde, entités et composants, systèmes (`SYSTEMS`, `SYSTEM_ORDER`), bus d'événements typé, registres (#3)
-- [ ] `Rng` déterministe (`src/sim/core/rng.ts`) avec ses tests (#3)
-- [ ] Boucle à pas fixe : `step(world, commands, dt)`, affichage interpolé (#3)
-- [ ] Système de commandes (`src/sim/core/commands.ts`) et lecture clavier → commandes (#3)
-- [ ] `TUNING` (`src/sim/core/config.ts`) (#3)
-- [ ] Caméra qui suit une cible, zoom pixel art net (#3)
+- [x] Noyau `src/sim/core` : monde, entités et composants, systèmes (`SYSTEMS`, `SYSTEM_ORDER`), bus d'événements typé, registres (#3)
+- [x] `Rng` déterministe (`src/sim/core/rng.ts`) avec ses tests (#3)
+- [x] Boucle à pas fixe : `createSimulation(world, systems)` puis `simulation.step(commands)`, affichage interpolé (#3)
+- [x] Système de commandes (`src/sim/core/commands.ts`) et lecture clavier → commandes (#3)
+- [x] `TUNING` (`src/sim/core/config.ts`) (#3)
+- [x] Caméra qui suit une cible, zoom pixel art net (#3)
 
 **Plus tard**
 
