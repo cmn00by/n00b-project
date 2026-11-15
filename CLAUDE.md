@@ -76,9 +76,14 @@ Ce qu'on doit pouvoir constater en jouant pour considérer la tâche terminée.
 
 - **Jamais de commit ni de push sur `main`.** Tout passe par une branche et une Pull Request.
 - **Une issue = une branche = une PR.**
-- **Seul `cmn00by` merge.** L'assistant IA ne merge jamais une PR, et n'approuve jamais une PR à la place d'un humain.
+- **Seul `cmn00by` merge.** L'assistant IA ne merge jamais une PR.
+- **Relecture assistée** : l'assistant peut relire une PR (`gh pr diff <n>`) et en faire un résumé : ce qui change, les risques, les points à tester, les problèmes repérés.
+  Il ne lance `gh pr review <n> --approve` **qu'après l'accord explicite** du développeur, donné après avoir lu ce résumé.
+  Sans accord, ou en cas de doute, il s'arrête au résumé. Voir [docs/git.md](docs/git.md#7-relire-une-pr).
 
 ### Le cycle d'une tâche
+
+Guide pas à pas, avec GitHub Desktop et en ligne de commande : [docs/git.md](docs/git.md).
 
 ```bash
 git switch main && git pull                 # repartir de la dernière version
@@ -281,7 +286,7 @@ Liste de contrôle :
 
 ## 9. Interdits
 
-- Commiter ou pusher sur `main`, merger une PR, approuver une PR à la place d'un humain.
+- Commiter ou pusher sur `main`, merger une PR, approuver une PR sans l'accord explicite du développeur.
 - Commandes Git destructives sans accord explicite (voir section 3).
 - **Secrets** : le repo est **public**. Jamais de clé API, jeton, mot de passe dans le code, les commits, les issues ou la discussion.
   Secrets locaux dans `.dev.vars` / `.env` (ignorés par Git), secrets de prod via `wrangler secret put` ou le dashboard Cloudflare.
