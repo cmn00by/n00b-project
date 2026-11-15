@@ -27,60 +27,61 @@ Toute génération d'image **part des blocs de prompt de ce document**, sans exc
 
 **Une petite ville ensoleillée et un peu kitsch, vue d'en haut, en pixel art 16 bits aux couleurs vives, où tout est légèrement exagéré pour faire rire.**
 
-Les mots-clés de l'univers : *ensoleillé, coloré, cartoon, kitsch, exagéré, bon enfant, rétro années 90.*
+Les mots-clés de l'univers : _ensoleillé, coloré, cartoon, kitsch, exagéré, bon enfant, rétro années 90._
 Ce qu'il n'est **pas** : sombre, réaliste, gore, sale, néon cyberpunk, sérieux.
 
 ## 2. Les règles visuelles
 
 Ces règles valent pour **toutes** les catégories. Elles sont déjà traduites dans le bloc STYLE.
 
-| Règle | Valeur | Pourquoi |
-|---|---|---|
-| **Style** | pixel art 16 bits, façon jeux de console de 1993-1996 | lisible, nostalgique, réalisable par l'IA |
-| **Unité de grille** | **32 × 32 px** (1 tuile) | assez grand pour que l'IA garde des détails après réduction ; à confirmer dans l'issue #4 |
-| **Échelle à l'écran** | ×2 ou ×3, toujours entier, `image-rendering: pixelated` | pixels nets, jamais flous |
-| **Perspective du monde** | **vue de dessus « trois-quarts »** : le sol vu du dessus, les bâtiments, personnages et objets montrent leur **face sud** et leur **toit** | standard des jeux en vue de dessus, plus lisible qu'une vue à la verticale stricte |
-| **Perspective des véhicules** | **vue strictement du dessus**, nez vers le **haut** (nord) | le jeu les fait pivoter : la vue de dessus tourne sans paraître fausse |
-| **Lumière** | soleil **en haut à gauche** ; ombres portées vers le bas à droite | cohérence de toutes les ombres |
-| **Ombres portées** | ovale ou forme **unie, sombre, sans dégradé** (couleur `ombre` de la palette) | lisibles et simples à superposer |
-| **Contour** | contour **sombre de 1 px** autour des personnages, véhicules et objets ; **pas de contour noir pur** (couleur `contour`) | détache les éléments du décor |
-| **Tuiles de sol** | **sans contour**, texture discrète | le sol ne doit pas voler la vedette |
-| **Ombrage** | 2 ou 3 tons par matière, **sans dégradé lisse, sans tramage** (dithering) | rendu net, palette tenue |
-| **Proportions des personnages** | **« chibi »** : tête grande (≈ 1/3 de la hauteur), corps trapu, membres courts | humour et lisibilité à petite taille |
-| **Transparence** | binaire : un pixel est opaque ou transparent, rien entre les deux | requis par le pixel art |
-| **Couleurs** | palette du jeu uniquement (section 3), 48 couleurs max par image | cohérence entre toutes les images |
-| **Texte dans les images** | **jamais** : les enseignes et panneaux sont laissés vides, le texte est ajouté par le jeu | l'IA écrit mal, et on traduit plus facilement |
+| Règle                           | Valeur                                                                                                                                     | Pourquoi                                                                                  |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------- |
+| **Style**                       | pixel art 16 bits, façon jeux de console de 1993-1996                                                                                      | lisible, nostalgique, réalisable par l'IA                                                 |
+| **Unité de grille**             | **32 × 32 px** (1 tuile)                                                                                                                   | assez grand pour que l'IA garde des détails après réduction ; à confirmer dans l'issue #4 |
+| **Échelle à l'écran**           | ×2 ou ×3, toujours entier, `image-rendering: pixelated`                                                                                    | pixels nets, jamais flous                                                                 |
+| **Perspective du monde**        | **vue de dessus « trois-quarts »** : le sol vu du dessus, les bâtiments, personnages et objets montrent leur **face sud** et leur **toit** | standard des jeux en vue de dessus, plus lisible qu'une vue à la verticale stricte        |
+| **Perspective des véhicules**   | **vue strictement du dessus**, nez vers le **haut** (nord)                                                                                 | le jeu les fait pivoter : la vue de dessus tourne sans paraître fausse                    |
+| **Lumière**                     | soleil **en haut à gauche** ; ombres portées vers le bas à droite                                                                          | cohérence de toutes les ombres                                                            |
+| **Ombres portées**              | ovale ou forme **unie, sombre, sans dégradé** (couleur `ombre` de la palette)                                                              | lisibles et simples à superposer                                                          |
+| **Contour**                     | contour **sombre de 1 px** autour des personnages, véhicules et objets ; **pas de contour noir pur** (couleur `contour`)                   | détache les éléments du décor                                                             |
+| **Tuiles de sol**               | **sans contour**, texture discrète                                                                                                         | le sol ne doit pas voler la vedette                                                       |
+| **Ombrage**                     | 2 ou 3 tons par matière, **sans dégradé lisse, sans tramage** (dithering)                                                                  | rendu net, palette tenue                                                                  |
+| **Proportions des personnages** | **« chibi »** : tête grande (≈ 1/3 de la hauteur), corps trapu, membres courts                                                             | humour et lisibilité à petite taille                                                      |
+| **Transparence**                | binaire : un pixel est opaque ou transparent, rien entre les deux                                                                          | requis par le pixel art                                                                   |
+| **Couleurs**                    | palette du jeu uniquement (section 3), 48 couleurs max par image                                                                           | cohérence entre toutes les images                                                         |
+| **Texte dans les images**       | **jamais** : les enseignes et panneaux sont laissés vides, le texte est ajouté par le jeu                                                  | l'IA écrit mal, et on traduit plus facilement                                             |
 
 ## 3. La palette
 
 Une palette **commune à tout le jeu**, vive et chaude. Elle sert de référence dans les prompts et pour le contrôle qualité.
 L'outil de réduction (section 7) peut forcer les images sur cette palette.
 
-| Rôle | Nom | Hex |
-|---|---|---|
-| Contour | `contour` | `#2B1E3A` |
-| Ombre portée | `ombre` | `#3A2F5B` |
-| Asphalte | `asphalte-fonce` / `asphalte` / `asphalte-clair` | `#3E4152` / `#565A6E` / `#6F7489` |
-| Marquage au sol | `marquage-blanc` / `marquage-jaune` | `#F2EFE6` / `#F5C84C` |
-| Trottoir, béton | `beton-fonce` / `beton` / `beton-clair` | `#9C9389` / `#BDB4A6` / `#DCD4C4` |
-| Herbe | `herbe-fonce` / `herbe` / `herbe-claire` | `#3F8F4A` / `#5DB65A` / `#8ED46B` |
-| Eau | `eau-fonce` / `eau` / `eau-claire` | `#2A6FB5` / `#3E9BE0` / `#7CC7F2` |
-| Sable, terre | `sable-fonce` / `sable` / `sable-clair` | `#C98E54` / `#E3B676` / `#F3D9A4` |
-| Tuile de toit | `toit-fonce` / `toit` / `toit-clair` | `#9E3B33` / `#C9533F` / `#E9805D` |
-| Bois | `bois-fonce` / `bois` / `bois-clair` | `#6B4228` / `#8E5B36` / `#B47E4E` |
-| Rouge vif | `rouge` | `#E5383B` |
-| Orange | `orange` | `#F28C28` |
-| Jaune | `jaune` | `#FFD23F` |
-| Vert vif | `vert` | `#43C46B` |
-| Turquoise | `turquoise` | `#2EC4B6` |
-| Bleu vif | `bleu` | `#3A86FF` |
-| Violet | `violet` | `#8E5CE0` |
-| Rose | `rose` | `#FF6FA8` |
-| Peaux | `peau-1` à `peau-5` | `#F6D3B8` / `#E8B08A` / `#C98A5E` / `#9C6440` / `#6A4128` |
-| Blanc chaud | `blanc` | `#FFF8EC` |
-| Gris neutre | `gris` | `#8A8797` |
+| Rôle            | Nom                                              | Hex                                                       |
+| --------------- | ------------------------------------------------ | --------------------------------------------------------- |
+| Contour         | `contour`                                        | `#2B1E3A`                                                 |
+| Ombre portée    | `ombre`                                          | `#3A2F5B`                                                 |
+| Asphalte        | `asphalte-fonce` / `asphalte` / `asphalte-clair` | `#3E4152` / `#565A6E` / `#6F7489`                         |
+| Marquage au sol | `marquage-blanc` / `marquage-jaune`              | `#F2EFE6` / `#F5C84C`                                     |
+| Trottoir, béton | `beton-fonce` / `beton` / `beton-clair`          | `#9C9389` / `#BDB4A6` / `#DCD4C4`                         |
+| Herbe           | `herbe-fonce` / `herbe` / `herbe-claire`         | `#3F8F4A` / `#5DB65A` / `#8ED46B`                         |
+| Eau             | `eau-fonce` / `eau` / `eau-claire`               | `#2A6FB5` / `#3E9BE0` / `#7CC7F2`                         |
+| Sable, terre    | `sable-fonce` / `sable` / `sable-clair`          | `#C98E54` / `#E3B676` / `#F3D9A4`                         |
+| Tuile de toit   | `toit-fonce` / `toit` / `toit-clair`             | `#9E3B33` / `#C9533F` / `#E9805D`                         |
+| Bois            | `bois-fonce` / `bois` / `bois-clair`             | `#6B4228` / `#8E5B36` / `#B47E4E`                         |
+| Rouge vif       | `rouge`                                          | `#E5383B`                                                 |
+| Orange          | `orange`                                         | `#F28C28`                                                 |
+| Jaune           | `jaune`                                          | `#FFD23F`                                                 |
+| Vert vif        | `vert`                                           | `#43C46B`                                                 |
+| Turquoise       | `turquoise`                                      | `#2EC4B6`                                                 |
+| Bleu vif        | `bleu`                                           | `#3A86FF`                                                 |
+| Violet          | `violet`                                         | `#8E5CE0`                                                 |
+| Rose            | `rose`                                           | `#FF6FA8`                                                 |
+| Peaux           | `peau-1` à `peau-5`                              | `#F6D3B8` / `#E8B08A` / `#C98A5E` / `#9C6440` / `#6A4128` |
+| Blanc chaud     | `blanc`                                          | `#FFF8EC`                                                 |
+| Gris neutre     | `gris`                                           | `#8A8797`                                                 |
 
 **Règles d'usage**
+
 - Les couleurs vives (`rouge`, `jaune`, `bleu`, `rose`…) sont réservées à ce qui doit **attirer l'œil** : personnages, véhicules, objets interactifs, interface.
 - Le décor (sol, murs, toits) reste dans les tons **moyens et doux**, pour que le joueur repère d'un coup d'œil ce qui compte.
 - Le **magenta `#FF00FF`** est **interdit** dans les visuels : il est réservé au fond de génération (section 4.2).
@@ -151,14 +152,15 @@ Pour chaque catégorie : les dimensions finales, le bloc de prompt, et un exempl
 
 ### 5.1 Portraits de dialogue
 
-| | |
-|---|---|
+|               |                                                            |
+| ------------- | ---------------------------------------------------------- |
 | Taille finale | **96 × 96 px**, buste cadré des épaules au sommet du crâne |
-| Couleurs | 48 max |
-| Planche | 2 × 2 (4 portraits) ou 3 × 3 |
-| Fichiers | `public/assets/portraits/<perso>-<expression>.png` |
+| Couleurs      | 48 max                                                     |
+| Planche       | 2 × 2 (4 portraits) ou 3 × 3                               |
+| Fichiers      | `public/assets/portraits/<perso>-<expression>.png`         |
 
 **Bloc CATÉGORIE**
+
 ```
 Character dialogue portrait, head-and-shoulders bust, facing the viewer at a slight three-quarter angle toward the right,
 big expressive cartoon face, large readable eyes and eyebrows, exaggerated features, simple flat clothing,
@@ -169,25 +171,28 @@ same framing and same head size in every cell.
 Si besoin, une seconde planche : `triste`, `rigolard`, `gene`, `louche`.
 
 **Exemple de DESCRIPTION**
+
 ```
 The same character in 4 expressions (neutral, happy, angry, surprised): Gégé, a sunburnt middle-aged dock worker,
 bushy grey moustache, tiny sailor cap, orange high-visibility vest over a striped tank top, a toothpick in his mouth.
 ```
 
 **Règles**
+
 - Un personnage nommé a une **fiche** dans `docs/personnages.md` (nom, rôle, quartier, description visuelle **en anglais**, copiée telle quelle dans tous ses prompts).
 - Pour une nouvelle expression d'un personnage existant : joindre **son** portrait `neutre` en référence.
 
 ### 5.2 Sprites de personnages (en jeu)
 
-| | |
-|---|---|
-| Taille finale | **32 × 32 px** par image, le personnage fait ≈ 28 px de haut, pieds en bas de la case |
-| Couleurs | 32 max |
-| Directions | **4** : bas (face), haut (dos), gauche, droite (la droite peut être la gauche retournée) |
-| Fichiers | `public/assets/characters/<perso>.png` (feuille d'animation) |
+|               |                                                                                          |
+| ------------- | ---------------------------------------------------------------------------------------- |
+| Taille finale | **32 × 32 px** par image, le personnage fait ≈ 28 px de haut, pieds en bas de la case    |
+| Couleurs      | 32 max                                                                                   |
+| Directions    | **4** : bas (face), haut (dos), gauche, droite (la droite peut être la gauche retournée) |
+| Fichiers      | `public/assets/characters/<perso>.png` (feuille d'animation)                             |
 
 **Bloc CATÉGORIE**
+
 ```
 Top-down three-quarter view game character sprite, chibi proportions with a big head (about one third of the body height),
 short limbs, full body visible, standing on the ground, small flat dark oval shadow under the feet,
@@ -196,12 +201,12 @@ readable silhouette at very small size, same size and same proportions in every 
 
 **Feuille d'animation standard** (une planche 4 colonnes × 4 lignes) :
 
-| Ligne | Contenu |
-|---|---|
-| 1 | vers le **bas** : debout, marche 1, debout, marche 2 |
-| 2 | vers le **haut** : idem |
-| 3 | vers la **gauche** : idem |
-| 4 | **actions** : course, coup de poing, porter un objet, KO au sol |
+| Ligne | Contenu                                                         |
+| ----- | --------------------------------------------------------------- |
+| 1     | vers le **bas** : debout, marche 1, debout, marche 2            |
+| 2     | vers le **haut** : idem                                         |
+| 3     | vers la **gauche** : idem                                       |
+| 4     | **actions** : course, coup de poing, porter un objet, KO au sol |
 
 ```
 Animation sheet, 4 columns by 4 rows. Row 1: facing down (idle, walk step left foot, idle, walk step right foot).
@@ -214,14 +219,15 @@ Row 2: facing up, same poses. Row 3: facing left, same poses. Row 4: running, pu
 
 ### 5.3 Véhicules
 
-| | |
-|---|---|
+|               |                                                                                              |
+| ------------- | -------------------------------------------------------------------------------------------- |
 | Taille finale | voiture **32 × 64 px** (1 × 2 tuiles), camionnette / bus **48 × 96**, voiturette **32 × 48** |
-| Couleurs | 32 max |
-| Orientation | **vue strictement de dessus, nez vers le haut** |
-| Fichiers | `public/assets/vehicles/<modele>.png`, `<modele>-abime.png`, `<modele>-epave.png` |
+| Couleurs      | 32 max                                                                                       |
+| Orientation   | **vue strictement de dessus, nez vers le haut**                                              |
+| Fichiers      | `public/assets/vehicles/<modele>.png`, `<modele>-abime.png`, `<modele>-epave.png`            |
 
 **Bloc CATÉGORIE**
+
 ```
 Vehicle seen strictly from directly above (bird's-eye top view, not three-quarter), front of the vehicle pointing up,
 perfectly symmetrical left and right, visible roof, windshield and hood, small flat shadow offset to the bottom-right,
@@ -229,6 +235,7 @@ cartoonish slightly rounded exaggerated shape, same scale for every vehicle in t
 ```
 
 **Exemple de DESCRIPTION** (planche 2 × 2)
+
 ```
 Four parody cars: a tiny old granny hatchback in pastel mint green with a lace doily on the rear shelf;
 a boxy white delivery van with an empty blank side panel; a flashy low sports car in bright yellow with an oversized rear wing;
@@ -240,13 +247,14 @@ a small golf cart in white and turquoise with a striped canopy.
 
 ### 5.4 Tuiles de carte (tileset)
 
-| | |
-|---|---|
-| Taille finale | **32 × 32 px** par tuile |
-| Couleurs | 48 max par jeu de tuiles |
-| Fichiers | `public/assets/tiles/<theme>.png` (planche importée dans Tiled) |
+|               |                                                                 |
+| ------------- | --------------------------------------------------------------- |
+| Taille finale | **32 × 32 px** par tuile                                        |
+| Couleurs      | 48 max par jeu de tuiles                                        |
+| Fichiers      | `public/assets/tiles/<theme>.png` (planche importée dans Tiled) |
 
 **Bloc CATÉGORIE**
+
 ```
 Top-down three-quarter view tileset for a 2D city game, each cell is one square ground tile seen from directly above,
 seamless edges meant to tile with their neighbours, low-contrast texture so characters stay readable on top,
@@ -255,14 +263,15 @@ no outline on ground tiles, no shadows from outside the tile, consistent scale a
 
 **Ce qui marche, et ce qui ne marche pas** avec l'IA :
 
-| Type | Méthode |
-|---|---|
-| **Sols unis** (asphalte, herbe, pavés, sable, eau, trottoir) | générer une **texture carrée** qui se répète, puis découper ; vérifier le raccord en répétant 3 × 3 |
-| **Routes** (lignes, passages piétons, carrefours, virages) | générer la **planche de base**, puis **assembler et corriger à la main** dans Aseprite : l'IA ne fait pas des raccords parfaits |
-| **Transitions** (herbe ↔ trottoir, sable ↔ eau) | générer une planche « 3 × 3 de bord » (coins, bords, centre), puis retoucher ; elle servira à l'auto-tile de Tiled |
-| **Bâtiments** | **pas en tuiles** : un bâtiment est **un objet entier** (section 5.5), posé sur la carte |
+| Type                                                         | Méthode                                                                                                                         |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| **Sols unis** (asphalte, herbe, pavés, sable, eau, trottoir) | générer une **texture carrée** qui se répète, puis découper ; vérifier le raccord en répétant 3 × 3                             |
+| **Routes** (lignes, passages piétons, carrefours, virages)   | générer la **planche de base**, puis **assembler et corriger à la main** dans Aseprite : l'IA ne fait pas des raccords parfaits |
+| **Transitions** (herbe ↔ trottoir, sable ↔ eau)              | générer une planche « 3 × 3 de bord » (coins, bords, centre), puis retoucher ; elle servira à l'auto-tile de Tiled              |
+| **Bâtiments**                                                | **pas en tuiles** : un bâtiment est **un objet entier** (section 5.5), posé sur la carte                                        |
 
 **Exemple de DESCRIPTION**
+
 ```
 Sheet of 16 ground tiles, 4 by 4: plain asphalt, asphalt with a white dashed lane line, asphalt with a yellow center line,
 zebra crossing, sidewalk paving, sidewalk with a curb on the top edge, grass, grass with small flowers, cobblestones,
@@ -271,13 +280,14 @@ sand, shallow water, wooden dock planks, gravel, dirt path, parking lot with a w
 
 ### 5.5 Bâtiments
 
-| | |
-|---|---|
+|               |                                                                                             |
+| ------------- | ------------------------------------------------------------------------------------------- |
 | Taille finale | multiples de 32 : petite maison **96 × 96**, immeuble **128 × 160**, entrepôt **192 × 128** |
-| Couleurs | 48 max |
-| Fichiers | `public/assets/buildings/<quartier>-<nom>.png` |
+| Couleurs      | 48 max                                                                                      |
+| Fichiers      | `public/assets/buildings/<quartier>-<nom>.png`                                              |
 
 **Bloc CATÉGORIE**
+
 ```
 Top-down three-quarter view building for a 2D city game: the roof seen from above takes most of the image and the south
 facade is visible below it, entrance door on the south facade, flat shadow cast to the bottom-right,
@@ -285,6 +295,7 @@ blank empty sign boards with no text, cartoon parody architecture, same scale an
 ```
 
 **Exemple de DESCRIPTION**
+
 ```
 Four buildings for the city center: a small town hall with a ridiculous oversized clock; a narrow kebab shop with a blank sign;
 a pink pharmacy with a giant neon cross shape; a tiny bank with exaggerated columns.
@@ -294,20 +305,22 @@ Les enseignes sont **vides** : le texte (« Kébab Royal ») est un objet sépar
 
 ### 5.6 Objets (props)
 
-| | |
-|---|---|
-| Taille finale | **32 × 32** (petits), **32 × 64** ou **64 × 64** (grands) |
-| Couleurs | 32 max |
-| États | si destructible : **intact** et **cassé** sur la même planche |
-| Fichiers | `public/assets/props/<objet>.png`, `<objet>-casse.png` |
+|               |                                                               |
+| ------------- | ------------------------------------------------------------- |
+| Taille finale | **32 × 32** (petits), **32 × 64** ou **64 × 64** (grands)     |
+| Couleurs      | 32 max                                                        |
+| États         | si destructible : **intact** et **cassé** sur la même planche |
+| Fichiers      | `public/assets/props/<objet>.png`, `<objet>-casse.png`        |
 
 **Bloc CATÉGORIE**
+
 ```
 Top-down three-quarter view small game props, each object standing on the ground with a small flat dark shadow to the bottom-right,
 readable at small size, same scale and same camera angle for every prop.
 ```
 
 **Exemple de DESCRIPTION**
+
 ```
 16 street props, 4 by 4: green trash bin, the same trash bin knocked over with litter, orange traffic cone, red fire hydrant,
 wooden bench, street lamp, phone booth with a blank sign, vending machine, garden gnome, plastic flamingo, market stall with fruit,
@@ -316,13 +329,14 @@ the same market stall smashed, crowd barrier, cardboard boxes, newspaper stand, 
 
 ### 5.7 Effets (FX)
 
-| | |
-|---|---|
+|               |                                                                  |
+| ------------- | ---------------------------------------------------------------- |
 | Taille finale | **32 × 32** ou **64 × 64** par image, 4 à 6 images par animation |
-| Couleurs | 16 max |
-| Fichiers | `public/assets/fx/<effet>.png` |
+| Couleurs      | 16 max                                                           |
+| Fichiers      | `public/assets/fx/<effet>.png`                                   |
 
 **Bloc CATÉGORIE**
+
 ```
 Cartoon pixel art visual effect animation frames, bold simple shapes, few colors, punchy and comic,
 each cell is the next frame of the same animation, same size and same center in every cell.
@@ -332,13 +346,14 @@ Exemples : fumée de moteur, explosion comique (nuage + étoiles), étincelles d
 
 ### 5.8 Interface et icônes
 
-| | |
-|---|---|
+|               |                                                                    |
+| ------------- | ------------------------------------------------------------------ |
 | Taille finale | icônes **16 × 16** ou **24 × 24** ; cadres en 9 tranches (9-slice) |
-| Couleurs | 16 max par icône |
-| Fichiers | `public/assets/ui/` |
+| Couleurs      | 16 max par icône                                                   |
+| Fichiers      | `public/assets/ui/`                                                |
 
 **Bloc CATÉGORIE**
+
 ```
 Pixel art game UI icons, front view, bold and readable at tiny size, thick dark outline, 2 tones per color,
 same size and same visual weight for every icon.
@@ -348,13 +363,14 @@ Le **téléphone du joueur** (cadre, icônes d'applis) suit le même bloc. Les a
 
 ### 5.9 Illustrations (écran titre, fins de mission)
 
-| | |
-|---|---|
+|               |                                            |
+| ------------- | ------------------------------------------ |
 | Taille finale | **320 × 180 px** (16:9), affichée ×3 ou ×4 |
-| Couleurs | 64 max |
-| Fichiers | `public/assets/illus/<nom>.png` |
+| Couleurs      | 64 max                                     |
+| Fichiers      | `public/assets/illus/<nom>.png`            |
 
 **Bloc CATÉGORIE**
+
 ```
 Full-frame pixel art scene illustration, 16:9, cinematic cartoon composition, side or three-quarter view allowed,
 characters drawn in the same design as the attached portraits, comic exaggerated situation.
@@ -366,14 +382,15 @@ characters drawn in the same design as the attached portraits, comic exaggerated
 
 Chaque quartier a une **ambiance** propre, mais **la même palette et les mêmes règles**. Ajouter la ligne du quartier à la DESCRIPTION.
 
-| Quartier | Ambiance | Couleurs dominantes | Ligne à ajouter au prompt |
-|---|---|---|---|
-| **Le Centre** | animé, commerçant, kitsch | pavés beiges, façades pastel, enseignes vives | `Lively small-town city center, pastel facades, cobblestones, cluttered shop fronts.` |
-| **Les Docks** | industriel, rouillé, louche | bleus, gris, orange rouille, bois | `Harbor docks district, containers, rusty cranes, wooden piers, seagulls.` |
-| **La Zone Pavillonnaire** | proprette, ridicule de normalité | verts, toits rouges, blanc | `Suburban housing estate, identical little houses, perfect lawns, hedges, garden gnomes.` |
-| **La Colline** | luxe tape-à-l'œil | blanc, turquoise, doré (`jaune`), rose | `Wealthy hillside, flashy villas, swimming pools, palm trees, golf course.` |
+| Quartier                  | Ambiance                         | Couleurs dominantes                           | Ligne à ajouter au prompt                                                                 |
+| ------------------------- | -------------------------------- | --------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| **Le Centre**             | animé, commerçant, kitsch        | pavés beiges, façades pastel, enseignes vives | `Lively small-town city center, pastel facades, cobblestones, cluttered shop fronts.`     |
+| **Les Docks**             | industriel, rouillé, louche      | bleus, gris, orange rouille, bois             | `Harbor docks district, containers, rusty cranes, wooden piers, seagulls.`                |
+| **La Zone Pavillonnaire** | proprette, ridicule de normalité | verts, toits rouges, blanc                    | `Suburban housing estate, identical little houses, perfect lawns, hedges, garden gnomes.` |
+| **La Colline**            | luxe tape-à-l'œil                | blanc, turquoise, doré (`jaune`), rose        | `Wealthy hillside, flashy villas, swimming pools, palm trees, golf course.`               |
 
 **Les piétons de chaque quartier** (planche de 16 par quartier) :
+
 - **Centre** : touristes, livreurs, commerçants, mamies, ados, un mime.
 - **Docks** : dockers, pêcheurs, gros bras, contrebandiers en imper.
 - **Zone Pavillonnaire** : retraités, joggeurs, voisins en peignoir, enfants.
@@ -413,14 +430,14 @@ La cohérence vient surtout des **images de référence jointes à chaque prompt
 
 **Étape 1 : les planches fondatrices** (à générer, choisir et valider à deux, une seule fois)
 
-| Référence | Contenu | Sert de référence pour |
-|---|---|---|
+| Référence               | Contenu                              | Sert de référence pour          |
+| ----------------------- | ------------------------------------ | ------------------------------- |
 | `bible/personnages.png` | 4 piétons variés, debout face caméra | tous les sprites de personnages |
-| `bible/portraits.png` | 4 portraits de styles différents | tous les portraits |
-| `bible/vehicules.png` | 4 véhicules | tous les véhicules |
-| `bible/sol.png` | 16 tuiles de sol | toutes les tuiles |
-| `bible/batiments.png` | 4 bâtiments | tous les bâtiments et objets |
-| `bible/scene.png` | une scène de rue complète assemblée | contrôle global de cohérence |
+| `bible/portraits.png`   | 4 portraits de styles différents     | tous les portraits              |
+| `bible/vehicules.png`   | 4 véhicules                          | tous les véhicules              |
+| `bible/sol.png`         | 16 tuiles de sol                     | toutes les tuiles               |
+| `bible/batiments.png`   | 4 bâtiments                          | tous les bâtiments et objets    |
+| `bible/scene.png`       | une scène de rue complète assemblée  | contrôle global de cohérence    |
 
 **Étape 2 : chaque nouvelle génération** joint la ou les planches bible de sa catégorie (et, si utile, une image proche déjà validée).
 
@@ -473,8 +490,8 @@ Avant d'ajouter un visuel au jeu, cocher :
 - Le registre `docs/registre-visuels.md` garde une ligne par génération retenue :
 
 ```markdown
-| Date | Fichier | Catégorie | Références jointes | Coût | Remarques |
-|---|---|---|---|---|---|
+| Date       | Fichier          | Catégorie | Références jointes  | Coût   | Remarques        |
+| ---------- | ---------------- | --------- | ------------------- | ------ | ---------------- |
 | 2026-11-20 | vehicules-01.png | véhicules | bible/vehicules.png | 0,04 $ | aileron retouché |
 ```
 

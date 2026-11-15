@@ -11,7 +11,7 @@ Chaque bloc donne :
 - **Fonctionnalités** par étape : **V0** (prototype), **V1** (solo complet), **Plus tard** (coop, online, mobile, bonus).
 - **Dépend de** : les blocs à faire avant.
 - **Fichiers** : où vit le code, pour savoir si deux personnes risquent de se marcher dessus.
-- **Profil** : 🔧 *moteur* (logique, algos, maths) ou 🎨 *contenu* (carte, données, textes, assets), et la difficulté ⭐ à ⭐⭐⭐.
+- **Profil** : 🔧 _moteur_ (logique, algos, maths) ou 🎨 _contenu_ (carte, données, textes, assets), et la difficulté ⭐ à ⭐⭐⭐.
 - **Fini quand** : ce qu'on doit constater en jouant.
 
 **Règle de répartition** : deux personnes ne prennent pas deux blocs qui touchent les mêmes fichiers en même temps.
@@ -19,27 +19,27 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 
 ## Vue d'ensemble
 
-| # | Bloc | Profil | Difficulté | Dépend de | Responsable |
-|---|---|---|---|---|---|
-| 0 | [Socle technique](#0-socle-technique) | 🔧 | ⭐⭐ | aucun | cmn00by (#2), Baghorror12 (#3) |
-| 1 | [Déplacement à pied](#1-déplacement-à-pied) | 🔧 | ⭐ | 0 | Baghorror12 |
-| 2 | [Ville et carte](#2-ville-et-carte) | 🎨 | ⭐⭐ | 0 | cmn00by (carte de test) |
-| 3 | [Conduite et véhicules](#3-conduite-et-véhicules) | 🔧 | ⭐⭐⭐ | 1, 2 | cmn00by |
-| 4 | [PNJ piétons](#4-pnj-piétons) | 🔧 | ⭐⭐ | 1, 2 | Baghorror12 |
-| 5 | [Trafic](#5-trafic) | 🔧 | ⭐⭐⭐ | 2, 3 | _à attribuer_ |
-| 6 | [Environnement interactif](#6-environnement-interactif) | 🔧🎨 | ⭐⭐ | 1, 2 | _à attribuer_ |
-| 7 | [Police et recherche](#7-police-et-recherche) | 🔧 | ⭐⭐⭐ | 3, 4 | _à attribuer_ |
-| 8 | [Missions](#8-missions) | 🔧🎨 | ⭐⭐ | 1, 3 | cmn00by (moteur), Baghorror12 (contenu) |
-| 9 | [Dialogues et humour](#9-dialogues-et-humour) | 🎨 | ⭐ | 4 | _à attribuer_ |
-| 10 | [Interface (HUD, menus, téléphone)](#10-interface-hud-menus-téléphone) | 🔧🎨 | ⭐⭐ | 0 | Baghorror12 |
-| 11 | [Progression et économie](#11-progression-et-économie) | 🔧🎨 | ⭐⭐ | 8 | _à attribuer_ |
-| 12 | [Sauvegarde](#12-sauvegarde) | 🔧 | ⭐ | 11 | _à attribuer_ |
-| 13 | [Audio](#13-audio) | 🎨 | ⭐ | 0 | _à attribuer_ |
-| 14 | [Graphismes et assets](#14-graphismes-et-assets) | 🎨 | ⭐⭐ | aucun | plus tard |
-| 15 | [Mise en ligne et admin](#15-mise-en-ligne-et-admin) | 🔧 | ⭐⭐ | 0 | cmn00by |
-| 16 | [Coop](#16-coop-v2) | 🔧 | ⭐⭐⭐ | V1 finie | plus tard |
-| 17 | [Mini online](#17-mini-online-v3) | 🔧 | ⭐⭐⭐ | 16 | plus tard |
-| 18 | [Mobile](#18-mobile) | 🔧🎨 | ⭐⭐ | 10 | plus tard |
+| #   | Bloc                                                                   | Profil | Difficulté | Dépend de | Responsable                             |
+| --- | ---------------------------------------------------------------------- | ------ | ---------- | --------- | --------------------------------------- |
+| 0   | [Socle technique](#0-socle-technique)                                  | 🔧     | ⭐⭐       | aucun     | cmn00by (#2), Baghorror12 (#3)          |
+| 1   | [Déplacement à pied](#1-déplacement-à-pied)                            | 🔧     | ⭐         | 0         | Baghorror12                             |
+| 2   | [Ville et carte](#2-ville-et-carte)                                    | 🎨     | ⭐⭐       | 0         | cmn00by (carte de test)                 |
+| 3   | [Conduite et véhicules](#3-conduite-et-véhicules)                      | 🔧     | ⭐⭐⭐     | 1, 2      | cmn00by                                 |
+| 4   | [PNJ piétons](#4-pnj-piétons)                                          | 🔧     | ⭐⭐       | 1, 2      | Baghorror12                             |
+| 5   | [Trafic](#5-trafic)                                                    | 🔧     | ⭐⭐⭐     | 2, 3      | _à attribuer_                           |
+| 6   | [Environnement interactif](#6-environnement-interactif)                | 🔧🎨   | ⭐⭐       | 1, 2      | _à attribuer_                           |
+| 7   | [Police et recherche](#7-police-et-recherche)                          | 🔧     | ⭐⭐⭐     | 3, 4      | _à attribuer_                           |
+| 8   | [Missions](#8-missions)                                                | 🔧🎨   | ⭐⭐       | 1, 3      | cmn00by (moteur), Baghorror12 (contenu) |
+| 9   | [Dialogues et humour](#9-dialogues-et-humour)                          | 🎨     | ⭐         | 4         | _à attribuer_                           |
+| 10  | [Interface (HUD, menus, téléphone)](#10-interface-hud-menus-téléphone) | 🔧🎨   | ⭐⭐       | 0         | Baghorror12                             |
+| 11  | [Progression et économie](#11-progression-et-économie)                 | 🔧🎨   | ⭐⭐       | 8         | _à attribuer_                           |
+| 12  | [Sauvegarde](#12-sauvegarde)                                           | 🔧     | ⭐         | 11        | _à attribuer_                           |
+| 13  | [Audio](#13-audio)                                                     | 🎨     | ⭐         | 0         | _à attribuer_                           |
+| 14  | [Graphismes et assets](#14-graphismes-et-assets)                       | 🎨     | ⭐⭐       | aucun     | plus tard                               |
+| 15  | [Mise en ligne et admin](#15-mise-en-ligne-et-admin)                   | 🔧     | ⭐⭐       | 0         | cmn00by                                 |
+| 16  | [Coop](#16-coop-v2)                                                    | 🔧     | ⭐⭐⭐     | V1 finie  | plus tard                               |
+| 17  | [Mini online](#17-mini-online-v3)                                      | 🔧     | ⭐⭐⭐     | 16        | plus tard                               |
+| 18  | [Mobile](#18-mobile)                                                   | 🔧🎨   | ⭐⭐       | 10        | plus tard                               |
 
 ### L'ordre de construction
 
@@ -62,11 +62,12 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 **Objectif** : un projet qui se lance, se teste et se déploie, sur lequel tout le reste se branche.
 
 **V0**
-- [ ] Projet Vite + TypeScript + Phaser 3, `npm run dev` affiche une scène vide (#2)
-- [ ] Vitest configuré, un premier test qui passe (#2)
-- [ ] Prettier configuré (style du `CLAUDE.md`) (#2)
-- [ ] Structure des dossiers selon `docs/architecture.md` (#2)
-- [ ] ESLint (règles d'imports), madge (cycles) et GitHub Action de vérification des PR (#2)
+
+- [x] Projet Vite + TypeScript + Phaser 3, `npm run dev` affiche une scène vide (#2)
+- [x] Vitest configuré, un premier test qui passe (#2)
+- [x] Prettier configuré (style du `CLAUDE.md`) (#2)
+- [x] Structure des dossiers selon `docs/architecture.md` (#2)
+- [x] ESLint (règles d'imports), madge (cycles) et GitHub Action de vérification des PR (#2)
 - [ ] Noyau `src/sim/core` : monde, entités et composants, systèmes (`SYSTEMS`, `SYSTEM_ORDER`), bus d'événements typé, registres (#3)
 - [ ] `Rng` déterministe (`src/sim/core/rng.ts`) avec ses tests (#3)
 - [ ] Boucle à pas fixe : `step(world, commands, dt)`, affichage interpolé (#3)
@@ -75,6 +76,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 - [ ] Caméra qui suit une cible, zoom pixel art net (#3)
 
 **Plus tard**
+
 - [ ] Mode debug : afficher les collisions, les chemins des PNJ, les FPS (touche F3)
 - [ ] Rejouer une partie à partir de la graine et des commandes enregistrées
 
@@ -87,17 +89,20 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 **Objectif** : se déplacer dans la ville doit être agréable et réactif.
 
 **V0**
+
 - [ ] Marcher dans 8 directions, courir (touche maintenue) (#7)
 - [ ] Collisions avec les murs et bâtiments de la carte (#7)
 - [ ] Animation de marche et de course (4 directions minimum) (#7)
 
 **V1**
+
 - [ ] Frapper (coup de poing cartoon), recevoir des coups, santé
 - [ ] Ramasser, porter et lancer un objet léger
 - [ ] Bouton d'interaction contextuel (« E : parler », « E : monter »)
 - [ ] Chute KO comique, puis réapparition à l'hôpital (avec facture)
 
 **Plus tard**
+
 - [ ] Sauter par-dessus les petits obstacles, plonger pour esquiver une voiture
 
 **Dépend de** : 0. **Fichiers** : `src/sim/systems/walking/`, `src/game/render/playerRenderer.ts`.
@@ -109,6 +114,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 **Objectif** : une ville petite mais dense, lisible, pleine de détails drôles.
 
 **V0**
+
 - [ ] Tuiles du Centre générées selon `style.md` (voir bloc 14, #4)
 - [ ] Un quartier dans **Tiled** : routes, trottoirs, bâtiments, calques de collision (#5)
 - [ ] Carte de test en données (grille de cases : route, trottoir, mur), collisions branchées sur la simulation (#6)
@@ -116,6 +122,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 - [ ] Calques d'objets dans Tiled : points d'apparition, zones, portes (#5)
 
 **V1**
+
 - [ ] Les 4 quartiers : Centre, Docks, Zone Pavillonnaire, Colline
 - [ ] Le réseau routier décrit pour le trafic : voies, sens, carrefours, feux (calque Tiled dédié)
 - [ ] Zones de quartier (pour la réputation, les PNJ, la musique)
@@ -123,6 +130,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 - [ ] Mini-carte et carte complète (avec le bloc 10)
 
 **Plus tard**
+
 - [ ] Intérieurs simples (planque, garage, boutiques)
 - [ ] Cycle jour / nuit (éclairage, PNJ différents la nuit)
 - [ ] Météo (pluie qui rend la route glissante)
@@ -136,12 +144,14 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 **Objectif** : conduire doit être **fun avant d'être réaliste** : dérapages, chocs, chaos.
 
 **V0**
+
 - [ ] Monter et descendre d'une voiture (bouton d'interaction) (#8)
 - [ ] Physique arcade : accélération, freinage, marche arrière, direction, frein à main, dérapage (#8)
 - [ ] Collisions voiture / bâtiments / objets / autres voitures (#8)
 - [ ] Caméra qui recule avec la vitesse (#8)
 
 **V1**
+
 - [ ] 5 ou 6 modèles avec des réglages différents (en données : `src/data/vehicles.ts`) : voiture de mamie, camionnette, sportive, voiturette de golf, bus, police
 - [ ] Voler une voiture occupée : le conducteur est éjecté et proteste (avec le bloc 9)
 - [ ] Dégâts visibles (fumée, carrosserie), puis panne, puis explosion comique
@@ -150,6 +160,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 - [ ] Radio : changer de station (avec le bloc 13)
 
 **Plus tard**
+
 - [ ] Deux-roues (scooter, vélo de livraison)
 - [ ] Personnalisation au garage (peinture, klaxons ridicules)
 
@@ -162,11 +173,13 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 **Objectif** : la ville a l'air vivante et **réagit** à ce que fait le joueur.
 
 **V0**
+
 - [ ] Piétons qui apparaissent autour du joueur et disparaissent hors champ (pas de PNJ simulés partout) (#10)
 - [ ] Marche sur les trottoirs, d'un point à un autre (#10)
 - [ ] Machine à états simple : se promener, s'arrêter, fuir (#10)
 
 **V1**
+
 - [ ] Réactions : peur (fuir), colère (insulter, frapper), curiosité (s'approcher), filmer avec son téléphone
 - [ ] Appeler la police quand ils voient un délit (avec le bloc 7)
 - [ ] Types de PNJ par quartier (dockers, retraités, golfeurs, touristes…) avec un comportement propre
@@ -174,6 +187,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 - [ ] Personnages nommés qui donnent des missions (avec le bloc 8)
 
 **Plus tard**
+
 - [ ] Routines (aller au travail le matin, au bar le soir)
 - [ ] PNJ qui interagissent entre eux (disputes, conversations)
 
@@ -186,6 +200,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 **Objectif** : des rues animées, avec des voitures qu'on peut emprunter… ou percuter.
 
 **V1**
+
 - [ ] Voitures PNJ qui suivent le réseau routier (bloc 2), à droite de la chaussée
 - [ ] Tourner aux carrefours, s'arrêter aux feux (plus ou moins bien)
 - [ ] Éviter les obstacles, freiner derrière une voiture, klaxonner
@@ -193,6 +208,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 - [ ] Apparition et disparition autour du joueur, densité par quartier
 
 **Plus tard**
+
 - [ ] Bus sur une ligne avec arrêts, camions de livraison
 - [ ] Embouteillages volontaires au Centre
 
@@ -205,12 +221,14 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 **Objectif** : tout ce qui traîne peut servir de jouet.
 
 **V1**
+
 - [ ] Objets poussables ou destructibles : poubelles, barrières, cartons, cônes, bornes, étals
 - [ ] Débris et effets (fumée, papiers qui volent) qui disparaissent après un moment
 - [ ] Interactions : distributeur (argent ou boisson), cabine téléphonique (missions), borne d'arcade (mini-jeu absurde), porte de garage
 - [ ] Objets placés depuis Tiled (calque d'objets)
 
 **Plus tard**
+
 - [ ] Bouches d'incendie qui arrosent, feux d'artifice, pièges à la Zone Pavillonnaire
 - [ ] Objets à collectionner cachés dans la ville (nains de jardin dorés…)
 
@@ -223,6 +241,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 **Objectif** : une pression qui monte, des poursuites drôles et tendues, une police zélée mais incompétente.
 
 **V1**
+
 - [ ] Jauge de recherche à 3 niveaux, qui monte selon les délits vus (par un PNJ ou un agent)
 - [ ] Niveau 1 : un agent à pied qui poursuit et sermonne
 - [ ] Niveau 2 : voitures de patrouille qui poursuivent et tentent de bloquer
@@ -232,6 +251,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 - [ ] Répliques absurdes des agents (avec le bloc 9)
 
 **Plus tard**
+
 - [ ] Hélicoptère de police (une drone ridicule ?)
 - [ ] Policiers corruptibles
 
@@ -244,11 +264,13 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 **Objectif** : des objectifs variés et absurdes, **écrits en données** pour en ajouter sans coder.
 
 **V0**
+
 - [ ] Moteur de missions : étapes, objectifs (chaque type d'objectif est une brique enregistrée), conditions de réussite et d'échec (#9)
 - [ ] Format de mission en données (`src/data/missions/`), documenté dans `docs/missions.md` (#9)
 - [ ] Une mission de livraison complète : prendre un colis, aller à un point, chrono (#13)
 
 **V1**
+
 - [ ] Briques d'objectifs : aller à, livrer, poursuivre, semer, récupérer un véhicule, provoquer N dégâts, survivre X secondes, parler à
 - [ ] Contraintes : chrono, colis fragile, ne pas être vu, véhicule imposé
 - [ ] Marqueurs à l'écran et sur la mini-carte, flèche de direction
@@ -256,6 +278,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 - [ ] Environ 10 missions réparties dans les 4 quartiers, avec des donneurs de mission nommés
 
 **Plus tard**
+
 - [ ] Petits jobs à répétition (taxi, livraison de pizzas, dépanneuse)
 - [ ] Une courte histoire principale (si décidée)
 
@@ -268,6 +291,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 **Objectif** : l'humour est un pilier. Chaque PNJ, panneau ou écran peut faire sourire.
 
 **V1**
+
 - [ ] Système de répliques par situation : PNJ bousculé, voiture volée, police, mission, klaxon…
 - [ ] Banques de répliques en données (`src/data/barks/`), plusieurs variantes tirées au hasard (via `Rng`)
 - [ ] Boîtes de dialogue des donneurs de mission (portrait + texte)
@@ -275,6 +299,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 - [ ] Une charte de ton dans `docs/ton.md` : ce qui est drôle pour nous, ce qu'on s'interdit
 
 **Plus tard**
+
 - [ ] Voix courtes (onomatopées, borborygmes) plutôt que des vraies voix
 - [ ] Fil d'actu parodique de la ville qui commente les exploits du joueur
 
@@ -287,10 +312,12 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 **Objectif** : une interface claire, discrète et dans le ton.
 
 **V0**
+
 - [ ] HUD : santé, argent, jauge de recherche (#11)
 - [ ] Indication d'interaction (« E : monter ») (#11)
 
 **V1**
+
 - [ ] Mini-carte et carte complète avec marqueurs
 - [ ] Menu titre, pause, options (volume, touches)
 - [ ] Téléphone du joueur : messages des contacts, missions disponibles, appli parodique
@@ -298,6 +325,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 - [ ] Écran d'aide des commandes
 
 **Plus tard**
+
 - [ ] Remappage des touches, prise en charge de la manette
 - [ ] Interface tactile (bloc 18)
 
@@ -310,6 +338,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 **Objectif** : une raison de continuer à jouer.
 
 **V1**
+
 - [ ] Argent gagné (missions, distributeurs, petits jobs) et perdu (amendes, hôpital, réparations)
 - [ ] Réputation par quartier, qui débloque contacts et missions
 - [ ] Planque : point de sauvegarde et garage pour stocker un véhicule
@@ -317,6 +346,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 - [ ] Prix et gains dans `TUNING`, équilibrés pour une V1 d'environ 2 heures
 
 **Plus tard**
+
 - [ ] Succès et défis parodiques
 - [ ] Statistiques du joueur (voitures volées, distance parcourue, amendes payées)
 
@@ -329,12 +359,14 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 **Objectif** : ne jamais perdre sa partie.
 
 **V1**
+
 - [ ] Sauvegarde locale dans le navigateur (IndexedDB), à la planque et automatiquement après une mission
 - [ ] Format versionné avec migrations : une vieille sauvegarde se charge toujours (repris de GRINTA)
 - [ ] Plusieurs emplacements de sauvegarde
 - [ ] Export et import d'un fichier de sauvegarde (utile pour déboguer)
 
 **Plus tard**
+
 - [ ] Sauvegarde en ligne liée à un compte (bloc 17)
 
 **Dépend de** : 11. **Fichiers** : `src/sim/save.ts`, `src/game/saves.ts`.
@@ -346,6 +378,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 **Objectif** : un son qui renforce le fun et l'humour.
 
 **V1**
+
 - [ ] Effets : pas, moteurs, chocs, klaxons, explosions, sirènes, interface
 - [ ] Ambiance par quartier (mouettes aux Docks, tondeuses à la Zone Pavillonnaire)
 - [ ] Radios dans les voitures : 2 ou 3 stations parodiques (musiques libres + jingles absurdes)
@@ -360,6 +393,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 **Objectif** : un style 100 % cohérent, généré par IA, sans bloquer le développement. Référence : [style.md](style.md).
 
 **V0**
+
 - [ ] Reprendre et adapter les scripts de GRINTA (`scripts/art/gen-image.mjs`, `pixelize.mjs`), `assets/raw/` dans `.gitignore`
 - [ ] Confirmer la grille de 32 × 32 px et la palette (#4)
 - [ ] Générer et valider les **planches bible** : personnages, portraits, véhicules, sol, bâtiments, scène (#4)
@@ -367,6 +401,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 - [ ] Sprite du joueur (4 directions, marche) et une voiture
 
 **V1**
+
 - [ ] Portraits des personnages nommés (4 expressions chacun), fiches dans `docs/personnages.md`
 - [ ] Planches de piétons par quartier, véhicules avec leurs 3 états, bâtiments et objets des 4 quartiers
 - [ ] Effets (fumée, explosion, étincelles, gyrophare), icônes et cadres d'interface
@@ -382,10 +417,12 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 **Objectif** : chaque merge sur `main` met le jeu en ligne, et on peut le régler sans redéployer.
 
 **V0**
+
 - [ ] Worker Cloudflare qui sert le jeu, connecté au repo (déploiement au merge, preview par PR) (#12)
 - [ ] `docs/deploiement.md` (#12)
 
 **V1**
+
 - [ ] Assets lourds servis depuis R2
 - [ ] Panneau admin (Worker séparé, protégé par Cloudflare Access) : modifier les valeurs de `TUNING` et les publier
 - [ ] Retours des joueurs : un formulaire dans le jeu, lu dans l'admin (D1)
@@ -437,13 +474,13 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 (rectangles pour les voitures, cercles pour les piétons, carte de test simple). Les visuels (#4) et la carte Tiled (#5) viendront ensuite,
 et remplaceront les formes **sans toucher à la simulation**, grâce à l'architecture en briques.
 
-| Phase | cmn00by | Baghorror12 |
-|---|---|---|
-| **1** | **#2 Initialiser le projet** (outils, dossiers, garde-fous) | **#3 Le noyau** (à commencer dès que #2 est mergée ; en attendant, lire `architecture.md` et `conventions.md`) |
-| **2** | **#6 Carte de test** (sans Tiled pour l'instant) + **#8 Conduite** | **#7 Déplacement à pied** |
-| **3** | **#9 Moteur de missions** | **#10 Piétons** + **#11 HUD** |
-| **4** | **#12 Mise en ligne** | **#13 Première mission** en données |
-| **Plus tard** | **#4 Identité visuelle** (bible, scripts prêts dans `scripts/art`) | **#5 Premier quartier dans Tiled** |
+| Phase         | cmn00by                                                            | Baghorror12                                                                                                    |
+| ------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| **1**         | **#2 Initialiser le projet** (outils, dossiers, garde-fous)        | **#3 Le noyau** (à commencer dès que #2 est mergée ; en attendant, lire `architecture.md` et `conventions.md`) |
+| **2**         | **#6 Carte de test** (sans Tiled pour l'instant) + **#8 Conduite** | **#7 Déplacement à pied**                                                                                      |
+| **3**         | **#9 Moteur de missions**                                          | **#10 Piétons** + **#11 HUD**                                                                                  |
+| **4**         | **#12 Mise en ligne**                                              | **#13 Première mission** en données                                                                            |
+| **Plus tard** | **#4 Identité visuelle** (bible, scripts prêts dans `scripts/art`) | **#5 Premier quartier dans Tiled**                                                                             |
 
 Chaque phase donne à chacun des dossiers différents, donc peu de conflits. La seule dépendance forte : **#3 attend #2**.
 

@@ -42,6 +42,7 @@ Explorer la ville ──► Trouver un boulot (PNJ, téléphone, panneau)
 Objectif : **une petite ville jouable de bout en bout**, pas un gros jeu inachevé.
 
 ### La ville
+
 - **4 quartiers** à l'ambiance distincte, par exemple :
   - **Le Centre** : mairie, boutiques, embouteillages permanents.
   - **Les Docks** : entrepôts, conteneurs, trafics en tout genre.
@@ -50,26 +51,32 @@ Objectif : **une petite ville jouable de bout en bout**, pas un gros jeu inachev
 - Une carte en tuiles, éditée avec **Tiled**, d'environ 2 à 3 minutes de traversée en voiture.
 
 ### Le joueur
+
 - À pied : marcher, courir, frapper, ramasser et lancer un objet, parler.
 - En voiture : monter, voler (le conducteur PNJ proteste), conduire, klaxonner, sortir.
 - Santé, argent, jauge de recherche.
 
 ### Les véhicules
+
 - 5 ou 6 modèles parodiques (voiture de mamie, camionnette de livraison, sportive tape-à-l'œil, voiturette de golf, bus, police).
 - Conduite arcade : dérapages, chocs, dégâts visibles, explosion comique.
 
 ### Les PNJ
+
 - **Piétons** avec une petite IA à états : se promener, réagir (peur, colère, curiosité), fuir, appeler la police, filmer avec leur téléphone.
 - **Personnages nommés** qui donnent des missions, avec des dialogues courts et drôles.
 - **Trafic** qui suit les routes, s'arrête aux feux (plus ou moins), klaxonne, et s'énerve.
 
 ### L'environnement interactif
+
 - Objets destructibles ou déplaçables : poubelles, bornes, barrières, cabines, étals de marché.
 - Interactions simples : distributeurs, cabines téléphoniques, portes de garage, bornes d'arcade.
 - Un cycle jour / nuit léger _(à trancher : V1 ou plus tard)_.
 
 ### Les missions (environ 10 en V1)
+
 Construites à partir de **briques réutilisables** décrites en données (JSON), pour qu'on puisse en écrire sans coder :
+
 - **Livraison** : aller de A à B, avec contraintes (chrono, colis fragile, ne pas être vu).
 - **Poursuite** : rattraper ou semer quelqu'un.
 - **Récupération** : voler un véhicule ou un objet et le ramener.
@@ -77,23 +84,25 @@ Construites à partir de **briques réutilisables** décrites en données (JSON)
 - **Absurde** : promener le chien du maire, livrer une pizza en voiture de golf…
 
 ### La police
+
 - Jauge de recherche à **3 niveaux** (contre 5 dans les jeux du genre, pour rester simple) : 1. un agent à pied, 2. voitures de patrouille, 3. barrages.
 - On la fait baisser en se cachant, en changeant de voiture, ou en passant par un garage de repeinte.
 
 ### La progression
+
 - Argent : acheter une planque, des véhicules, des tenues ridicules.
 - Réputation par quartier : débloque des contacts et des missions.
 - Sauvegarde locale (navigateur), puis en ligne avec un compte.
 
 ## 5. Les étapes du projet
 
-| Étape | Contenu | Cloudflare utilisé |
-|---|---|---|
-| **V0 : prototype** | un quartier, marcher, conduire, quelques PNJ, une mission | Workers (servir le jeu) |
-| **V1 : solo** | 4 quartiers, ~10 missions, police, progression, sauvegarde locale | Workers, R2 (assets) |
-| **V2 : coop** | 2 à 4 joueurs dans la même ville, sur invitation (code de partie) | Durable Objects (salons temps réel) |
-| **V3 : mini online** | ville persistante partagée, classements, profils | D1 (comptes, scores), Durable Objects |
-| **Mobile** | commandes tactiles, interface adaptée | aucun en plus |
+| Étape                | Contenu                                                           | Cloudflare utilisé                    |
+| -------------------- | ----------------------------------------------------------------- | ------------------------------------- |
+| **V0 : prototype**   | un quartier, marcher, conduire, quelques PNJ, une mission         | Workers (servir le jeu)               |
+| **V1 : solo**        | 4 quartiers, ~10 missions, police, progression, sauvegarde locale | Workers, R2 (assets)                  |
+| **V2 : coop**        | 2 à 4 joueurs dans la même ville, sur invitation (code de partie) | Durable Objects (salons temps réel)   |
+| **V3 : mini online** | ville persistante partagée, classements, profils                  | D1 (comptes, scores), Durable Objects |
+| **Mobile**           | commandes tactiles, interface adaptée                             | aucun en plus                         |
 
 **Pourquoi la coop est réaliste** : un **Durable Object** = un salon de jeu, qui garde l'état d'une partie et relaie les actions des joueurs par WebSocket.
 C'est inclus dans l'offre à 5 $. La condition, c'est que le moteur soit **pensé pour ça dès le prototype** (voir section 7).
@@ -110,6 +119,7 @@ Tous les visuels sont **générés par IA (OpenRouter) puis pixelisés**, selon 
 palette commune, blocs de prompt figés, tailles par catégorie, planches de référence (« bible ») jointes à chaque génération.
 
 ### Le son
+
 - Effets : packs gratuits (Kenney, freesound en CC0).
 - Radios parodiques dans les voitures : courtes boucles et jingles absurdes _(à trancher : voix générées ou texte affiché)_.
 
@@ -121,7 +131,7 @@ palette commune, blocs de prompt figés, tailles par catégorie, planches de ré
   - la **simulation** (positions, règles, PNJ) est séparée de l'**affichage** ;
   - le jeu avance à **pas de temps fixe** ;
   - les actions des joueurs passent par des **commandes** (`accélérer`, `monter dans le véhicule`…) et pas par des appels directs.
-  C'est ce qui permettra d'envoyer ces commandes à un serveur pour la coop sans tout réécrire.
+    C'est ce qui permettra d'envoyer ces commandes à un serveur pour la coop sans tout réécrire.
 - **Léger** : le jeu complet doit se charger vite (objectif : moins de 20 Mo d'assets en V1).
 
 ## 8. Ce qu'on ne fait PAS (pour finir le projet)
