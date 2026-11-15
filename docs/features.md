@@ -21,22 +21,22 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 
 | # | Bloc | Profil | Difficulté | Dépend de | Responsable |
 |---|---|---|---|---|---|
-| 0 | [Socle technique](#0-socle-technique) | 🔧 | ⭐⭐ | aucun | _à attribuer_ |
-| 1 | [Déplacement à pied](#1-déplacement-à-pied) | 🔧 | ⭐ | 0 | _à attribuer_ |
-| 2 | [Ville et carte](#2-ville-et-carte) | 🎨 | ⭐⭐ | 0 | _à attribuer_ |
-| 3 | [Conduite et véhicules](#3-conduite-et-véhicules) | 🔧 | ⭐⭐⭐ | 1, 2 | _à attribuer_ |
-| 4 | [PNJ piétons](#4-pnj-piétons) | 🔧 | ⭐⭐ | 1, 2 | _à attribuer_ |
+| 0 | [Socle technique](#0-socle-technique) | 🔧 | ⭐⭐ | aucun | cmn00by (#2), Baghorror12 (#3) |
+| 1 | [Déplacement à pied](#1-déplacement-à-pied) | 🔧 | ⭐ | 0 | Baghorror12 |
+| 2 | [Ville et carte](#2-ville-et-carte) | 🎨 | ⭐⭐ | 0 | cmn00by (carte de test) |
+| 3 | [Conduite et véhicules](#3-conduite-et-véhicules) | 🔧 | ⭐⭐⭐ | 1, 2 | cmn00by |
+| 4 | [PNJ piétons](#4-pnj-piétons) | 🔧 | ⭐⭐ | 1, 2 | Baghorror12 |
 | 5 | [Trafic](#5-trafic) | 🔧 | ⭐⭐⭐ | 2, 3 | _à attribuer_ |
 | 6 | [Environnement interactif](#6-environnement-interactif) | 🔧🎨 | ⭐⭐ | 1, 2 | _à attribuer_ |
 | 7 | [Police et recherche](#7-police-et-recherche) | 🔧 | ⭐⭐⭐ | 3, 4 | _à attribuer_ |
-| 8 | [Missions](#8-missions) | 🔧🎨 | ⭐⭐ | 1, 3 | _à attribuer_ |
+| 8 | [Missions](#8-missions) | 🔧🎨 | ⭐⭐ | 1, 3 | cmn00by (moteur), Baghorror12 (contenu) |
 | 9 | [Dialogues et humour](#9-dialogues-et-humour) | 🎨 | ⭐ | 4 | _à attribuer_ |
-| 10 | [Interface (HUD, menus, téléphone)](#10-interface-hud-menus-téléphone) | 🔧🎨 | ⭐⭐ | 0 | _à attribuer_ |
+| 10 | [Interface (HUD, menus, téléphone)](#10-interface-hud-menus-téléphone) | 🔧🎨 | ⭐⭐ | 0 | Baghorror12 |
 | 11 | [Progression et économie](#11-progression-et-économie) | 🔧🎨 | ⭐⭐ | 8 | _à attribuer_ |
 | 12 | [Sauvegarde](#12-sauvegarde) | 🔧 | ⭐ | 11 | _à attribuer_ |
 | 13 | [Audio](#13-audio) | 🎨 | ⭐ | 0 | _à attribuer_ |
-| 14 | [Graphismes et assets](#14-graphismes-et-assets) | 🎨 | ⭐⭐ | aucun | _à attribuer_ |
-| 15 | [Mise en ligne et admin](#15-mise-en-ligne-et-admin) | 🔧 | ⭐⭐ | 0 | _à attribuer_ |
+| 14 | [Graphismes et assets](#14-graphismes-et-assets) | 🎨 | ⭐⭐ | aucun | plus tard |
+| 15 | [Mise en ligne et admin](#15-mise-en-ligne-et-admin) | 🔧 | ⭐⭐ | 0 | cmn00by |
 | 16 | [Coop](#16-coop-v2) | 🔧 | ⭐⭐⭐ | V1 finie | plus tard |
 | 17 | [Mini online](#17-mini-online-v3) | 🔧 | ⭐⭐⭐ | 16 | plus tard |
 | 18 | [Mobile](#18-mobile) | 🔧🎨 | ⭐⭐ | 10 | plus tard |
@@ -111,7 +111,8 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 **V0**
 - [ ] Tuiles du Centre générées selon `style.md` (voir bloc 14, #4)
 - [ ] Un quartier dans **Tiled** : routes, trottoirs, bâtiments, calques de collision (#5)
-- [ ] Chargement de la carte Tiled dans Phaser, collisions branchées sur la simulation (#6)
+- [ ] Carte de test en données (grille de cases : route, trottoir, mur), collisions branchées sur la simulation (#6)
+- [ ] Chargement des cartes Tiled (quand #5 sera faite)
 - [ ] Calques d'objets dans Tiled : points d'apparition, zones, portes (#5)
 
 **V1**
@@ -430,17 +431,21 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 
 ---
 
-## Proposition de répartition pour le prototype (V0)
+## Répartition du prototype (V0) : le code d'abord
+
+**Décision du 2026-11-15** : on code d'abord le prototype **sans visuels**. Le jeu tourne avec des formes de couleur
+(rectangles pour les voitures, cercles pour les piétons, carte de test simple). Les visuels (#4) et la carte Tiled (#5) viendront ensuite,
+et remplaceront les formes **sans toucher à la simulation**, grâce à l'architecture en briques.
 
 | Phase | cmn00by | Baghorror12 |
 |---|---|---|
-| 1 | **0. Socle technique** (#2, #3) | **14. Planches bible** (#4) + **2. Premier quartier dans Tiled** (#5) |
-| 2 | **3. Conduite** (#8) + **2. Chargement de la carte** (#6) | **1. Déplacement à pied** (#7, bon premier bloc de code) |
-| 3 | **8. Moteur de missions** (#9) | **4. Piétons** (#10) + **10. HUD** (#11) |
-| 4 | **15. Mise en ligne** (#12) | **8. Écrire la première mission** en données (#13) |
+| **1** | **#2 Initialiser le projet** (outils, dossiers, garde-fous) | **#3 Le noyau** (à commencer dès que #2 est mergée ; en attendant, lire `architecture.md` et `conventions.md`) |
+| **2** | **#6 Carte de test** (sans Tiled pour l'instant) + **#8 Conduite** | **#7 Déplacement à pied** |
+| **3** | **#9 Moteur de missions** | **#10 Piétons** + **#11 HUD** |
+| **4** | **#12 Mise en ligne** | **#13 Première mission** en données |
+| **Plus tard** | **#4 Identité visuelle** (bible, scripts prêts dans `scripts/art`) | **#5 Premier quartier dans Tiled** |
 
-Cette répartition donne à chacun des fichiers différents à chaque phase, donc peu de conflits.
-À ajuster ensemble : c'est une proposition, pas une obligation.
+Chaque phase donne à chacun des dossiers différents, donc peu de conflits. La seule dépendance forte : **#3 attend #2**.
 
 ## Tenir ce document à jour
 
