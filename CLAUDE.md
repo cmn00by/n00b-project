@@ -246,6 +246,8 @@ Le sens des dépendances est **unique** : `game → sim`. `sim` n'importe jamais
 | `docs/architecture.md` | les dossiers, les couches, les grands systèmes |
 | `docs/GDD.md` | le game design : concept, boucle de jeu, règles |
 | `docs/decisions.md` | les décisions importantes : date, choix, alternatives, raison |
+| `docs/features.md` | toutes les fonctionnalités par bloc, la répartition, l'avancement (cocher les cases au fil des issues) |
+| `docs/git.md` | le guide des branches et des PR, pas à pas |
 | `docs/deploiement.md` | les Workers, les environnements, les secrets (noms seulement, jamais les valeurs) |
 | `src/data/changelog.ts` | le journal des nouveautés, rédigé **pour le joueur** |
 
