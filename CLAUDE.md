@@ -1,6 +1,6 @@
 # n00b-project : consignes pour Claude
 
-Jeu web, développé **à deux** : `cmn00by` (propriétaire du repo, relit et merge) et `Baghorror12` (contributeur).
+Mini monde ouvert parodique en 2D (navigateur), développé **à deux** : `cmn00by` (propriétaire du repo, relit et merge) et `Baghorror12` (contributeur).
 Ce fichier est lu automatiquement par Claude Code. Ses règles valent pour **les deux développeurs et leurs assistants IA**.
 En cas de doute : **demander, ne pas deviner.**
 
@@ -141,39 +141,51 @@ Les commits faits avec Claude se terminent par la ligne `Co-Authored-By` demand�
 
 ## 4. Architecture
 
-> **Stack de référence** (reprise du projet GRINTA, à confirmer dans `docs/decisions.md` au démarrage) :
-> Vite + TypeScript + React + Tailwind pour l'interface, Zustand pour l'état, Vitest pour les tests,
-> Cloudflare Workers pour l'hébergement (et D1 si une base de données devient nécessaire).
-> Si la stack change, mettre à jour cette section **dans la même PR**.
+> Le jeu : un **mini monde ouvert parodique en vue de dessus, en 2D pixel art** (voir [docs/GDD.md](docs/GDD.md)).
+> Stack : **Phaser 3 + TypeScript + Vite**, **Vitest**, cartes **Tiled**, hébergement **Cloudflare Workers** (+ R2, puis D1 et Durable Objects).
+> Raisons et alternatives : [docs/decisions.md](docs/decisions.md). Si la stack change, mettre à jour cette section **dans la même PR**.
 
 ### Les dossiers
 
 ```
 src/
-  engine/       la logique du jeu : TypeScript pur, sans React, sans navigateur
+  sim/          la simulation : TypeScript pur, SANS Phaser, sans navigateur
     config.ts   toutes les valeurs d'équilibrage (TUNING)
     rng.ts      le hasard déterministe
+    commands.ts les commandes des joueurs (accélérer, monter, frapper...)
+    world.ts    l'état du monde et le pas de simulation (step)
+    entities/   joueur, véhicules, piétons, police
+    systems/    déplacement, collisions, IA des PNJ, recherche, missions
     types.ts    les types partagés
-  state/        le store (Zustand), la sauvegarde des parties
-  ui/           les écrans React
-    kit.tsx     les composants de base (Button, Card, ...) : à réutiliser, pas à recopier
-  admin/        le panneau admin (application séparée)
-  data/         données statiques (textes, listes, changelog)
-worker/         les Workers Cloudflare (jeu, admin)
-public/         images, sons, polices
+  game/         l'affichage Phaser
+    scenes/     les scènes (Boot, Ville, Interface, Menu)
+    render/     dessine l'état de la simulation (sprites, caméra, effets)
+    input/      clavier, souris, manette, tactile → commandes
+  data/         données du jeu en JSON / TS : missions, dialogues, véhicules
+  net/          (V2) le client réseau de la coop
+worker/         les Workers Cloudflare (jeu, API, et plus tard salons coop en Durable Objects)
+public/
+  maps/         cartes Tiled exportées en JSON
+  assets/       sprites, tuiles, sons (packs CC0, visuels maison ou générés)
 docs/           la documentation du projet
-tests/          ou fichiers *.test.ts à côté du code testé
 ```
 
 ### Les trois couches
 
-1. **Le moteur (`src/engine`)** : c'est le jeu (règles, état, calculs). Il ne connaît ni React ni le navigateur,
-   pour pouvoir être testé dans Node et réutilisé partout (jeu, admin, scripts).
-2. **L'état (`src/state`)** : le store appelle le moteur, puis sauvegarde et prévient l'interface.
-3. **L'interface (`src/ui`)** : affiche et transmet les actions du joueur. **Un écran ne calcule rien d'important lui-même** :
-   il appelle des fonctions du moteur qui renvoient des données prêtes à afficher.
+1. **La simulation (`src/sim`)** : c'est le jeu (règles, état, IA). Elle ne connaît **ni Phaser ni le navigateur**,
+   pour être testée dans Node et, plus tard, tourner sur un serveur (Durable Object) pour la coop.
+2. **Les entrées (`src/game/input`)** : transforment clavier, souris, manette ou tactile en **commandes**.
+   La simulation ne lit jamais le clavier directement.
+3. **L'affichage (`src/game/render`, `scenes`)** : lit l'état de la simulation et le dessine. **Il ne décide rien** :
+   aucune règle de jeu dans une scène Phaser.
 
-Le sens des dépendances est **unique** : `ui → state → engine`. Le moteur n'importe jamais `ui` ni `state`.
+Le sens des dépendances est **unique** : `game → sim`. `sim` n'importe jamais `game`, `net` ni Phaser.
+
+### La boucle
+
+- La simulation avance à **pas de temps fixe** (par exemple 30 pas par seconde) : `step(world, commands, dt)`.
+- L'affichage tourne à la vitesse de l'écran et **interpole** entre deux pas.
+- C'est ce qui garantit le même résultat sur toutes les machines, condition de la coop.
 
 ## 5. Règles du code
 
@@ -188,14 +200,14 @@ Le sens des dépendances est **unique** : `ui → state → engine`. Le moteur n
 ### Modularité
 
 - Chaque système du jeu (déplacement, collisions, score, audio, sauvegarde…) dans **son propre module**, avec une interface claire (ce qu'il exporte).
-- Séparer **logique**, **état** et **affichage** (voir l'architecture).
+- Séparer **simulation**, **entrées** et **affichage** (voir l'architecture).
 - Une fonction qui peut échouer renvoie `{ ok: true }` ou `{ ok: false, why: '...' }`, et l'interface affiche la raison au joueur.
 
-### Règles du moteur (repris de GRINTA)
+### Règles de la simulation (repris de GRINTA)
 
-- **Déterministe** : tout le hasard passe par `Rng` (`src/engine/rng.ts`) avec une graine. **Jamais `Math.random()` dans le moteur.**
+- **Déterministe** : tout le hasard passe par `Rng` (`src/sim/rng.ts`) avec une graine. **Jamais `Math.random()` dans `src/sim`.** Pas de `Date.now()` non plus : le temps vient du pas de simulation.
   Même graine + mêmes choix = même partie : c'est ce qui rend les bugs reproductibles et les tests fiables.
-- **Pas de valeurs en dur** : vitesses, dégâts, durées, probabilités… vont dans `src/engine/config.ts` (`TUNING`), avec un commentaire sur leur rôle.
+- **Pas de valeurs en dur** : vitesses, dégâts, durées, probabilités… vont dans `src/sim/config.ts` (`TUNING`), avec un commentaire sur leur rôle.
 - **Sauvegardes compatibles** : un nouveau champ de sauvegarde est **optionnel** ou complété par une fonction de migration. Une ancienne partie doit toujours se charger.
 
 ### Style
@@ -203,7 +215,8 @@ Le sens des dépendances est **unique** : `ui → state → engine`. Le moteur n
 - TypeScript **strict**, pas de `any` (sauf exception justifiée en commentaire).
 - Formatage : Prettier, pas de point-virgule, guillemets simples, lignes de 200 caractères max.
   `npx prettier --no-semi --single-quote --print-width 200 --write <fichier>`
-- Interface : Tailwind et composants de `src/ui/kit.tsx`. Pas de styles copiés-collés d'un écran à l'autre.
+- Phaser : une scène = un rôle. Les clés d'assets sont déclarées à un seul endroit (pas de chaînes `'car_red'` éparpillées). Les sprites ne portent pas de logique de jeu.
+- Contenus (missions, dialogues, véhicules) **en données** dans `src/data/`, pas en code : on doit pouvoir écrire une mission sans toucher à la simulation.
 - Respecter le style du code existant, même s'il diffère de ses habitudes.
 
 ### Dépendances
@@ -246,9 +259,9 @@ npm run dev       # le jeu se lance et la fonctionnalité marche en jouant
 Liste de contrôle :
 
 - [ ] Branche à jour avec `main`, sans conflit
-- [ ] Tests et build qui passent ; tests ajoutés pour la nouvelle logique du moteur
+- [ ] Tests et build qui passent ; tests ajoutés pour la nouvelle logique de `src/sim`
 - [ ] Testé en jouant, sur ordinateur et sur mobile si l'interface change
-- [ ] Pas de `Math.random()` dans le moteur, pas de valeur d'équilibrage en dur
+- [ ] Pas de `Math.random()` ni de Phaser dans `src/sim`, pas de valeur d'équilibrage en dur
 - [ ] Anciennes sauvegardes toujours chargeables
 - [ ] Pas de secret, pas de log de debug, pas de code mort
 - [ ] Doc et changelog à jour
