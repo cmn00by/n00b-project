@@ -19,7 +19,7 @@ const { values: a } = parseArgs({
     out: { type: 'string' },
     ref: { type: 'string', multiple: true, default: [] },
     aspect: { type: 'string', default: '1:1' },
-    model: { type: 'string', default: 'google/gemini-3.1-flash-image' },
+    model: { type: 'string', default: 'google/gemini-3-pro-image' },
     size: { type: 'string' },
   },
 })

@@ -2,6 +2,6 @@
 
 Full-frame pixel art scene, top-down three-quarter view of a small sunny parody town street corner as seen in the game camera, using exactly the same art style, scale, characters, vehicles, ground tiles and buildings as the attached reference sheets.
 
-A crossroads with a zebra crossing, sidewalks and a little grass patch; the kebab shop and the green pharmacy along the top, front-facing like in the attached building sheet; the mint granny car and the yellow sports car on the road; the tourist, the old lady and the pizza delivery guy on the sidewalks; a few props: trash bin, traffic cone, bench, street lamp. Bright midday sun.
+A crossroads with a zebra crossing, sidewalks and a little grass patch; the kebab shop and the green pharmacy along the top, front-facing like in the attached building sheet; the mint granny car and the yellow sports car on the road, drawn strictly from directly above exactly like in the attached vehicle sheet (never from the side); the tourist, the old lady and the pizza delivery guy on the sidewalks; a few props: trash bin, traffic cone, bench, street lamp. Bright midday sun. All shop signs are blank, with absolutely no letters or words anywhere.
 
 No text, no letters, no numbers, no logos, no watermark, no signature, no UI frame, no real brands, no real people, no realistic rendering, no 3D render, no blur, no photo, no gore, no blood.

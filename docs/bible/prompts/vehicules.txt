@@ -2,7 +2,7 @@
 
 Solid flat pure magenta background (#FF00FF) filling the whole image, no floor, no shadow on the background, no gradient, no texture, nothing else in magenta, every element fully separated from the others by magenta space.
 
-Vehicle seen strictly from directly above (bird's-eye top view, not three-quarter), front of the vehicle pointing up, perfectly symmetrical left and right, visible roof, windshield and hood, small flat shadow offset to the bottom-right, cartoonish slightly rounded exaggerated shape, same scale for every vehicle in the sheet.
+Vehicle seen strictly from directly above (bird's-eye top view, not three-quarter), front of the vehicle (hood, headlights) pointing UP toward the top edge of the image and the rear (trunk, tail lights) toward the bottom, perfectly symmetrical left and right, visible roof, windshield and hood, small flat shadow offset to the bottom-right, cartoonish slightly rounded exaggerated shape, same scale for every vehicle in the sheet.
 
 Four parody vehicles: a tiny old granny hatchback in pastel mint green with a lace doily on the rear shelf; a boxy white delivery van with an empty blank roof; a flashy low sports car in bright yellow with an oversized rear wing; a small white and turquoise police car with a light bar on the roof.
 

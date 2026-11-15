@@ -1,0 +1,11 @@
+16-bit pixel art in the style of mid-1990s console games, crisp hard-edged pixels, no anti-aliasing, no gradients, no dithering, 2 to 3 flat shading tones per material, warm sunny cartoon look, bright saturated colors for characters and vehicles, softer muted tones for the ground and buildings, light coming from the top-left, flat dark shadows to the bottom-right, 1-pixel dark purple-brown outline (#2B1E3A) around characters, vehicles and props, never pure black outlines, playful parody tone, slightly exaggerated cartoon proportions, consistent with the attached reference images.
+
+Solid flat pure magenta background (#FF00FF) filling the whole image, no floor, no scenery, no gradient, nothing else in magenta.
+
+Game character walk animation sprite sheet, top-down three-quarter view (like classic 16-bit RPGs), chibi proportions with an oversized head one third of the body height, small flat dark oval shadow under the feet.
+
+ONE single character, the skinny pizza delivery guy from the attached reference (red cap, red polo shirt, blue jeans, holding a pizza box), drawn 16 times with IDENTICAL design, colors, size and proportions in every cell.
+
+Strict grid of 4 columns by 4 rows, equal cells, the character centered in each cell with his feet on the same baseline. Row 1: facing down toward the viewer. Row 2: facing up, seen from the back. Row 3: facing left, side view. Row 4: facing right, side view. In each row the 4 columns are: standing, left foot forward, standing, right foot forward.
+
+No text, no letters, no numbers, no logos, no watermark, no UI frame, no real brands, no real people, no 3D render, no blur.

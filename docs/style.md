@@ -194,8 +194,8 @@ bushy grey moustache, tiny sailor cap, orange high-visibility vest over a stripe
 **Bloc CATÉGORIE**
 
 ```
-Top-down three-quarter view game character sprite, chibi proportions with a big head (about one third of the body height),
-short limbs, full body visible, standing on the ground, small flat dark oval shadow under the feet,
+Top-down three-quarter view game character sprite, super-deformed chibi proportions like town NPCs in 16-bit RPGs: about 2.5 heads tall,
+the head as big as the torso, very short stubby limbs, full body visible, standing on the ground, small flat dark oval shadow under the feet,
 readable silhouette at very small size, same size and same proportions in every cell.
 ```
 
@@ -210,7 +210,7 @@ readable silhouette at very small size, same size and same proportions in every 
 
 ```
 Animation sheet, 4 columns by 4 rows. Row 1: facing down (idle, walk step left foot, idle, walk step right foot).
-Row 2: facing up, same poses. Row 3: facing left, same poses. Row 4: running, punching, carrying a box above the head, knocked out lying on the ground.
+Row 2: facing up, same poses. Row 3: facing left, side view, same poses. Row 4: running, punching, carrying a box above the head, knocked out lying on the ground.
 ```
 
 > L'IA tient mal la cohérence image par image d'une animation. Prévoir des **retouches dans Aseprite ou Piskel** (gratuits) : aligner les pieds, harmoniser les tailles. C'est normal et attendu.
@@ -229,7 +229,7 @@ Row 2: facing up, same poses. Row 3: facing left, same poses. Row 4: running, pu
 **Bloc CATÉGORIE**
 
 ```
-Vehicle seen strictly from directly above (bird's-eye top view, not three-quarter), front of the vehicle pointing up,
+Vehicle seen strictly from directly above (bird's-eye top view, not three-quarter), front of the vehicle (hood, headlights) pointing UP toward the top edge of the image and the rear (trunk, tail lights) toward the bottom,
 perfectly symmetrical left and right, visible roof, windshield and hood, small flat shadow offset to the bottom-right,
 cartoonish slightly rounded exaggerated shape, same scale for every vehicle in the sheet.
 ```
@@ -413,8 +413,8 @@ Reprise de la chaîne de GRINTA, qui a fait ses preuves.
 ```
 
 1. **Prompt** : assemblé à partir des blocs (section 4), avec les références (section 8).
-2. **Génération** : `node scripts/art/gen-image.mjs --out assets/raw/<nom>.png --prompt-file assets/raw/<nom>.txt --ref <ref1> --ref <ref2> --aspect 1:1`
-   - Modèle par défaut : celui de GRINTA (`google/gemini-3.1-flash-image`).
+2. **Génération** (modèle par défaut : **Gemini 3 Pro Image**, ≈ 0,14 $ par planche) : `node scripts/art/gen-image.mjs --out assets/raw/<nom>.png --prompt-file assets/raw/<nom>.txt --ref <ref1> --ref <ref2> --aspect 1:1`
+   - Pour des essais en masse à moindre coût : `--model google/gemini-3.1-flash-image` (≈ 0,07 $), mais il suit moins bien les consignes.
    - La clé `OPENROUTER_API_KEY` est dans `.env` (non versionné), **jamais affichée ni commitée**.
    - Le script affiche le **coût** de chaque image et la note dans `assets/raw/journal.tsv`, pour remplir le registre (section 11).
 3. **Pixelisation** : `node scripts/art/pixelize.mjs --in <planche> --grid 4x4 --size 32x32 --colors 32 --mode sprite --out <dossier> --names a,b,c…`

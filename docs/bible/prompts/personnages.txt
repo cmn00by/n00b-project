@@ -2,7 +2,7 @@
 
 Solid flat pure magenta background (#FF00FF) filling the whole image, no floor, no shadow on the background, no gradient, no texture, nothing else in magenta, every element fully separated from the others by magenta space.
 
-Top-down three-quarter view game character sprite, strong chibi proportions: an oversized head that is one third of the total body height, small stubby body, short limbs, full body visible, isolated on the magenta background with absolutely no scenery, no buildings, no walls, no street behind them, small flat dark oval shadow under the feet, readable silhouette at very small size, same size and same proportions in every cell.
+Top-down three-quarter view game character sprite, super-deformed chibi proportions like town NPCs in 16-bit RPGs: the whole character is only about 2.5 heads tall, the head is as big as the whole torso, very short stubby legs and arms, short limbs, full body visible, isolated on the magenta background with absolutely no scenery, no buildings, no walls, no street behind them, small flat dark oval shadow under the feet, readable silhouette at very small size, same size and same proportions in every cell.
 
 Four different pedestrians of a sunny parody small town, all standing and facing down toward the viewer, each character small in its cell (about half the cell height): a sunburnt tourist in a loud flowered shirt with a camera; a grumpy old lady with a purple perm and a shopping trolley; a tall skinny pizza delivery guy in a red cap; a buff dock worker in an orange high-visibility vest with a moustache.
 
