@@ -6,6 +6,7 @@ describe('createWorld', () => {
     const world = createWorld(7)
     expect(world.seed).toBe(7)
     expect(world.stepCount).toBe(0)
+    expect(world.commands).toEqual([])
     expect(world.entities).toEqual({})
     expect(world.nextEntityId).toBe(1)
   })

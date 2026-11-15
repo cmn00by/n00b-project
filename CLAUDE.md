@@ -214,7 +214,7 @@ Le sens des dépendances est **unique** : `game → systems → core`, et `data 
 
 ### La boucle
 
-- La simulation avance à **pas de temps fixe** (30 pas par seconde) : `step(world, commands)` appelle chaque système de `SYSTEMS` dans l'ordre de `SYSTEM_ORDER`.
+- La simulation avance à **pas de temps fixe** (30 pas par seconde) : `createSimulation(world, SYSTEMS)` prépare les systèmes, puis `simulation.step(commands)` appelle chacun dans l'ordre de `SYSTEM_ORDER`.
 - L'affichage tourne à la vitesse de l'écran et **interpole** entre deux pas.
 - C'est ce qui garantit le même résultat sur toutes les machines, condition de la coop.
 

@@ -122,7 +122,7 @@ src/sim/core/
   registry.ts      les registres de contenus (section 8)
   rng.ts           le hasard déterministe
   config.ts        TUNING : les réglages
-  step.ts          step(world, commands) : fait avancer le monde d'un pas
+  step.ts          createSimulation(world, systems) : prépare les systèmes ; simulation.step(commands) fait avancer le monde d'un pas
 ```
 
 **Modifier `core` est exceptionnel.** Ça se fait dans une **PR dédiée**, relue par les deux, avec une ligne dans `decisions.md`.
