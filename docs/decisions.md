@@ -5,6 +5,16 @@ Une nouvelle décision s'ajoute **en haut**. Une décision remise en cause n'est
 
 ---
 
+## 2026-11-15 : Architecture modulaire « LEGO » et conventions de nommage
+
+**Choix** : un noyau stable (`src/sim/core`) et des briques qui s'y enregistrent : systèmes (un dossier, une ligne dans `SYSTEMS`),
+entités à composants, bus d'événements typé, contenus en données dans des registres. Règles d'import vérifiées par ESLint et madge.
+Code en anglais, commentaires et textes en français, verbes de fonctions à sens fixe et glossaire. Détails : [architecture.md](architecture.md), [conventions.md](conventions.md).
+
+**Alternatives écartées** : un ECS complet en bibliothèque (bitECS…) : plus performant mais plus abstrait pour débuter ; des systèmes qui s'appellent directement : plus simple au début, mais chaque ajout casse le voisin.
+
+**Raison** : ajouter une fonctionnalité sans modifier les autres, travailler à deux dans des dossiers séparés, et garder un état simple à sauvegarder et à envoyer sur le réseau (coop).
+
 ## 2026-11-15 : Graphismes générés par IA (remplace « Graphismes » ci-dessous)
 
 **Choix** : **tous les visuels** (portraits, sprites, tuiles, véhicules, bâtiments, objets, interface) sont générés en pixel art via **OpenRouter**,
