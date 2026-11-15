@@ -242,6 +242,8 @@ a boxy white delivery van with an empty blank side panel; a flashy low sports ca
 a small golf cart in white and turquoise with a striped canopy.
 ```
 
+**Sens** : le modèle dessine parfois le nez vers le bas ; vérifier et tourner de 180° si besoin (voir `docs/registre-visuels.md`).
+
 **États** : chaque modèle a 3 versions (**neuf**, **abîmé** : bosses, vitre fêlée, **épave** : noirci, fumant). Joindre la version neuve en référence pour générer les deux autres.
 **Recoloration** : le modèle de base est généré dans **une seule couleur vive** de carrosserie ; le jeu peut recolorer cette teinte pour varier le trafic.
 
@@ -289,9 +291,11 @@ sand, shallow water, wooden dock planks, gravel, dirt path, parking lot with a w
 **Bloc CATÉGORIE**
 
 ```
-Top-down three-quarter view building for a 2D city game: the roof seen from above takes most of the image and the south
-facade is visible below it, entrance door on the south facade, flat shadow cast to the bottom-right,
-blank empty sign boards with no text, cartoon parody architecture, same scale and same camera angle for every building.
+Top-down front view building for a 2D city game, NOT isometric, NOT rotated, NO side walls visible: the camera looks north and down at the building,
+so the image shows only two flat parts stacked vertically, the roof seen from above as a flat rectangle on top, and directly below it the front (south)
+facade seen straight on, its bottom edge perfectly horizontal and parallel to the bottom of the image, left and right edges perfectly vertical,
+entrance door centered on the facade, blank empty sign boards with no text, flat shadow cast to the bottom-right, cartoon parody architecture,
+same scale and same camera angle for every building, exactly like the houses in classic 16-bit top-down RPG towns.
 ```
 
 **Exemple de DESCRIPTION**

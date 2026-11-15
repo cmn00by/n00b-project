@@ -1,0 +1,11 @@
+16-bit pixel art in the style of mid-1990s console games, crisp hard-edged pixels, no anti-aliasing, no gradients, no dithering, 2 to 3 flat shading tones per material, warm sunny cartoon look, bright saturated colors for characters and vehicles, softer muted tones for the ground and buildings, light coming from the top-left, flat dark shadows to the bottom-right, 1-pixel dark purple-brown outline (#2B1E3A) around characters, vehicles and props, never pure black outlines, playful parody tone, slightly exaggerated cartoon proportions, consistent with the attached reference images.
+
+Solid flat pure magenta background (#FF00FF) filling the whole image, no floor, no shadow on the background, no gradient, no texture, nothing else in magenta, every element fully separated from the others by magenta space.
+
+Top-down front view building for a 2D city game, NOT isometric, NOT rotated, NO side walls visible: the camera looks north and down at the building, so the image shows only two flat parts stacked vertically, the roof seen from above as a flat rectangle on top, and directly below it the front (south) facade seen straight on, its bottom edge perfectly horizontal and parallel to the bottom of the image, left and right edges perfectly vertical, entrance door centered on the facade, blank empty sign boards with no text, flat shadow cast to the bottom-right, cartoon parody architecture, same scale and same camera angle for every building, exactly like the houses in classic 16-bit top-down RPG towns.
+
+Four small-town buildings: a small town hall with a ridiculous oversized clock on the roof; a narrow kebab shop with a striped awning and a blank sign; a pastel green pharmacy with a giant white cross shape on the facade; a pastel suburban house with a red tiled roof, a hedge and a garden gnome.
+
+Sprite sheet laid out as a strict grid of 2 columns by 2 rows, equal cells, one element centered in each cell, same scale and same camera angle for every element, generous magenta margin inside each cell.
+
+No text, no letters, no numbers, no logos, no watermark, no signature, no UI frame, no real brands, no real people, no realistic rendering, no 3D render, no blur, no photo, no gore, no blood.

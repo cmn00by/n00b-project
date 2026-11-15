@@ -1,0 +1,11 @@
+16-bit pixel art in the style of mid-1990s console games, crisp hard-edged pixels, no anti-aliasing, no gradients, no dithering, 2 to 3 flat shading tones per material, warm sunny cartoon look, bright saturated colors for characters and vehicles, softer muted tones for the ground and buildings, light coming from the top-left, flat dark shadows to the bottom-right, 1-pixel dark purple-brown outline (#2B1E3A) around characters, vehicles and props, never pure black outlines, playful parody tone, slightly exaggerated cartoon proportions, consistent with the attached reference images.
+
+Solid flat pure magenta background (#FF00FF) filling the whole image, no floor, no shadow on the background, no gradient, no texture, nothing else in magenta, every element fully separated from the others by magenta space.
+
+Character dialogue portrait, head-and-shoulders bust, facing the viewer at a slight three-quarter angle toward the right, big expressive cartoon face, large readable eyes and eyebrows, exaggerated features, simple flat clothing, same framing and same head size in every cell.
+
+Four very different characters, same art style as the attached sprite sheet: a sunburnt dock worker with a bushy grey moustache, tiny sailor cap and orange vest, grinning; a smug wealthy lady with huge sunglasses, pearl necklace and a pink bob haircut; a nervous young courier with a backwards cap and freckles, surprised; a stern mustached police officer with a too-small cap, angry.
+
+Sprite sheet laid out as a strict grid of 2 columns by 2 rows, equal cells, one element centered in each cell, same scale and same camera angle for every element, generous magenta margin inside each cell.
+
+No text, no letters, no numbers, no logos, no watermark, no signature, no UI frame, no real brands, no real people, no realistic rendering, no 3D render, no blur, no photo, no gore, no blood.
