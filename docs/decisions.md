@@ -5,6 +5,17 @@ Une nouvelle décision s'ajoute **en haut**. Une décision remise en cause n'est
 
 ---
 
+## 2026-11-15 : Graphismes générés par IA (remplace « Graphismes » ci-dessous)
+
+**Choix** : **tous les visuels** (portraits, sprites, tuiles, véhicules, bâtiments, objets, interface) sont générés en pixel art via **OpenRouter**,
+puis pixelisés par script (chaîne reprise de GRINTA). La référence unique est [style.md](style.md) : blocs de prompt, palette, tailles, planches « bible ».
+Grille de base proposée : **32 × 32 px** (à confirmer dans l'issue #4).
+
+**Alternatives écartées** : packs CC0 (look moins unique), dessin à la main (trop lent pour débuter).
+
+**Raison** : l'équipe maîtrise déjà cette chaîne sur GRINTA. La cohérence est garantie par des blocs de prompt figés et des images de référence jointes à chaque génération.
+Les tuiles de route et les animations demanderont des retouches à la main (Aseprite ou Piskel).
+
 ## 2026-11-15 : Stack technique (proposition, à valider)
 
 **Choix**
@@ -30,7 +41,7 @@ Phaser ne fait qu'**afficher** l'état et **transmettre les commandes** du joueu
 **Raison** : c'est la condition pour la coop et l'online (V2, V3) : la même simulation pourra tourner dans un Durable Object.
 C'est aussi ce qui rend la logique testable avec Vitest. Repris de la séparation moteur / interface de GRINTA.
 
-## 2026-11-15 : Graphismes
+## 2026-11-15 : Graphismes (remplacée par « Graphismes générés par IA »)
 
 **Choix** : packs **CC0** (Kenney) pour la ville et les véhicules dès le prototype ; **génération IA** (OpenRouter) réservée aux portraits et illustrations,
 avec un budget fixé par le propriétaire du repo.

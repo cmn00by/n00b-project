@@ -34,7 +34,7 @@ Chaque bloc donne :
 | 11 | [Progression et économie](#11-progression-et-économie) | 🔧🎨 | ⭐⭐ | 8 | _à attribuer_ |
 | 12 | [Sauvegarde](#12-sauvegarde) | 🔧 | ⭐ | 11 | _à attribuer_ |
 | 13 | [Audio](#13-audio) | 🎨 | ⭐ | 0 | _à attribuer_ |
-| 14 | [Graphismes et assets](#14-graphismes-et-assets) | 🎨 | ⭐ | aucun | _à attribuer_ |
+| 14 | [Graphismes et assets](#14-graphismes-et-assets) | 🎨 | ⭐⭐ | aucun | _à attribuer_ |
 | 15 | [Mise en ligne et admin](#15-mise-en-ligne-et-admin) | 🔧 | ⭐⭐ | 0 | _à attribuer_ |
 | 16 | [Coop](#16-coop-v2) | 🔧 | ⭐⭐⭐ | V1 finie | plus tard |
 | 17 | [Mini online](#17-mini-online-v3) | 🔧 | ⭐⭐⭐ | 16 | plus tard |
@@ -106,7 +106,7 @@ Chaque bloc donne :
 **Objectif** : une ville petite mais dense, lisible, pleine de détails drôles.
 
 **V0**
-- [ ] Choix du jeu de tuiles (voir bloc 14) et de la taille (16×16 ou 32×32) (#4)
+- [ ] Tuiles du Centre générées selon `style.md` (voir bloc 14, #4)
 - [ ] Un quartier dans **Tiled** : routes, trottoirs, bâtiments, calques de collision (#5)
 - [ ] Chargement de la carte Tiled dans Phaser, collisions branchées sur la simulation (#6)
 - [ ] Calques d'objets dans Tiled : points d'apparition, zones, portes (#5)
@@ -353,24 +353,25 @@ Chaque bloc donne :
 
 ## 14. Graphismes et assets
 
-**Objectif** : un style cohérent, sans bloquer le développement.
+**Objectif** : un style 100 % cohérent, généré par IA, sans bloquer le développement. Référence : [style.md](style.md).
 
 **V0**
-- [ ] Choisir les packs CC0 de base (Kenney : ville, véhicules et personnages en vue de dessus) et noter leurs licences dans `docs/credits.md` (#4)
-- [ ] Organisation de `public/assets/` et chargement centralisé des clés (#4)
+- [ ] Reprendre et adapter les scripts de GRINTA (`scripts/art/gen-image.mjs`, `pixelize.mjs`), `assets/raw/` dans `.gitignore`
+- [ ] Confirmer la grille de 32 × 32 px et la palette (#4)
+- [ ] Générer et valider les **planches bible** : personnages, portraits, véhicules, sol, bâtiments, scène (#4)
+- [ ] Tuiles du premier quartier (Centre) et quelques objets, pour le premier quartier dans Tiled
+- [ ] Sprite du joueur (4 directions, marche) et une voiture
 
 **V1**
-- [ ] Palette et charte visuelle dans `docs/style.md`
-- [ ] Portraits des personnages nommés (génération IA, budget fixé par le propriétaire du repo)
+- [ ] Portraits des personnages nommés (4 expressions chacun), fiches dans `docs/personnages.md`
+- [ ] Planches de piétons par quartier, véhicules avec leurs 3 états, bâtiments et objets des 4 quartiers
+- [ ] Effets (fumée, explosion, étincelles, gyrophare), icônes et cadres d'interface
 - [ ] Écran titre et illustrations des fins de mission
-- [ ] Effets visuels : fumée, étincelles, débris, éclairs de sirène
+- [ ] Page **Identité visuelle** dans le jeu (comme dans GRINTA) et `docs/registre-visuels.md` à jour
 
-**Plus tard**
-- [ ] Remplacer progressivement par des graphismes maison
-
-**Dépend de** : aucun. **Fichiers** : `public/assets/`, `docs/credits.md`, `docs/style.md`.
-**Profil** : 🎨 ⭐. Se fait **en parallèle de tout le reste**.
-**Fini quand** : tout le jeu a l'air de venir du même univers.
+**Dépend de** : aucun (les scripts dépendent juste de Node). **Fichiers** : `scripts/art/`, `docs/bible/`, `public/assets/`, `docs/registre-visuels.md`.
+**Profil** : 🎨 ⭐⭐. Se fait **en parallèle de tout le reste**, dans le budget fixé par `cmn00by`.
+**Fini quand** : tout le jeu a l'air de venir du même univers, et n'importe qui peut produire un nouvel asset cohérent en suivant `style.md`.
 
 ## 15. Mise en ligne et admin
 
@@ -430,7 +431,7 @@ Chaque bloc donne :
 
 | Phase | cmn00by | Baghorror12 |
 |---|---|---|
-| 1 | **0. Socle technique** (#2, #3) | **14. Choix des assets** (#4) + **2. Premier quartier dans Tiled** (#5) |
+| 1 | **0. Socle technique** (#2, #3) | **14. Planches bible** (#4) + **2. Premier quartier dans Tiled** (#5) |
 | 2 | **3. Conduite** (#8) + **2. Chargement de la carte** (#6) | **1. Déplacement à pied** (#7, bon premier bloc de code) |
 | 3 | **8. Moteur de missions** (#9) | **4. Piétons** (#10) + **10. HUD** (#11) |
 | 4 | **15. Mise en ligne** (#12) | **8. Écrire la première mission** en données (#13) |

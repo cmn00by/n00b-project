@@ -101,20 +101,13 @@ C'est inclus dans l'offre à 5 $. La condition, c'est que le moteur soit **pens�
 ## 6. Direction artistique
 
 - **Pixel art en vue de dessus**, couleurs vives et saturées, contours marqués.
-- Résolution de tuile : **16×16 ou 32×32** _(à trancher)_, affichée en `pixelated`.
+- Grille de **32 × 32 px** _(à confirmer)_, affichée en `pixelated` à l'échelle ×2 ou ×3. Détails dans [style.md](style.md).
 - Interface façon téléphone et panneaux publicitaires parodiques.
 
-### Les options pour les graphismes
+### Production des graphismes
 
-| Option | Pour | Contre | Usage conseillé |
-|---|---|---|---|
-| **Packs gratuits** (Kenney, licence CC0 ; itch.io) | gratuit, cohérent, immédiat, libre d'usage | look moins unique | **la base de la V0/V1** : tuiles de ville, véhicules, piétons |
-| **Génération IA** (crédits OpenRouter) | personnalisé, rapide pour l'unique | cohérence difficile entre images, mal adapté aux tuiles qui doivent se raccorder | **portraits des PNJ**, illustrations, affiches, écran titre |
-| **Fait à la main** (Aseprite, Piskel gratuit) | 100 % à vous, cohérent | lent si on débute | retouches, personnages clés |
-
-**Proposition** : packs CC0 pour la ville et les véhicules dès le prototype (on code sans attendre les graphismes),
-IA pour les portraits et illustrations des personnages nommés (budget fixé par le propriétaire du repo),
-et remplacement progressif par des graphismes maison si l'envie vient.
+Tous les visuels sont **générés par IA (OpenRouter) puis pixelisés**, selon le guide [style.md](style.md) :
+palette commune, blocs de prompt figés, tailles par catégorie, planches de référence (« bible ») jointes à chaque génération.
 
 ### Le son
 - Effets : packs gratuits (Kenney, freesound en CC0).
@@ -142,7 +135,7 @@ et remplacement progressif par des graphismes maison si l'envie vient.
 ## 9. Questions ouvertes
 
 - [ ] Le nom du jeu et de la ville.
-- [ ] Taille des tuiles : 16×16 ou 32×32.
+- [ ] Confirmer la grille de 32 × 32 px (proposée dans `style.md`).
 - [ ] Cycle jour / nuit en V1 ?
 - [ ] Une petite histoire principale, ou uniquement des missions libres ?
 - [ ] Armes : cartoon (tapette géante, pistolet à eau, lance-pizzas) ou pas d'armes du tout ?

@@ -248,6 +248,7 @@ Le sens des dépendances est **unique** : `game → sim`. `sim` n'importe jamais
 | `docs/decisions.md` | les décisions importantes : date, choix, alternatives, raison |
 | `docs/features.md` | toutes les fonctionnalités par bloc, la répartition, l'avancement (cocher les cases au fil des issues) |
 | `docs/git.md` | le guide des branches et des PR, pas à pas |
+| `docs/style.md` | **l'identité visuelle** : palette, tailles, blocs de prompt, chaîne de génération. À lire avant toute génération d'image |
 | `docs/deploiement.md` | les Workers, les environnements, les secrets (noms seulement, jamais les valeurs) |
 | `src/data/changelog.ts` | le journal des nouveautés, rédigé **pour le joueur** |
 
@@ -296,6 +297,7 @@ Liste de contrôle :
 - `git add -A` ou `git add .` sans avoir vérifié `git status` : ajouter seulement les fichiers de la tâche.
 - Ajouter une dépendance, changer la stack ou l'architecture sans accord.
 - Dépenser de l'argent (API payantes, génération d'images, services Cloudflare payants) sans budget donné par le propriétaire.
+- Générer une image sans suivre [docs/style.md](docs/style.md) : prompt assemblé à partir de ses blocs, références de la bible jointes, ligne ajoutée au registre.
 - Contenus protégés : pas de noms, personnages, musiques ou visuels de jeux, marques ou personnes réels.
 
 ## 10. Commandes
