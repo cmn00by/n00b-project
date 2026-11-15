@@ -4,12 +4,12 @@ Mini monde ouvert parodique en 2D (navigateur), développé **à deux** : `cmn00
 Ce fichier est lu automatiquement par Claude Code. Ses règles valent pour **les deux développeurs et leurs assistants IA**.
 En cas de doute : **demander, ne pas deviner.**
 
-| | |
-|---|---|
-| Repo | https://github.com/cmn00by/n00b-project (public) |
-| Tableau de tâches | https://github.com/users/cmn00by/projects/3 |
+|                       |                                                              |
+| --------------------- | ------------------------------------------------------------ |
+| Repo                  | https://github.com/cmn00by/n00b-project (public)             |
+| Tableau de tâches     | https://github.com/users/cmn00by/projects/3                  |
 | Branche de production | `main` (protégée : modification uniquement par Pull Request) |
-| Hébergement | Cloudflare Workers : un merge sur `main` = mise en ligne |
+| Hébergement           | Cloudflare Workers : un merge sur `main` = mise en ligne     |
 
 ## Sommaire
 
@@ -40,6 +40,15 @@ En cas de doute : **demander, ne pas deviner.**
 
 ## 2. Le tableau et les issues
 
+### Tenir GitHub à jour à chaque ajout
+
+Chaque ajout, même petit, laisse GitHub dans un état exact :
+
+- le travail est **poussé** sur sa branche et passe par une **PR** (jamais de travail qui reste seulement en local) ;
+- la carte de l'issue est dans la bonne colonne du tableau (_In Progress_ pendant, _Done_ au merge via `Closes #n`) ;
+- la PR met à jour **`CHANGELOG.md`** (une ligne dans « Non publié ») et coche les cases dans **`docs/roadmap.md`** et **`docs/features.md`** ;
+- une nouvelle idée ou un bug repéré devient une **issue**, ajoutée au tableau.
+
 **Aucun travail sans issue.** Le tableau est la source de vérité de qui fait quoi.
 
 ### Avant de coder
@@ -56,13 +65,16 @@ En cas de doute : **demander, ne pas deviner.**
 
 ```markdown
 ## Contexte
+
 Pourquoi on en a besoin, côté joueur.
 
 ## À faire
+
 - [ ] point 1
 - [ ] point 2
 
 ## Critères de fin
+
 Ce qu'on doit pouvoir constater en jouant pour considérer la tâche terminée.
 ```
 
@@ -106,14 +118,14 @@ Pendant la PR, si `main` a avancé : `git switch main && git pull && git switch 
 
 En français, à l'impératif, préfixés par le type :
 
-| Préfixe | Usage |
-|---|---|
-| `feat:` | nouvelle fonctionnalité |
-| `fix:` | correction de bug |
+| Préfixe     | Usage                                          |
+| ----------- | ---------------------------------------------- |
+| `feat:`     | nouvelle fonctionnalité                        |
+| `fix:`      | correction de bug                              |
 | `refactor:` | réorganisation sans changement de comportement |
-| `docs:` | documentation seule |
-| `test:` | ajout ou correction de tests |
-| `chore:` | outils, dépendances, configuration |
+| `docs:`     | documentation seule                            |
+| `test:`     | ajout ou correction de tests                   |
+| `chore:`    | outils, dépendances, configuration             |
 
 Un commit = un changement cohérent qui compile. Pas de « wip », « test », « fix fix ».
 Les commits faits avec Claude se terminent par la ligne `Co-Authored-By` demandée par la session.
@@ -126,13 +138,16 @@ Les commits faits avec Claude se terminent par la ligne `Co-Authored-By` demand�
   Closes #4
 
   ## Ce qui change
+
   - ...
 
   ## Comment tester
+
   1. `npm run dev`
   2. ...
 
   ## Non vérifié
+
   - ... (ou « rien »)
   ```
 - Joindre une **capture ou un GIF** si l'interface change.
@@ -251,19 +266,20 @@ Le sens des dépendances est **unique** : `game → systems → core`, et `data 
 - Chaque module a un **commentaire d'en-tête** : son rôle et ce qu'il expose.
 - Fichiers de documentation, à tenir à jour **dans la même PR** que le changement qu'ils décrivent :
 
-| Fichier | Contenu |
-|---|---|
-| `README.md` | ce qu'est le jeu, installer, lancer en local |
-| `docs/README.md` | le sommaire de la documentation |
-| `docs/architecture.md` | **le développement modulaire (LEGO)** : couches, modules, systèmes, composants, événements, registres, recettes |
-| `docs/conventions.md` | **le nommage** : fichiers, fonctions, types, événements, ids, glossaire |
-| `docs/GDD.md` | le game design : concept, boucle de jeu, règles |
-| `docs/decisions.md` | les décisions importantes : date, choix, alternatives, raison |
-| `docs/features.md` | toutes les fonctionnalités par bloc, la répartition, l'avancement (cocher les cases au fil des issues) |
-| `docs/git.md` | le guide des branches et des PR, pas à pas |
-| `docs/style.md` | **l'identité visuelle** : palette, tailles, blocs de prompt, chaîne de génération. À lire avant toute génération d'image |
-| `docs/deploiement.md` | les Workers, les environnements, les secrets (noms seulement, jamais les valeurs) |
-| `src/data/changelog.ts` | le journal des nouveautés, rédigé **pour le joueur** |
+| Fichier                | Contenu                                                                                                                  |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `README.md`            | ce qu'est le jeu, installer, lancer en local                                                                             |
+| `docs/README.md`       | le sommaire de la documentation                                                                                          |
+| `docs/architecture.md` | **le développement modulaire (LEGO)** : couches, modules, systèmes, composants, événements, registres, recettes          |
+| `docs/conventions.md`  | **le nommage** : fichiers, fonctions, types, événements, ids, glossaire                                                  |
+| `docs/GDD.md`          | le game design : concept, boucle de jeu, règles                                                                          |
+| `docs/decisions.md`    | les décisions importantes : date, choix, alternatives, raison                                                            |
+| `docs/features.md`     | toutes les fonctionnalités par bloc, la répartition, l'avancement (cocher les cases au fil des issues)                   |
+| `docs/git.md`          | le guide des branches et des PR, pas à pas                                                                               |
+| `docs/style.md`        | **l'identité visuelle** : palette, tailles, blocs de prompt, chaîne de génération. À lire avant toute génération d'image |
+| `docs/deploiement.md`  | les Workers, les environnements, les secrets (noms seulement, jamais les valeurs)                                        |
+| `CHANGELOG.md`         | le journal des modifications : **une ligne par PR**, dans « Non publié »                                                 |
+| `docs/roadmap.md`      | les étapes du jeu et leurs cases à cocher : **cochées à chaque issue fermée**                                            |
 
 - Avant de toucher à un système, **lire sa doc**. Si elle est fausse ou manquante, la corriger.
 
@@ -272,10 +288,11 @@ Le sens des dépendances est **unique** : `game → systems → core`, et `data 
 À faire passer **avant chaque PR** :
 
 ```bash
-npm test          # les tests passent
-npm run build     # le projet compile sans erreur
+npm run check     # lint (règles d'architecture) + cycles + tests + build : tout doit passer
 npm run dev       # le jeu se lance et la fonctionnalité marche en jouant
 ```
+
+La même vérification tourne **automatiquement sur chaque PR** (GitHub Actions) : une PR rouge ne se merge pas.
 
 Liste de contrôle :
 
@@ -287,17 +304,19 @@ Liste de contrôle :
 - [ ] `npm run lint` et `npm run check:cycles` passent
 - [ ] Anciennes sauvegardes toujours chargeables
 - [ ] Pas de secret, pas de log de debug, pas de code mort
-- [ ] Doc et changelog à jour
+- [ ] Doc à jour si le comportement change
+- [ ] **`CHANGELOG.md`** : une ligne dans « Non publié », sous la bonne rubrique, avec le numéro d'issue
+- [ ] **`docs/roadmap.md`** et **`docs/features.md`** : cases de l'issue cochées
 - [ ] Description de PR complète (`Closes #n`, comment tester, ce qui n'est pas vérifié)
 
 ## 8. Déploiement et environnements
 
-| Environnement | Comment | Pour quoi |
-|---|---|---|
-| **Local** | `npm run dev` | développer |
-| **Preview** | automatique, une URL par branche / PR | tester une PR avant le merge |
-| **Production** | automatique au merge sur `main` | le jeu en ligne |
-| **Admin** | Worker séparé, protégé par Cloudflare Access | gérer le jeu en ligne |
+| Environnement  | Comment                                      | Pour quoi                    |
+| -------------- | -------------------------------------------- | ---------------------------- |
+| **Local**      | `npm run dev`                                | développer                   |
+| **Preview**    | automatique, une URL par branche / PR        | tester une PR avant le merge |
+| **Production** | automatique au merge sur `main`              | le jeu en ligne              |
+| **Admin**      | Worker séparé, protégé par Cloudflare Access | gérer le jeu en ligne        |
 
 - **Personne ne déploie en production à la main** (`wrangler deploy` vers la prod est interdit) : le merge sur `main` s'en charge.
 - Les modifications faites dans le panneau admin en ligne sont **publiées par un humain**, jamais par l'assistant IA.
@@ -318,13 +337,18 @@ Liste de contrôle :
 ## 10. Commandes
 
 ```bash
-npm install       # installer les dépendances (après un clone ou un pull qui change package.json)
-npm run dev       # lancer le jeu en local
-npm test          # tests
-npm run build     # compiler
-gh issue list     # voir les tâches
-gh pr list        # voir les Pull Requests ouvertes
-gh pr checks      # voir l'état des vérifications d'une PR
+npm install            # installer les dépendances (après un clone ou un pull qui change package.json)
+npm run dev            # lancer le jeu en local (http://localhost:5173)
+npm test               # tests (Vitest)
+npm run test:watch     # tests en continu pendant qu'on code
+npm run lint           # règles de code et d'architecture (ESLint)
+npm run check:cycles   # dépendances circulaires (madge)
+npm run build          # vérifier les types et compiler (dist/)
+npm run check          # tout ce qui précède : à lancer avant chaque PR
+npm run format         # formater tout le code (Prettier)
+gh issue list          # voir les tâches
+gh pr list             # voir les Pull Requests ouvertes
+gh pr checks           # voir l'état des vérifications d'une PR
 ```
 
-> Les commandes `npm` seront disponibles une fois le projet initialisé (première issue). Mettre cette section à jour si des scripts sont ajoutés.
+Outils des visuels (plus tard) : voir [scripts/art/README.md](scripts/art/README.md).

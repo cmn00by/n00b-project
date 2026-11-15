@@ -58,14 +58,14 @@ src/game  ──►  src/sim/systems  ──►  src/sim/core
     └────────────────┴──► src/data ───────┘   (les données utilisent les types du noyau)
 ```
 
-| Couche | Peut importer | Ne doit **jamais** importer |
-|---|---|---|
-| `src/sim/core` | rien d'autre du projet | `systems`, `data`, `game`, Phaser, le navigateur |
-| `src/sim/systems/*` | `core`, `data` | **un autre système**, `game`, Phaser |
-| `src/data` | les **types** de `core` | `systems`, `game` |
-| `src/game` | `core`, `systems` (leur `index.ts`), `data` | l'intérieur d'un module (voir 3) |
-| `src/net` (V2) | `core` | `game` |
-| `worker/` | `core`, `systems`, `data` (pour la coop) | `game`, Phaser |
+| Couche              | Peut importer                               | Ne doit **jamais** importer                      |
+| ------------------- | ------------------------------------------- | ------------------------------------------------ |
+| `src/sim/core`      | rien d'autre du projet                      | `systems`, `data`, `game`, Phaser, le navigateur |
+| `src/sim/systems/*` | `core`, `data`                              | **un autre système**, `game`, Phaser             |
+| `src/data`          | les **types** de `core`                     | `systems`, `game`                                |
+| `src/game`          | `core`, `systems` (leur `index.ts`), `data` | l'intérieur d'un module (voir 3)                 |
+| `src/net` (V2)      | `core`                                      | `game`                                           |
+| `worker/`           | `core`, `systems`, `data` (pour la coop)    | `game`, Phaser                                   |
 
 Ces règles sont **vérifiées automatiquement** (section 11) : une PR qui les enfreint ne passe pas.
 
@@ -139,10 +139,10 @@ Tout système respecte la même forme :
 ```ts
 // src/sim/core/systems.ts
 export interface System {
-  id: string                                  // identifiant unique, en kebab-case : 'wanted'
-  order: number                               // ordre d'exécution (voir le tableau ci-dessous)
-  init?(world: World): void                   // une fois, à la création du monde
-  step(world: World, dt: number): void        // à chaque pas
+  id: string // identifiant unique, en kebab-case : 'wanted'
+  order: number // ordre d'exécution (voir le tableau ci-dessous)
+  init?(world: World): void // une fois, à la création du monde
+  step(world: World, dt: number): void // à chaque pas
 }
 ```
 
@@ -171,7 +171,7 @@ export const SYSTEMS: System[] = [
   drivingSystem,
   collisionSystem,
   pedestrianSystem,
-  wantedSystem,      // ← ajouter la police = ajouter cette ligne
+  wantedSystem, // ← ajouter la police = ajouter cette ligne
   missionSystem,
 ]
 ```
@@ -180,13 +180,13 @@ Le noyau trie la liste par `order` et appelle chaque système. **Retirer une lig
 
 ### L'ordre d'exécution
 
-| `SYSTEM_ORDER` | Valeur | Rôle | Exemples |
-|---|---|---|---|
-| `input` | 100 | appliquer les commandes des joueurs | input |
-| `ai` | 200 | décisions des PNJ | pedestrians, traffic, police-ai |
-| `physics` | 300 | déplacements et collisions | movement, driving, collision |
-| `rules` | 400 | règles du jeu | wanted, damage, missions, economy |
-| `cleanup` | 900 | nettoyage | despawn, events flush |
+| `SYSTEM_ORDER` | Valeur | Rôle                                | Exemples                          |
+| -------------- | ------ | ----------------------------------- | --------------------------------- |
+| `input`        | 100    | appliquer les commandes des joueurs | input                             |
+| `ai`           | 200    | décisions des PNJ                   | pedestrians, traffic, police-ai   |
+| `physics`      | 300    | déplacements et collisions          | movement, driving, collision      |
+| `rules`        | 400    | règles du jeu                       | wanted, damage, missions, economy |
+| `cleanup`      | 900    | nettoyage                           | despawn, events flush             |
 
 Deux systèmes dans la même tranche ne doivent pas dépendre l'un de l'autre.
 
@@ -207,22 +207,23 @@ Un **composant** est un **petit paquet de données sans logique**. Un système a
 }
 ```
 
-| Composant | Données | Utilisé par |
-|---|---|---|
-| `position` | x, y, angle | presque tout |
-| `velocity` | vx, vy | movement, driving |
-| `body` | taille, masse, solide ou non | collision |
-| `health` | points de vie | damage |
-| `driver` | véhicule occupé | driving, input |
-| `vehicle` | modèle, vitesse, dégâts | driving, traffic |
-| `pedestrian` | type, état d'IA, humeur | pedestrians |
-| `wanted` | niveau, minuteur | wanted |
-| `interactable` | action proposée (« monter », « parler ») | input, hud |
-| `sprite` | clé d'affichage | game uniquement |
+| Composant      | Données                                  | Utilisé par       |
+| -------------- | ---------------------------------------- | ----------------- |
+| `position`     | x, y, angle                              | presque tout      |
+| `velocity`     | vx, vy                                   | movement, driving |
+| `body`         | taille, masse, solide ou non             | collision         |
+| `health`       | points de vie                            | damage            |
+| `driver`       | véhicule occupé                          | driving, input    |
+| `vehicle`      | modèle, vitesse, dégâts                  | driving, traffic  |
+| `pedestrian`   | type, état d'IA, humeur                  | pedestrians       |
+| `wanted`       | niveau, minuteur                         | wanted            |
+| `interactable` | action proposée (« monter », « parler ») | input, hud        |
+| `sprite`       | clé d'affichage                          | game uniquement   |
 
 **Pourquoi c'est LEGO** : pour rendre une poubelle destructible, on lui **ajoute** le composant `health`. Le système de dégâts s'en occupe tout seul, sans une ligne de code en plus.
 
 **Règles**
+
 - Un composant contient **des données simples** (nombres, textes, identifiants), **jamais de fonction ni d'objet Phaser**. Ainsi l'état complet se sauvegarde et s'envoie sur le réseau tel quel.
 - Une entité référence une autre entité **par son `id`**, jamais par un pointeur direct.
 - Les types de composants sont déclarés dans `core/components.ts`. En ajouter un est un **ajout** permis.
@@ -258,6 +259,7 @@ export interface GameEvents {
 ```
 
 **Règles**
+
 - Un événement décrit **un fait passé** (`vehicle:crashed`), pas un ordre (`damage-vehicle`).
 - Les données d'un événement sont **simples** et **suffisantes** : l'écouteur ne doit pas avoir à fouiller dans un autre module.
 - Un écouteur ne doit **pas supposer** qu'un autre écouteur existe : chaque brique fonctionne seule.
@@ -288,6 +290,7 @@ export const VEHICLES: VehicleDef[] = [mamieCar, deliveryVan, sportsCar, golfCar
 **Ajouter une voiture = un fichier de données + une ligne dans la liste.** Aucun système n'est modifié.
 
 **Règles**
+
 - Chaque contenu a un **`id` unique** en kebab-case ; le code le référence **par cet `id`**.
 - Chaque type de contenu a son **type TypeScript** (`VehicleDef`, `MissionDef`, `PropDef`…) dans `core/registry.ts`, et une **fonction de validation**
   lancée par les tests : ids en double, référence vers un sprite ou un id inexistant, valeur hors bornes → le test échoue.
@@ -343,13 +346,13 @@ Si une case ne peut pas être cochée, l'expliquer dans la PR.
 
 À mettre en place avec le socle (issue #2), pour que les règles ne reposent pas sur la mémoire :
 
-| Outil | Ce qu'il vérifie | Commande |
-|---|---|---|
-| **ESLint** + règles d'imports (`no-restricted-imports` ou `eslint-plugin-boundaries`) | le sens des dépendances (section 2), les imports uniquement par `index.ts`, pas de Phaser ni de `Math.random` dans `src/sim` | `npm run lint` |
-| **madge** | aucune dépendance circulaire | `npm run check:cycles` |
-| **TypeScript strict** | les types des composants, événements et contenus | `npm run build` |
-| **Tests de registres** | ids uniques, références valides, bornes | `npm test` |
-| **Test de déterminisme** | même graine + mêmes commandes = même monde | `npm test` |
+| Outil                                                                                 | Ce qu'il vérifie                                                                                                             | Commande               |
+| ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| **ESLint** + règles d'imports (`no-restricted-imports` ou `eslint-plugin-boundaries`) | le sens des dépendances (section 2), les imports uniquement par `index.ts`, pas de Phaser ni de `Math.random` dans `src/sim` | `npm run lint`         |
+| **madge**                                                                             | aucune dépendance circulaire                                                                                                 | `npm run check:cycles` |
+| **TypeScript strict**                                                                 | les types des composants, événements et contenus                                                                             | `npm run build`        |
+| **Tests de registres**                                                                | ids uniques, références valides, bornes                                                                                      | `npm test`             |
+| **Test de déterminisme**                                                              | même graine + mêmes commandes = même monde                                                                                   | `npm test`             |
 
 Une GitHub Action lancera `lint`, `check:cycles`, `test` et `build` sur chaque PR : **une PR rouge ne se merge pas.**
 

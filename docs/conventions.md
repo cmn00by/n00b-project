@@ -25,41 +25,41 @@ La structure des modules est décrite dans [architecture.md](architecture.md), l
 
 ## 1. La langue
 
-| Quoi | Langue | Exemple |
-|---|---|---|
-| **Code** : noms de fichiers de code, fonctions, variables, types, événements, ids | **anglais** | `wantedSystem`, `vehicle:crashed`, `mamie-car` |
-| **Commentaires** du code | **français** | `// le joueur garde 3 frames d'invincibilité` |
-| **Textes affichés** au joueur | **français**, dans `src/data/` | `name: 'La Mamie'` |
-| **Docs**, issues, PR, commits | **français** | `feat: ajoute la police` |
-| **Fichiers d'assets** | **français**, sans accent | `poubelle-casse.png` (voir `style.md`) |
+| Quoi                                                                              | Langue                         | Exemple                                        |
+| --------------------------------------------------------------------------------- | ------------------------------ | ---------------------------------------------- |
+| **Code** : noms de fichiers de code, fonctions, variables, types, événements, ids | **anglais**                    | `wantedSystem`, `vehicle:crashed`, `mamie-car` |
+| **Commentaires** du code                                                          | **français**                   | `// le joueur garde 3 frames d'invincibilité`  |
+| **Textes affichés** au joueur                                                     | **français**, dans `src/data/` | `name: 'La Mamie'`                             |
+| **Docs**, issues, PR, commits                                                     | **français**                   | `feat: ajoute la police`                       |
+| **Fichiers d'assets**                                                             | **français**, sans accent      | `poubelle-casse.png` (voir `style.md`)         |
 
 **Pourquoi l'anglais dans le code** : Phaser, TypeScript et toutes les docs techniques sont en anglais ; un mélange `getVitesse()` est plus dur à lire.
 On utilise **le glossaire** (section 13) pour toujours traduire un mot du jeu de la même façon.
 
 ## 2. Le tableau récapitulatif
 
-| Élément | Style | Exemple |
-|---|---|---|
-| Dossier | `camelCase` | `systems/`, `wanted/`, `npcTypes/` |
-| Fichier de code (module, fonctions) | `camelCase.ts` | `wantedLevel.ts`, `rng.ts` |
-| Fichier qui exporte **une** classe | `PascalCase.ts` | `CityScene.ts` |
-| Fichier de test | `<fichier>.test.ts` à côté du code | `wantedLevel.test.ts` |
-| Fonction | `camelCase`, **commence par un verbe** | `computeWantedLevel()` |
-| Variable, paramètre | `camelCase`, **un nom** | `maxSpeed`, `vehicleId` |
-| Booléen | `is` / `has` / `can` / `should` + adjectif | `isDriving`, `hasKey`, `canEnter` |
-| Type, interface, classe | `PascalCase` | `VehicleDef`, `World` |
-| Type d'union de textes | `PascalCase`, valeurs en `kebab-case` | `type Mood = 'calm' \| 'scared' \| 'angry'` |
-| Constante globale | `UPPER_SNAKE_CASE` | `TILE_SIZE`, `SYSTEM_ORDER` |
-| Liste de registre | `UPPER_SNAKE_CASE` au pluriel | `VEHICLES`, `MISSIONS` |
-| Clé de `TUNING` | `camelCase`, groupée par module | `TUNING.wanted.decayPerSecond` |
-| Id de contenu | `kebab-case` | `'mamie-car'`, `'livraison-pizza'` |
-| Événement | `'domaine:fait-au-passe'` | `'vehicle:crashed'` |
-| Commande | `'domaine:verbe'` | `'vehicle:enter'` |
-| Système | `<nom>System` | `drivingSystem` |
-| Renderer | `<nom>Renderer` | `vehicleRenderer` |
-| Scène Phaser | `<Nom>Scene` | `CityScene`, `HudScene` |
-| Clé d'asset | nom du fichier sans extension | `'mamie-car-abime'` |
-| Branche Git | `<type>/<n°issue>-<description>` | `feature/7-deplacement-a-pied` (voir `git.md`) |
+| Élément                             | Style                                      | Exemple                                        |
+| ----------------------------------- | ------------------------------------------ | ---------------------------------------------- |
+| Dossier                             | `camelCase`                                | `systems/`, `wanted/`, `npcTypes/`             |
+| Fichier de code (module, fonctions) | `camelCase.ts`                             | `wantedLevel.ts`, `rng.ts`                     |
+| Fichier qui exporte **une** classe  | `PascalCase.ts`                            | `CityScene.ts`                                 |
+| Fichier de test                     | `<fichier>.test.ts` à côté du code         | `wantedLevel.test.ts`                          |
+| Fonction                            | `camelCase`, **commence par un verbe**     | `computeWantedLevel()`                         |
+| Variable, paramètre                 | `camelCase`, **un nom**                    | `maxSpeed`, `vehicleId`                        |
+| Booléen                             | `is` / `has` / `can` / `should` + adjectif | `isDriving`, `hasKey`, `canEnter`              |
+| Type, interface, classe             | `PascalCase`                               | `VehicleDef`, `World`                          |
+| Type d'union de textes              | `PascalCase`, valeurs en `kebab-case`      | `type Mood = 'calm' \| 'scared' \| 'angry'`    |
+| Constante globale                   | `UPPER_SNAKE_CASE`                         | `TILE_SIZE`, `SYSTEM_ORDER`                    |
+| Liste de registre                   | `UPPER_SNAKE_CASE` au pluriel              | `VEHICLES`, `MISSIONS`                         |
+| Clé de `TUNING`                     | `camelCase`, groupée par module            | `TUNING.wanted.decayPerSecond`                 |
+| Id de contenu                       | `kebab-case`                               | `'mamie-car'`, `'livraison-pizza'`             |
+| Événement                           | `'domaine:fait-au-passe'`                  | `'vehicle:crashed'`                            |
+| Commande                            | `'domaine:verbe'`                          | `'vehicle:enter'`                              |
+| Système                             | `<nom>System`                              | `drivingSystem`                                |
+| Renderer                            | `<nom>Renderer`                            | `vehicleRenderer`                              |
+| Scène Phaser                        | `<Nom>Scene`                               | `CityScene`, `HudScene`                        |
+| Clé d'asset                         | nom du fichier sans extension              | `'mamie-car-abime'`                            |
+| Branche Git                         | `<type>/<n°issue>-<description>`           | `feature/7-deplacement-a-pied` (voir `git.md`) |
 
 ## 3. Dossiers et fichiers
 
@@ -73,26 +73,27 @@ On utilise **le glossaire** (section 13) pour toujours traduire un mot du jeu de
 
 Une fonction **commence par un verbe** qui dit ce qu'elle fait. Les verbes ont **un sens fixe** dans tout le projet :
 
-| Verbe | Sens | Effet sur l'état | Exemple |
-|---|---|---|---|
-| `create…` | fabrique et renvoie un nouvel objet | aucun | `createWorld()`, `createVehicle(def)` |
-| `spawn…` | crée une entité **dans le monde** | ajoute | `spawnPedestrian(world, pos)` |
-| `despawn…` / `remove…` | retire une entité du monde | retire | `despawnFarEntities(world)` |
-| `get…` | lit une valeur **qui existe**, rapide | aucun | `getVehicle(world, id)` |
-| `find…` | cherche, **peut ne rien trouver** (`undefined`) | aucun | `findNearestCar(world, pos)` |
-| `compute…` | calcule une valeur (souvent coûteux) | aucun | `computeWantedLevel(heat)` |
-| `is…` / `has…` / `can…` | répond oui ou non | aucun | `canEnterVehicle(world, playerId, carId)` |
-| `set…` | remplace une valeur | modifie | `setWantedLevel(world, 2)` |
-| `update…` | fait évoluer selon le temps | modifie | `updateTraffic(world, dt)` |
-| `apply…` | applique un effet | modifie | `applyDamage(world, id, 20)` |
-| `try…` | tente une action **du joueur**, renvoie `{ ok, why }` | modifie si réussi | `tryEnterVehicle(world, playerId)` |
-| `handle…` | réagit à un événement | selon | `handleCrash(world, event)` |
-| `load…` / `save…` | lit / écrit un stockage | I/O | `loadSave(slot)` |
-| `validate…` | vérifie des données, renvoie les erreurs | aucun | `validateVehicles(VEHICLES)` |
-| `to…` / `from…` | convertit | aucun | `toTileCoords(pos)` |
-| `draw…` / `render…` | affiche (côté `game` uniquement) | aucun sur le monde | `drawMinimap(scene, world)` |
+| Verbe                   | Sens                                                  | Effet sur l'état   | Exemple                                   |
+| ----------------------- | ----------------------------------------------------- | ------------------ | ----------------------------------------- |
+| `create…`               | fabrique et renvoie un nouvel objet                   | aucun              | `createWorld()`, `createVehicle(def)`     |
+| `spawn…`                | crée une entité **dans le monde**                     | ajoute             | `spawnPedestrian(world, pos)`             |
+| `despawn…` / `remove…`  | retire une entité du monde                            | retire             | `despawnFarEntities(world)`               |
+| `get…`                  | lit une valeur **qui existe**, rapide                 | aucun              | `getVehicle(world, id)`                   |
+| `find…`                 | cherche, **peut ne rien trouver** (`undefined`)       | aucun              | `findNearestCar(world, pos)`              |
+| `compute…`              | calcule une valeur (souvent coûteux)                  | aucun              | `computeWantedLevel(heat)`                |
+| `is…` / `has…` / `can…` | répond oui ou non                                     | aucun              | `canEnterVehicle(world, playerId, carId)` |
+| `set…`                  | remplace une valeur                                   | modifie            | `setWantedLevel(world, 2)`                |
+| `update…`               | fait évoluer selon le temps                           | modifie            | `updateTraffic(world, dt)`                |
+| `apply…`                | applique un effet                                     | modifie            | `applyDamage(world, id, 20)`              |
+| `try…`                  | tente une action **du joueur**, renvoie `{ ok, why }` | modifie si réussi  | `tryEnterVehicle(world, playerId)`        |
+| `handle…`               | réagit à un événement                                 | selon              | `handleCrash(world, event)`               |
+| `load…` / `save…`       | lit / écrit un stockage                               | I/O                | `loadSave(slot)`                          |
+| `validate…`             | vérifie des données, renvoie les erreurs              | aucun              | `validateVehicles(VEHICLES)`              |
+| `to…` / `from…`         | convertit                                             | aucun              | `toTileCoords(pos)`                       |
+| `draw…` / `render…`     | affiche (côté `game` uniquement)                      | aucun sur le monde | `drawMinimap(scene, world)`               |
 
 **Règles**
+
 - **Les fonctions de lecture** (`get`, `find`, `compute`, `is`, `can`) **ne modifient jamais rien**.
 - **Les fonctions de la simulation reçoivent `world` en premier paramètre** : `applyDamage(world, id, amount)`.
 - Au-delà de **3 paramètres**, passer un objet : `spawnVehicle(world, { modelId, position, color })`.
@@ -125,11 +126,11 @@ Une fonction **commence par un verbe** qui dit ce qu'elle fait. Les verbes ont *
 ```ts
 export const TUNING = {
   walking: {
-    walkSpeed: 60,          // px par seconde
-    runSpeed: 110,          // px par seconde
+    walkSpeed: 60, // px par seconde
+    runSpeed: 110, // px par seconde
   },
   wanted: {
-    decayPerSecond: 0.05,   // points de recherche perdus par seconde hors de vue
+    decayPerSecond: 0.05, // points de recherche perdus par seconde hors de vue
     levelThresholds: [1, 3, 6],
   },
 }
@@ -144,27 +145,27 @@ export const TUNING = {
 
 ## 9. Événements et commandes
 
-| | Événement | Commande |
-|---|---|---|
-| Ce que c'est | **un fait** qui vient d'arriver | **une demande** d'un joueur |
-| Forme | `'domaine:fait-au-passe'` | `'domaine:verbe'` |
-| Exemples | `'vehicle:crashed'`, `'mission:completed'`, `'wanted:level-changed'` | `'vehicle:enter'`, `'player:punch'`, `'player:interact'` |
-| Déclaré dans | `core/events.ts` | `core/commands.ts` |
+|              | Événement                                                            | Commande                                                 |
+| ------------ | -------------------------------------------------------------------- | -------------------------------------------------------- |
+| Ce que c'est | **un fait** qui vient d'arriver                                      | **une demande** d'un joueur                              |
+| Forme        | `'domaine:fait-au-passe'`                                            | `'domaine:verbe'`                                        |
+| Exemples     | `'vehicle:crashed'`, `'mission:completed'`, `'wanted:level-changed'` | `'vehicle:enter'`, `'player:punch'`, `'player:interact'` |
+| Déclaré dans | `core/events.ts`                                                     | `core/commands.ts`                                       |
 
 - Le **domaine** est le nom du module ou de l'entité concernée, au singulier : `vehicle`, `player`, `mission`, `wanted`, `crime`.
 - Le fait est en anglais, au **participe passé**, en `kebab-case` : `crashed`, `level-changed`, `entered`.
 
 ## 10. Systèmes, composants, renderers
 
-| Élément | Nom | Fichier | Exemple |
-|---|---|---|---|
-| Module de simulation | nom du domaine | `src/sim/systems/<nom>/` | `wanted/` |
-| Système | `<nom>System` | `<nom>System.ts` | `wantedSystem` dans `wantedSystem.ts` |
-| Id du système | `'<nom>'` en kebab-case | | `id: 'wanted'` |
-| Composant | nom court au singulier | déclaré dans `core/components.ts` | `wanted`, `vehicle`, `health` |
-| Renderer | `<entité>Renderer` | `src/game/render/<entité>Renderer.ts` | `vehicleRenderer` |
-| Effet visuel | `<nom>Fx` | `src/game/fx/<nom>Fx.ts` | `sparksFx` |
-| Widget d'interface | `<Nom>Widget` | `src/game/hud/<Nom>Widget.ts` | `WantedWidget` |
+| Élément              | Nom                     | Fichier                               | Exemple                               |
+| -------------------- | ----------------------- | ------------------------------------- | ------------------------------------- |
+| Module de simulation | nom du domaine          | `src/sim/systems/<nom>/`              | `wanted/`                             |
+| Système              | `<nom>System`           | `<nom>System.ts`                      | `wantedSystem` dans `wantedSystem.ts` |
+| Id du système        | `'<nom>'` en kebab-case |                                       | `id: 'wanted'`                        |
+| Composant            | nom court au singulier  | déclaré dans `core/components.ts`     | `wanted`, `vehicle`, `health`         |
+| Renderer             | `<entité>Renderer`      | `src/game/render/<entité>Renderer.ts` | `vehicleRenderer`                     |
+| Effet visuel         | `<nom>Fx`               | `src/game/fx/<nom>Fx.ts`              | `sparksFx`                            |
+| Widget d'interface   | `<Nom>Widget`           | `src/game/hud/<Nom>Widget.ts`         | `WantedWidget`                        |
 
 ## 11. Tests
 
@@ -192,29 +193,29 @@ describe('computeWantedLevel', () => {
 
 Pour qu'un même concept porte **toujours le même nom** dans le code. Ajouter un mot ici avant de l'utiliser.
 
-| Dans le jeu (français) | Dans le code (anglais) | À ne **pas** utiliser |
-|---|---|---|
-| Joueur | `player` | `hero`, `user` |
-| Piéton (PNJ à pied) | `pedestrian` | `npc` pour un piéton, `civilian`, `walker` |
-| PNJ (tout personnage non joueur) | `npc` | `ai`, `bot` |
-| Personnage nommé (donneur de mission) | `contact` | `quest giver`, `boss` |
-| Véhicule | `vehicle` | `car` pour un véhicule en général |
-| Modèle de véhicule | `vehicleModel` (`VehicleDef`) | `carType` |
-| Conducteur | `driver` | `pilot` |
-| Trafic | `traffic` | `cars` |
-| Objet du décor | `prop` | `object`, `item` |
-| Objet ramassable | `item` | `pickup`, `loot` |
-| Recherche (police) | `wanted` | `heat`, `alert` |
-| Délit | `crime` | `offense` |
-| Mission | `mission` | `quest`, `job` |
-| Objectif de mission | `objective` | `goal`, `task` |
-| Quartier | `district` | `zone` (réservé aux zones Tiled), `area` |
-| Planque | `hideout` | `safehouse`, `base` |
-| Argent | `money` | `cash`, `gold` |
-| Réputation | `reputation` | `rep`, `respect` |
-| Réplique d'un PNJ | `bark` | `line`, `shout` |
-| Dialogue (avec portrait) | `dialogue` | `conversation`, `talk` |
-| Dégâts | `damage` | `dmg`, `hurt` |
-| Santé | `health` | `hp`, `life` |
-| Pas de simulation | `step` | `tick`, `frame` |
-| Réglages d'équilibrage | `TUNING` | `config`, `settings` |
+| Dans le jeu (français)                | Dans le code (anglais)        | À ne **pas** utiliser                      |
+| ------------------------------------- | ----------------------------- | ------------------------------------------ |
+| Joueur                                | `player`                      | `hero`, `user`                             |
+| Piéton (PNJ à pied)                   | `pedestrian`                  | `npc` pour un piéton, `civilian`, `walker` |
+| PNJ (tout personnage non joueur)      | `npc`                         | `ai`, `bot`                                |
+| Personnage nommé (donneur de mission) | `contact`                     | `quest giver`, `boss`                      |
+| Véhicule                              | `vehicle`                     | `car` pour un véhicule en général          |
+| Modèle de véhicule                    | `vehicleModel` (`VehicleDef`) | `carType`                                  |
+| Conducteur                            | `driver`                      | `pilot`                                    |
+| Trafic                                | `traffic`                     | `cars`                                     |
+| Objet du décor                        | `prop`                        | `object`, `item`                           |
+| Objet ramassable                      | `item`                        | `pickup`, `loot`                           |
+| Recherche (police)                    | `wanted`                      | `heat`, `alert`                            |
+| Délit                                 | `crime`                       | `offense`                                  |
+| Mission                               | `mission`                     | `quest`, `job`                             |
+| Objectif de mission                   | `objective`                   | `goal`, `task`                             |
+| Quartier                              | `district`                    | `zone` (réservé aux zones Tiled), `area`   |
+| Planque                               | `hideout`                     | `safehouse`, `base`                        |
+| Argent                                | `money`                       | `cash`, `gold`                             |
+| Réputation                            | `reputation`                  | `rep`, `respect`                           |
+| Réplique d'un PNJ                     | `bark`                        | `line`, `shout`                            |
+| Dialogue (avec portrait)              | `dialogue`                    | `conversation`, `talk`                     |
+| Dégâts                                | `damage`                      | `dmg`, `hurt`                              |
+| Santé                                 | `health`                      | `hp`, `life`                               |
+| Pas de simulation                     | `step`                        | `tick`, `frame`                            |
+| Réglages d'équilibrage                | `TUNING`                      | `config`, `settings`                       |

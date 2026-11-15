@@ -29,6 +29,7 @@ Les tuiles de route et les animations demanderont des retouches à la main (Asep
 ## 2026-11-15 : Stack technique (proposition, à valider)
 
 **Choix**
+
 - **Phaser 3** + **TypeScript** + **Vite** pour le jeu.
 - **Vitest** pour les tests de la simulation.
 - **Tiled** pour éditer la carte (export JSON lu par Phaser).
@@ -36,6 +37,7 @@ Les tuiles de route et les animations demanderont des retouches à la main (Asep
 - Interface hors jeu (menus, téléphone, inventaire) : en Phaser au début. _(à trancher : passer à du HTML/React par-dessus si les menus deviennent lourds.)_
 
 **Alternatives écartées**
+
 - **React + canvas maison** (stack de GRINTA) : très bien pour un jeu de menus, mais il faudrait réécrire caméra, collisions, sprites, tuiles. Phaser les fournit.
 - **Moteur 3D (Three.js, Babylon)** : trop ambitieux pour un premier projet à deux.
 - **Godot export web** : bon moteur, mais exports lourds et moins naturels à héberger et à brancher sur des Workers.

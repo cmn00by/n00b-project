@@ -1,0 +1,27 @@
+# Les vérifications de chaque Pull Request (docs/architecture.md, section 11).
+# Une PR rouge ne se merge pas.
+name: Vérifications
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  verifications:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Lint (règles d'architecture)
+        run: npm run lint
+      - name: Dépendances circulaires
+        run: npm run check:cycles
+      - name: Tests
+        run: npm test
+      - name: Build
+        run: npm run build
