@@ -15,6 +15,7 @@ Chaque bloc donne :
 - **Fini quand** : ce qu'on doit constater en jouant.
 
 **Règle de répartition** : deux personnes ne prennent pas deux blocs qui touchent les mêmes fichiers en même temps.
+Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque bloc vit dans **ses propres dossiers** : seuls le noyau et les listes d'enregistrement sont partagés.
 
 ## Vue d'ensemble
 
@@ -64,18 +65,20 @@ Chaque bloc donne :
 - [ ] Projet Vite + TypeScript + Phaser 3, `npm run dev` affiche une scène vide (#2)
 - [ ] Vitest configuré, un premier test qui passe (#2)
 - [ ] Prettier configuré (style du `CLAUDE.md`) (#2)
-- [ ] Structure des dossiers `src/sim`, `src/game`, `src/data` (voir `CLAUDE.md`) (#2)
-- [ ] `Rng` déterministe (`src/sim/rng.ts`) avec ses tests (#3)
+- [ ] Structure des dossiers selon `docs/architecture.md` (#2)
+- [ ] ESLint (règles d'imports), madge (cycles) et GitHub Action de vérification des PR (#2)
+- [ ] Noyau `src/sim/core` : monde, entités et composants, systèmes (`SYSTEMS`, `SYSTEM_ORDER`), bus d'événements typé, registres (#3)
+- [ ] `Rng` déterministe (`src/sim/core/rng.ts`) avec ses tests (#3)
 - [ ] Boucle à pas fixe : `step(world, commands, dt)`, affichage interpolé (#3)
-- [ ] Système de commandes (`src/sim/commands.ts`) et lecture clavier → commandes (#3)
-- [ ] `TUNING` (`src/sim/config.ts`) (#3)
+- [ ] Système de commandes (`src/sim/core/commands.ts`) et lecture clavier → commandes (#3)
+- [ ] `TUNING` (`src/sim/core/config.ts`) (#3)
 - [ ] Caméra qui suit une cible, zoom pixel art net (#3)
 
 **Plus tard**
 - [ ] Mode debug : afficher les collisions, les chemins des PNJ, les FPS (touche F3)
 - [ ] Rejouer une partie à partir de la graine et des commandes enregistrées
 
-**Fichiers** : `src/sim/{rng,config,commands,world,types}.ts`, `src/game/scenes/`, `src/game/input/`, config du projet.
+**Fichiers** : `src/sim/core/`, `src/game/scenes/`, `src/game/input/`, config du projet.
 **Profil** : 🔧 ⭐⭐. À faire **en premier, par une seule personne**, car tout le monde en dépend.
 **Fini quand** : un carré se déplace au clavier dans une scène, la caméra le suit, et `npm test` passe.
 
@@ -97,7 +100,7 @@ Chaque bloc donne :
 **Plus tard**
 - [ ] Sauter par-dessus les petits obstacles, plonger pour esquiver une voiture
 
-**Dépend de** : 0. **Fichiers** : `src/sim/entities/player.ts`, `src/sim/systems/movement.ts`, `src/game/render/player.ts`.
+**Dépend de** : 0. **Fichiers** : `src/sim/systems/walking/`, `src/game/render/playerRenderer.ts`.
 **Profil** : 🔧 ⭐ (bon premier bloc pour apprendre la structure).
 **Fini quand** : on parcourt un quartier à pied sans traverser les murs, et on peut ramasser une poubelle et la lancer.
 
@@ -149,7 +152,7 @@ Chaque bloc donne :
 - [ ] Deux-roues (scooter, vélo de livraison)
 - [ ] Personnalisation au garage (peinture, klaxons ridicules)
 
-**Dépend de** : 1, 2. **Fichiers** : `src/sim/entities/vehicle.ts`, `src/sim/systems/driving.ts`, `src/data/vehicles.ts`, `src/game/render/vehicle.ts`.
+**Dépend de** : 1, 2. **Fichiers** : `src/sim/systems/driving/`, `src/data/vehicles/`, `src/game/render/vehicleRenderer.ts`.
 **Profil** : 🔧 ⭐⭐⭐ (le cœur du jeu : à soigner et à régler longtemps).
 **Fini quand** : on a envie de faire le tour du quartier en voiture juste pour s'amuser à déraper.
 
@@ -173,7 +176,7 @@ Chaque bloc donne :
 - [ ] Routines (aller au travail le matin, au bar le soir)
 - [ ] PNJ qui interagissent entre eux (disputes, conversations)
 
-**Dépend de** : 1, 2. **Fichiers** : `src/sim/entities/pedestrian.ts`, `src/sim/systems/ai.ts`, `src/data/npcTypes.ts`.
+**Dépend de** : 1, 2. **Fichiers** : `src/sim/systems/pedestrians/`, `src/data/npcTypes/`, `src/game/render/pedestrianRenderer.ts`.
 **Profil** : 🔧 ⭐⭐.
 **Fini quand** : quand on fait n'importe quoi dans la rue, les gens fuient, râlent ou filment.
 
@@ -192,7 +195,7 @@ Chaque bloc donne :
 - [ ] Bus sur une ligne avec arrêts, camions de livraison
 - [ ] Embouteillages volontaires au Centre
 
-**Dépend de** : 2, 3. **Fichiers** : `src/sim/systems/traffic.ts`, `src/sim/entities/vehicle.ts` (partagé avec le bloc 3 : **se coordonner**).
+**Dépend de** : 2, 3. **Fichiers** : `src/sim/systems/traffic/` (réutilise le composant `vehicle` : **ajouter**, ne pas modifier `driving/`).
 **Profil** : 🔧 ⭐⭐⭐.
 **Fini quand** : on peut regarder un carrefour fonctionner tout seul pendant une minute sans voiture coincée.
 
@@ -210,7 +213,7 @@ Chaque bloc donne :
 - [ ] Bouches d'incendie qui arrosent, feux d'artifice, pièges à la Zone Pavillonnaire
 - [ ] Objets à collectionner cachés dans la ville (nains de jardin dorés…)
 
-**Dépend de** : 1, 2. **Fichiers** : `src/sim/entities/prop.ts`, `src/data/props.ts`, `src/game/render/props.ts`.
+**Dépend de** : 1, 2. **Fichiers** : `src/sim/systems/props/`, `src/data/props/`, `src/game/render/propRenderer.ts`.
 **Profil** : 🔧🎨 ⭐⭐.
 **Fini quand** : traverser le marché en voiture est un spectacle.
 
@@ -231,7 +234,7 @@ Chaque bloc donne :
 - [ ] Hélicoptère de police (une drone ridicule ?)
 - [ ] Policiers corruptibles
 
-**Dépend de** : 3, 4. **Fichiers** : `src/sim/systems/wanted.ts`, `src/sim/entities/police.ts`.
+**Dépend de** : 3, 4. **Fichiers** : `src/sim/systems/wanted/`, `src/sim/systems/police/`.
 **Profil** : 🔧 ⭐⭐⭐.
 **Fini quand** : une course-poursuite de niveau 2 dure une minute, se perd ou se gagne, et fait rire.
 
@@ -240,7 +243,7 @@ Chaque bloc donne :
 **Objectif** : des objectifs variés et absurdes, **écrits en données** pour en ajouter sans coder.
 
 **V0**
-- [ ] Moteur de missions : étapes, objectifs, conditions de réussite et d'échec (#9)
+- [ ] Moteur de missions : étapes, objectifs (chaque type d'objectif est une brique enregistrée), conditions de réussite et d'échec (#9)
 - [ ] Format de mission en données (`src/data/missions/`), documenté dans `docs/missions.md` (#9)
 - [ ] Une mission de livraison complète : prendre un colis, aller à un point, chrono (#13)
 
@@ -255,7 +258,7 @@ Chaque bloc donne :
 - [ ] Petits jobs à répétition (taxi, livraison de pizzas, dépanneuse)
 - [ ] Une courte histoire principale (si décidée)
 
-**Dépend de** : 1, 3. **Fichiers** : `src/sim/systems/missions.ts` (🔧), `src/data/missions/` (🎨).
+**Dépend de** : 1, 3. **Fichiers** : `src/sim/systems/missions/` (🔧), `src/data/missions/` (🎨).
 **Profil** : 🔧🎨 ⭐⭐. **Se partage bien** : un développeur fait le moteur, l'autre écrit les missions.
 **Fini quand** : on écrit une nouvelle mission en JSON, sans toucher au code, et elle se joue.
 
@@ -265,7 +268,7 @@ Chaque bloc donne :
 
 **V1**
 - [ ] Système de répliques par situation : PNJ bousculé, voiture volée, police, mission, klaxon…
-- [ ] Banques de répliques en données (`src/data/lines/`), plusieurs variantes tirées au hasard (via `Rng`)
+- [ ] Banques de répliques en données (`src/data/barks/`), plusieurs variantes tirées au hasard (via `Rng`)
 - [ ] Boîtes de dialogue des donneurs de mission (portrait + texte)
 - [ ] Noms de lieux, enseignes, pubs, radios parodiques
 - [ ] Une charte de ton dans `docs/ton.md` : ce qui est drôle pour nous, ce qu'on s'interdit
@@ -274,7 +277,7 @@ Chaque bloc donne :
 - [ ] Voix courtes (onomatopées, borborygmes) plutôt que des vraies voix
 - [ ] Fil d'actu parodique de la ville qui commente les exploits du joueur
 
-**Dépend de** : 4. **Fichiers** : `src/data/lines/`, `src/sim/systems/barks.ts`, `docs/ton.md`.
+**Dépend de** : 4. **Fichiers** : `src/data/barks/`, `src/sim/systems/barks/`, `docs/ton.md`.
 **Profil** : 🎨 ⭐ (surtout de l'écriture : parfait pour s'amuser).
 **Fini quand** : on a ri au moins une fois en testant.
 
@@ -316,7 +319,7 @@ Chaque bloc donne :
 - [ ] Succès et défis parodiques
 - [ ] Statistiques du joueur (voitures volées, distance parcourue, amendes payées)
 
-**Dépend de** : 8. **Fichiers** : `src/sim/systems/economy.ts`, `src/data/shops.ts`.
+**Dépend de** : 8. **Fichiers** : `src/sim/systems/economy/`, `src/data/shops/`.
 **Profil** : 🔧🎨 ⭐⭐.
 **Fini quand** : on a un objectif d'achat en tête après chaque mission.
 

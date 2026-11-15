@@ -150,29 +150,40 @@ Les commits faits avec Claude se terminent par la ligne `Co-Authored-By` demand�
 > Stack : **Phaser 3 + TypeScript + Vite**, **Vitest**, cartes **Tiled**, hébergement **Cloudflare Workers** (+ R2, puis D1 et Durable Objects).
 > Raisons et alternatives : [docs/decisions.md](docs/decisions.md). Si la stack change, mettre à jour cette section **dans la même PR**.
 
+### Développement modulaire (« LEGO ») : à lire avant de coder
+
+Le détail est dans **[docs/architecture.md](docs/architecture.md)** (structure) et **[docs/conventions.md](docs/conventions.md)** (nommage). L'essentiel :
+
+- Un **noyau stable** (`src/sim/core`) : monde, entités, événements, registres, `Rng`, `TUNING`. On le modifie **rarement**, en PR dédiée.
+- Des **briques** qui s'y emboîtent : chaque système est un **dossier** avec `index.ts` (seule porte d'entrée), ses tests et un `README.md`,
+  enregistré par **une ligne** dans `SYSTEMS`. Chaque contenu (véhicule, mission, objet…) est un **fichier de données** + une ligne dans sa liste.
+- Les briques **ne s'importent jamais entre elles** : elles communiquent par **événements** (`world.events`) et lisent l'état par **composants**.
+- **Ajouter, pas modifier** : une nouvelle fonctionnalité ajoute un dossier, une ligne de registre, un événement ou un composant. Si elle oblige à modifier un autre système, s'arrêter et en parler.
+- **Test LEGO** avant chaque PR : retirer la ligne d'enregistrement de la brique ne casse rien, et ses tests passent seuls.
+- Les règles d'import sont **vérifiées automatiquement** (`npm run lint`, `npm run check:cycles`).
+
 ### Les dossiers
 
 ```
 src/
-  sim/          la simulation : TypeScript pur, SANS Phaser, sans navigateur
-    config.ts   toutes les valeurs d'équilibrage (TUNING)
-    rng.ts      le hasard déterministe
-    commands.ts les commandes des joueurs (accélérer, monter, frapper...)
-    world.ts    l'état du monde et le pas de simulation (step)
-    entities/   joueur, véhicules, piétons, police
-    systems/    déplacement, collisions, IA des PNJ, recherche, missions
-    types.ts    les types partagés
-  game/         l'affichage Phaser
-    scenes/     les scènes (Boot, Ville, Interface, Menu)
-    render/     dessine l'état de la simulation (sprites, caméra, effets)
-    input/      clavier, souris, manette, tactile → commandes
-  data/         données du jeu en JSON / TS : missions, dialogues, véhicules
-  net/          (V2) le client réseau de la coop
-worker/         les Workers Cloudflare (jeu, API, et plus tard salons coop en Durable Objects)
+  sim/                 la simulation : TypeScript pur, SANS Phaser, sans navigateur
+    core/              le noyau stable : world, entities, components, events, commands, registry, rng, config (TUNING), step
+    systems/           les briques de règles, un dossier chacune, listées dans systems/index.ts (SYSTEMS)
+      driving/  pedestrians/  traffic/  wanted/  missions/  ...
+  data/                les contenus en données, un dossier par type, chacun avec sa liste (VEHICLES, MISSIONS...)
+    vehicles/  missions/  npcTypes/  props/  barks/  ...
+  game/                l'affichage Phaser
+    scenes/            BootScene, CityScene, HudScene, MenuScene
+    render/            un renderer par type d'entité (vehicleRenderer...)
+    fx/  audio/  hud/  les effets, sons et widgets, qui écoutent les événements
+    input/             clavier, manette, tactile → commandes
+    assets.ts          toutes les clés d'assets (ASSET_KEYS)
+  net/                 (V2) le client réseau de la coop
+worker/                les Workers Cloudflare (jeu, API, et plus tard salons coop en Durable Objects)
 public/
-  maps/         cartes Tiled exportées en JSON
-  assets/       sprites, tuiles, sons (packs CC0, visuels maison ou générés)
-docs/           la documentation du projet
+  maps/                cartes Tiled exportées en JSON
+  assets/              visuels et sons (voir docs/style.md)
+docs/                  la documentation du projet
 ```
 
 ### Les trois couches
@@ -184,11 +195,11 @@ docs/           la documentation du projet
 3. **L'affichage (`src/game/render`, `scenes`)** : lit l'état de la simulation et le dessine. **Il ne décide rien** :
    aucune règle de jeu dans une scène Phaser.
 
-Le sens des dépendances est **unique** : `game → sim`. `sim` n'importe jamais `game`, `net` ni Phaser.
+Le sens des dépendances est **unique** : `game → systems → core`, et `data → core` (types seulement). `sim` n'importe jamais `game`, `net` ni Phaser. Un système n'importe jamais un autre système.
 
 ### La boucle
 
-- La simulation avance à **pas de temps fixe** (par exemple 30 pas par seconde) : `step(world, commands, dt)`.
+- La simulation avance à **pas de temps fixe** (30 pas par seconde) : `step(world, commands)` appelle chaque système de `SYSTEMS` dans l'ordre de `SYSTEM_ORDER`.
 - L'affichage tourne à la vitesse de l'écran et **interpole** entre deux pas.
 - C'est ce qui garantit le même résultat sur toutes les machines, condition de la coop.
 
@@ -196,7 +207,7 @@ Le sens des dépendances est **unique** : `game → sim`. `sim` n'importe jamais
 
 ### Clarté
 
-- **Clair avant malin.** Noms explicites (`playerSpeed`, pas `ps` ; `isGameOver`, pas `flag`).
+- **Clair avant malin.** Noms explicites, selon **[docs/conventions.md](docs/conventions.md)** : code en anglais, commentaires en français, verbes de fonctions à sens fixe (`get`, `find`, `compute`, `try`, `apply`…), glossaire des mots du jeu.
 - Fonctions **courtes**, qui font **une seule chose**. Au-delà de ~50 lignes, se demander s'il faut découper.
 - Fichiers **d'une seule responsabilité**. Au-delà de ~300 lignes, envisager de découper.
 - Pas de code dupliqué : si un bout de code existe déjà, le réutiliser ou l'extraire dans une fonction commune.
@@ -204,15 +215,16 @@ Le sens des dépendances est **unique** : `game → sim`. `sim` n'importe jamais
 
 ### Modularité
 
-- Chaque système du jeu (déplacement, collisions, score, audio, sauvegarde…) dans **son propre module**, avec une interface claire (ce qu'il exporte).
-- Séparer **simulation**, **entrées** et **affichage** (voir l'architecture).
+- Suivre **[docs/architecture.md](docs/architecture.md)** : un module = un dossier, une porte d'entrée (`index.ts`), un `README.md`, des tests autonomes.
+- Séparer **simulation**, **entrées** et **affichage** ; communiquer entre briques par **événements**, jamais par import direct.
+- Pas de `if (id === '...')` dans un système : le comportement propre à un contenu vient de ses données.
 - Une fonction qui peut échouer renvoie `{ ok: true }` ou `{ ok: false, why: '...' }`, et l'interface affiche la raison au joueur.
 
 ### Règles de la simulation (repris de GRINTA)
 
-- **Déterministe** : tout le hasard passe par `Rng` (`src/sim/rng.ts`) avec une graine. **Jamais `Math.random()` dans `src/sim`.** Pas de `Date.now()` non plus : le temps vient du pas de simulation.
+- **Déterministe** : tout le hasard passe par `Rng` (`src/sim/core/rng.ts`) avec une graine. **Jamais `Math.random()` dans `src/sim`.** Pas de `Date.now()` non plus : le temps vient du pas de simulation.
   Même graine + mêmes choix = même partie : c'est ce qui rend les bugs reproductibles et les tests fiables.
-- **Pas de valeurs en dur** : vitesses, dégâts, durées, probabilités… vont dans `src/sim/config.ts` (`TUNING`), avec un commentaire sur leur rôle.
+- **Pas de valeurs en dur** : vitesses, dégâts, durées, probabilités… vont dans `src/sim/core/config.ts` (`TUNING`, groupé par module), avec un commentaire sur leur rôle.
 - **Sauvegardes compatibles** : un nouveau champ de sauvegarde est **optionnel** ou complété par une fonction de migration. Une ancienne partie doit toujours se charger.
 
 ### Style
@@ -243,7 +255,8 @@ Le sens des dépendances est **unique** : `game → sim`. `sim` n'importe jamais
 |---|---|
 | `README.md` | ce qu'est le jeu, installer, lancer en local |
 | `docs/README.md` | le sommaire de la documentation |
-| `docs/architecture.md` | les dossiers, les couches, les grands systèmes |
+| `docs/architecture.md` | **le développement modulaire (LEGO)** : couches, modules, systèmes, composants, événements, registres, recettes |
+| `docs/conventions.md` | **le nommage** : fichiers, fonctions, types, événements, ids, glossaire |
 | `docs/GDD.md` | le game design : concept, boucle de jeu, règles |
 | `docs/decisions.md` | les décisions importantes : date, choix, alternatives, raison |
 | `docs/features.md` | toutes les fonctionnalités par bloc, la répartition, l'avancement (cocher les cases au fil des issues) |
@@ -270,6 +283,8 @@ Liste de contrôle :
 - [ ] Tests et build qui passent ; tests ajoutés pour la nouvelle logique de `src/sim`
 - [ ] Testé en jouant, sur ordinateur et sur mobile si l'interface change
 - [ ] Pas de `Math.random()` ni de Phaser dans `src/sim`, pas de valeur d'équilibrage en dur
+- [ ] Test LEGO réussi (voir `docs/architecture.md`, section 10) et noms conformes à `docs/conventions.md`
+- [ ] `npm run lint` et `npm run check:cycles` passent
 - [ ] Anciennes sauvegardes toujours chargeables
 - [ ] Pas de secret, pas de log de debug, pas de code mort
 - [ ] Doc et changelog à jour
