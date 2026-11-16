@@ -16,7 +16,7 @@ const simPurity = {
   'no-restricted-globals': ['error', { name: 'window', message: 'Pas de navigateur dans src/sim.' }, { name: 'document', message: 'Pas de navigateur dans src/sim.' }],
 }
 
-const noPhaser = { name: 'phaser', message: 'Pas de Phaser dans src/sim ni src/data : la simulation doit tourner dans Node.' }
+const noDisplay = [{ name: 'three', message: 'Pas de three.js dans src/sim ni src/data : la simulation doit tourner dans Node (et sur un serveur pour la coop).' }]
 const coreDeep = { group: ['**/core/*'], message: "Importer le noyau par sa porte d'entrée : '.../core', jamais un fichier interne." }
 
 export default tseslint.config(
@@ -41,7 +41,7 @@ export default tseslint.config(
       'no-restricted-imports': [
         'error',
         {
-          paths: [noPhaser],
+          paths: noDisplay,
           // Tout ce qui sort du dossier du noyau ('../…') est interdit ; ses propres fichiers ('./…') sont permis,
           // quel que soit leur nom (l'ancienne règle, fondée sur les noms, bloquait à tort un fichier './systems').
           patterns: [{ regex: '^\\.\\./', message: "Le noyau n'importe rien d'autre du projet." }],
@@ -58,7 +58,7 @@ export default tseslint.config(
       'no-restricted-imports': [
         'error',
         {
-          paths: [noPhaser],
+          paths: noDisplay,
           patterns: [
             // '../x' (un module voisin) est interdit ; '../../core' (le noyau) est permis.
             { regex: '^\\.\\./[^.]', message: "Un système n'importe jamais un autre système : passer par les événements." },
@@ -75,7 +75,7 @@ export default tseslint.config(
     files: ['src/sim/systems/index.ts'],
     rules: {
       ...simPurity,
-      'no-restricted-imports': ['error', { paths: [noPhaser], patterns: [{ group: ['./*/*'], message: 'Importer un système par son index.ts.' }, coreDeep] }],
+      'no-restricted-imports': ['error', { paths: noDisplay, patterns: [{ group: ['./*/*'], message: 'Importer un système par son index.ts.' }, coreDeep] }],
     },
   },
 
@@ -86,7 +86,7 @@ export default tseslint.config(
       ...simPurity,
       'no-restricted-imports': [
         'error',
-        { paths: [noPhaser], patterns: [{ group: ['**/systems', '**/systems/**', '**/game', '**/game/**'], message: "Les données n'importent que les types du noyau." }, coreDeep] },
+        { paths: noDisplay, patterns: [{ group: ['**/systems', '**/systems/**', '**/game', '**/game/**'], message: "Les données n'importent que les types du noyau." }, coreDeep] },
       ],
     },
   },

@@ -1,8 +1,8 @@
 // Les immeubles de la carte, regroupés en blocs rectangulaires, avec une hauteur.
 // Expose : BuildingBlock, findBuildingBlocks().
-// Pourquoi : pour le relief (essai #26), un immeuble doit être dessiné d'un seul tenant (un toit, quatre façades), et non case par case :
-// sinon on verrait des murs entre deux cases du même immeuble. Ce calcul ne dépend pas de Phaser : il se teste dans Node.
-// La hauteur est provisoire (déduite de la position) : elle viendra des données de la carte quand l'essai sera validé.
+// Pourquoi : un immeuble doit être construit d'un seul tenant (une boîte : un toit, quatre façades), et non case par case :
+// sinon on verrait des murs entre deux cases du même immeuble. Ce calcul ne dépend pas de three.js : il se teste dans Node.
+// La hauteur est provisoire (déduite de la position) : elle viendra des données de la carte (Tiled, #5).
 
 import type { TileMap } from '../../sim/core'
 

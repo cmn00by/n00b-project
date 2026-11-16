@@ -1,6 +1,6 @@
 // La traduction des touches tenues en commande de conduite.
 // Expose : DriveKeys, toDriveCommand().
-// Pourquoi : comme moveCommand.ts, cette partie ne dépend pas de Phaser et se teste dans Node.
+// Pourquoi : comme moveCommand.ts, cette partie ne dépend pas du navigateur et se teste dans Node.
 // Haut : accélérer · Bas : freiner puis reculer · Gauche/Droite : tourner · Espace : frein à main.
 
 import type { Command, EntityId } from '../../sim/core'

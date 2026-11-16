@@ -27,8 +27,13 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 - Un carré jaune se déplace dans la ville : flèches, ZQSD ou WASD pour marcher, Maj pour courir, la caméra le suit (#3)
 - Bible visuelle en Gemini 3 Pro : 7 planches de référence (personnages, animation, portraits, véhicules, sol, bâtiments, scène) et leurs prompts (#4)
 
+### Modifié
+
+- Le jeu s'affiche désormais en pixel art 3D (three.js) : vrais immeubles, vraies ombres, lumière de nuit réelle ; Phaser et l'essai de relief 2.5D sont retirés
+
 ### Technique
 
+- Bascule du moteur d'affichage : le code 3D rejoint `src/game` (`render/`, `input/`), ESLint interdit three.js dans la simulation ; le clavier lit la position physique des touches (#21)
 - Brique `driving` (physique arcade déterministe, cap en vecteur), modèles de véhicules en données, `isSpaceClear` dans le noyau ; la brique `collision` bloque aussi contre les autres entités, coupe la vitesse au choc et annonce `entity:blocked` (#8)
 - Format de carte en données (`MapDef`), carte chargée dans le monde (`world.map`), brique `collision` et tranche `SYSTEM_ORDER.collision` (#6)
 - Règle ESLint du noyau corrigée : elle interdit tout import qui sort du dossier `core` au lieu de se fier aux noms de fichiers

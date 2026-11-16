@@ -1,10 +1,10 @@
-// Le clavier de l'essai 3D : lit les touches par leur POSITION physique (KeyboardEvent.code), pas par leur lettre.
-// Expose : createKeyboard3d(), Keyboard3d.
+// Le clavier : lit les touches par leur POSITION physique (KeyboardEvent.code), pas par leur lettre.
+// Expose : createKeyboard(), Keyboard.
 // Pourquoi : la même rangée de touches déplace le joueur sur tous les claviers (ZQSD en AZERTY, WASD en QWERTY), comme le propose l'issue #21.
-// Il produit les mêmes états de touches que le clavier Phaser : moveCommand.ts et driveCommand.ts les traduisent en commandes.
+// Il produit des états de touches : moveCommand.ts et driveCommand.ts les traduisent en commandes.
 
-import type { DriveKeys } from '../game/input/driveCommand'
-import type { PressedKeys } from '../game/input/moveCommand'
+import type { DriveKeys } from './driveCommand'
+import type { PressedKeys } from './moveCommand'
 
 const CODES = {
   up: ['ArrowUp', 'KeyW'],
@@ -16,7 +16,7 @@ const CODES = {
   interact: ['KeyE', 'Enter', 'NumpadEnter'],
 } as const
 
-export interface Keyboard3d {
+export interface Keyboard {
   readPressedKeys(): PressedKeys
   readDriveKeys(): DriveKeys
   /** Vrai une seule fois par appui sur la touche d'interaction. */
@@ -25,7 +25,7 @@ export interface Keyboard3d {
   onPress(code: string, action: () => void): void
 }
 
-export function createKeyboard3d(target: Window): Keyboard3d {
+export function createKeyboard(target: Window): Keyboard {
   const held = new Set<string>()
   const pressActions = new Map<string, Array<() => void>>()
   let isInteractPending = false

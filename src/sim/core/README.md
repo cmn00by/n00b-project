@@ -26,6 +26,6 @@ Modifier le reste se fait dans une **PR dédiée**, relue par les deux, avec une
 ## Règles (vérifiées par `npm run lint`)
 
 - n'importe **rien** d'autre du projet (ni `systems`, ni `data`, ni `game`) ;
-- pas de Phaser, pas de navigateur, pas de `Math.random()` ni de `Date.now()` ;
+- pas de three.js, pas de navigateur, pas de `Math.random()` ni de `Date.now()` ;
 - `Math.sqrt` plutôt que `Math.hypot`, et pas de `Math.atan2`, `sin` ou `cos` dont la dernière décimale peut changer d'un navigateur à l'autre : le résultat doit être identique partout (coop) ;
 - les autres modules l'importent **uniquement** par `core/index.ts`.

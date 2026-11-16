@@ -1,8 +1,6 @@
 // Toutes les clés d'assets du jeu, déclarées à un seul endroit (docs/conventions.md, section 12).
-// Expose : TILE_TEXTURES, ROOF_TEXTURES, PROP_TEXTURES, tileKey(), roofKey(), propKey(), preloadAssets().
+// Expose : TILE_TEXTURES, ROOF_TEXTURES, PROP_TEXTURES et leurs types. Le chargement est dans render/textures.ts.
 // Les images viennent de public/assets (générées selon docs/style.md, voir docs/registre-visuels.md).
-import type Phaser from 'phaser'
-
 /** Les textures de sol, 32 × 32 px (public/assets/tiles). */
 export const TILE_TEXTURES = [
   'asphalte',
@@ -66,14 +64,3 @@ export const PROP_TEXTURES = [
 export type TileTexture = (typeof TILE_TEXTURES)[number]
 export type RoofTexture = (typeof ROOF_TEXTURES)[number]
 export type PropTexture = (typeof PROP_TEXTURES)[number]
-
-export const tileKey = (name: TileTexture): string => `tile:${name}`
-export const roofKey = (name: RoofTexture): string => `roof:${name}`
-export const propKey = (name: PropTexture): string => `prop:${name}`
-
-/** Charge toutes les images (à appeler dans le preload de la première scène). */
-export function preloadAssets(scene: Phaser.Scene): void {
-  for (const name of TILE_TEXTURES) scene.load.image(tileKey(name), `assets/tiles/${name}.png`)
-  for (const name of ROOF_TEXTURES) scene.load.image(roofKey(name), `assets/roofs/${name}.png`)
-  for (const name of PROP_TEXTURES) scene.load.image(propKey(name), `assets/props/${name}.png`)
-}

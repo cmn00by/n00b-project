@@ -1,129 +1,83 @@
-// L'éclairage de nuit : un voile sombre sur la ville, percé là où il y a de la lumière (lampadaires, phares), et des halos chauds.
-// Expose : createLighting(), Lighting, LightSpot, LightBeam.
-// Pourquoi : pas besoin de vrais calculs de lumière pour une ambiance réussie. On recouvre l'écran d'un voile bleu nuit, et on y découpe
-// des taches de lumière dégradées ; par-dessus, un halo coloré en mode « addition » fait briller les lampes.
-// Le voile passe sous les immeubles : eux s'assombrissent eux-mêmes et allument leurs fenêtres (buildingRelief.ts).
+// La lumière : le soleil et ses ombres nettes, le ciel, puis la nuit avec les lampadaires et les phares.
+// Expose : createLighting(), Lighting.
+// Pourquoi : en vraie 3D, la lumière éclaire vraiment les façades et le sol, et les immeubles projettent leur ombre selon le soleil.
+// Les ombres sont « dures » (sans flou), comme en pixel art. Pour rester rapide, seuls les lampadaires les plus proches du joueur
+// deviennent de vraies lumières ; les autres ne gardent que leur halo.
 
-import Phaser from 'phaser'
-import { HEADLIGHT_LENGTH_PX, HEADLIGHT_WIDTH_PX, LAMP_GLOW_COLOR, NIGHT_SHADE_ALPHA, NIGHT_SHADE_COLOR } from '../constants'
-
-/** Une lumière ronde (un lampadaire), centrée sur (x, y). */
-export interface LightSpot {
-  x: number
-  y: number
-  radius: number
-}
-
-/** Un faisceau (les phares d'une voiture) qui part de (x, y) dans la direction (directionX, directionY). */
-export interface LightBeam {
-  x: number
-  y: number
-  directionX: number
-  directionY: number
-}
+import * as THREE from 'three'
+import type { LampPost } from './decor'
 
 export interface Lighting {
-  /** À appeler à chaque image. `night` va de 0 (jour : rien n'est dessiné) à 1 (pleine nuit). */
-  update(view: Phaser.Geom.Rectangle, night: number, spots: readonly LightSpot[], beams: readonly LightBeam[]): void
+  /** `focus` : là où regarde la caméra (coordonnées de la simulation). `headlight` : l'avant de la voiture conduite et son cap, s'il y en a une. */
+  update(focus: { x: number; y: number }, night: number, lamps: readonly LampPost[], headlight: { x: number; y: number; headingX: number; headingY: number } | undefined): void
 }
 
-/** Profondeurs : le voile au-dessus du joueur, des voitures et de la déco haute ; les halos juste au-dessus ; les immeubles (15) au-dessus. */
-const SHADE_DEPTH = 14
-const GLOW_DEPTH = 14.5
-const TEXTURE_SIZE = 128
-const SPOT_KEY = 'light:spot'
-const BEAM_KEY = 'light:beam'
+/** Réglages de lumière. Les intensités suivent les unités de three.js (le Lambert divise par π : d'où des valeurs autour de 3). */
+const DAY = { sun: 2.9, sky: 1.7, background: 0x9fd8ef, sunColor: 0xfff1d6, skyColor: 0xfff8ec, groundColor: 0x6a6a8a }
+const NIGHT = { sun: 0.35, sky: 0.55, background: 0x0c0a24, sunColor: 0x8fa2ff, skyColor: 0x5a6aa8, groundColor: 0x1a1830 }
+/** Le soleil vient du nord-ouest, en hauteur (en haut à gauche de l'écran, comme dans docs/style.md). */
+const SUN_OFFSET = new THREE.Vector3(-260, 520, -220)
+const SHADOW_HALF_SIZE = 520
+const LAMP_LIGHTS = 10
+const LAMP = { intensity: 7, distance: 130, color: 0xffc870 }
+const HEADLIGHT = { intensity: 14, distance: 280, angle: 0.5, penumbra: 0.55, color: 0xfff1c8 }
 
-/** Crée une fois les deux formes de lumière : une tache ronde et un faisceau en cône, dégradées du centre vers le bord. */
-function createLightTextures(scene: Phaser.Scene) {
-  if (!scene.textures.exists(SPOT_KEY)) {
-    const spot = scene.textures.createCanvas(SPOT_KEY, TEXTURE_SIZE, TEXTURE_SIZE)
-    const context = spot?.getContext()
-    if (spot && context) {
-      const gradient = context.createRadialGradient(64, 64, 0, 64, 64, 64)
-      gradient.addColorStop(0, 'rgba(255,255,255,1)')
-      gradient.addColorStop(0.45, 'rgba(255,255,255,0.75)')
-      gradient.addColorStop(1, 'rgba(255,255,255,0)')
-      context.fillStyle = gradient
-      context.fillRect(0, 0, TEXTURE_SIZE, TEXTURE_SIZE)
-      spot.refresh()
-    }
-  }
-  if (!scene.textures.exists(BEAM_KEY)) {
-    const beam = scene.textures.createCanvas(BEAM_KEY, TEXTURE_SIZE, TEXTURE_SIZE)
-    const context = beam?.getContext()
-    if (beam && context) {
-      // Un cône qui part du bas (les phares) et s'ouvre vers le haut, de plus en plus faible.
-      const gradient = context.createLinearGradient(0, TEXTURE_SIZE, 0, 0)
-      gradient.addColorStop(0, 'rgba(255,255,255,0.95)')
-      gradient.addColorStop(1, 'rgba(255,255,255,0)')
-      context.fillStyle = gradient
-      context.beginPath()
-      context.moveTo(54, TEXTURE_SIZE)
-      context.lineTo(74, TEXTURE_SIZE)
-      context.lineTo(TEXTURE_SIZE, 0)
-      context.lineTo(0, 0)
-      context.closePath()
-      context.fill()
-      beam.refresh()
-    }
-  }
-}
+export function createLighting(scene: THREE.Scene, renderer: THREE.WebGLRenderer): Lighting {
+  renderer.shadowMap.enabled = true
+  renderer.shadowMap.type = THREE.BasicShadowMap // ombres dures, pixelisées
 
-export function createLighting(scene: Phaser.Scene): Lighting {
-  createLightTextures(scene)
-  const shade = scene.add.renderTexture(0, 0, 16, 16).setOrigin(0).setDepth(SHADE_DEPTH)
-  const spotStamp = scene.make.image({ x: 0, y: 0, key: SPOT_KEY, add: false }).setOrigin(0.5)
-  const beamStamp = scene.make.image({ x: 0, y: 0, key: BEAM_KEY, add: false }).setOrigin(0.5, 1)
-  // Les halos : une réserve d'images réutilisées d'une image à l'autre.
-  const glows: Phaser.GameObjects.Image[] = []
-  const glowAt = (index: number): Phaser.GameObjects.Image => {
-    let glow = glows[index]
-    if (glow === undefined) {
-      glow = scene.add.image(0, 0, SPOT_KEY).setDepth(GLOW_DEPTH).setBlendMode(Phaser.BlendModes.ADD).setTint(LAMP_GLOW_COLOR)
-      glows.push(glow)
-    }
-    return glow
-  }
+  const sky = new THREE.HemisphereLight(DAY.skyColor, DAY.groundColor, DAY.sky)
+  scene.add(sky)
+  const sun = new THREE.DirectionalLight(DAY.sunColor, DAY.sun)
+  sun.castShadow = true
+  sun.shadow.mapSize.set(2048, 2048)
+  const shadowCamera = sun.shadow.camera
+  shadowCamera.left = -SHADOW_HALF_SIZE
+  shadowCamera.right = SHADOW_HALF_SIZE
+  shadowCamera.top = SHADOW_HALF_SIZE
+  shadowCamera.bottom = -SHADOW_HALF_SIZE
+  shadowCamera.near = 10
+  shadowCamera.far = 2000
+  sun.shadow.bias = -0.0015
+  scene.add(sun, sun.target)
+
+  // Une réserve fixe de lumières (jamais ajoutées ni retirées en cours de jeu : three.js recompilerait ses shaders).
+  const lampLights = Array.from({ length: LAMP_LIGHTS }, () => {
+    const light = new THREE.PointLight(LAMP.color, 0, LAMP.distance, 0)
+    scene.add(light)
+    return light
+  })
+  const headlight = new THREE.SpotLight(HEADLIGHT.color, 0, HEADLIGHT.distance, HEADLIGHT.angle, HEADLIGHT.penumbra, 0)
+  scene.add(headlight, headlight.target)
+
+  const background = new THREE.Color()
+  const mixColors = (day: number, nightColor: number, t: number) => new THREE.Color(day).lerp(new THREE.Color(nightColor), t)
 
   return {
-    update(view, night, spots, beams) {
-      const isNight = night > 0.01
-      shade.setVisible(isNight)
-      if (!isNight) {
-        for (const glow of glows) glow.setVisible(false)
-        return
-      }
+    update(focus, night, lamps, car) {
+      // Le soleil suit la caméra : ses ombres restent précises là où on regarde.
+      sun.position.set(focus.x + SUN_OFFSET.x, SUN_OFFSET.y, focus.y + SUN_OFFSET.z)
+      sun.target.position.set(focus.x, 0, focus.y)
+      sun.intensity = DAY.sun + (NIGHT.sun - DAY.sun) * night
+      sun.color.copy(mixColors(DAY.sunColor, NIGHT.sunColor, night))
+      sky.intensity = DAY.sky + (NIGHT.sky - DAY.sky) * night
+      sky.color.copy(mixColors(DAY.skyColor, NIGHT.skyColor, night))
+      sky.groundColor.copy(mixColors(DAY.groundColor, NIGHT.groundColor, night))
+      background.copy(mixColors(DAY.background, NIGHT.background, night))
+      scene.background = background
 
-      // Le voile couvre exactement ce que voit la caméra (plus une marge, pour les arrondis).
-      const width = Math.ceil(view.width) + 4
-      const height = Math.ceil(view.height) + 4
-      if (shade.width !== width || shade.height !== height) shade.resize(width, height)
-      shade.setPosition(Math.floor(view.x) - 2, Math.floor(view.y) - 2)
-      shade.clear()
-      shade.fill(NIGHT_SHADE_COLOR, NIGHT_SHADE_ALPHA * night)
+      // Les lampadaires les plus proches deviennent de vraies lumières.
+      const nearest = [...lamps].sort((first, second) => (first.x - focus.x) ** 2 + (first.y - focus.y) ** 2 - ((second.x - focus.x) ** 2 + (second.y - focus.y) ** 2))
+      lampLights.forEach((light, index) => {
+        const lamp = nearest[index]
+        light.intensity = lamp === undefined ? 0 : LAMP.intensity * night
+        if (lamp !== undefined) light.position.set(lamp.x, lamp.lampHeight, lamp.y)
+      })
 
-      const isVisible = (x: number, y: number, margin: number) => x > view.x - margin && x < view.right + margin && y > view.y - margin && y < view.bottom + margin
-      let glowCount = 0
-      for (const spot of spots) {
-        if (!isVisible(spot.x, spot.y, spot.radius)) continue
-        spotStamp.setScale((spot.radius * 2) / TEXTURE_SIZE)
-        shade.erase(spotStamp, spot.x - shade.x, spot.y - shade.y)
-        const glow = glowAt(glowCount++)
-        glow
-          .setVisible(true)
-          .setPosition(spot.x, spot.y)
-          .setScale((spot.radius * 1.1) / TEXTURE_SIZE)
-          .setAlpha(0.45 * night)
-      }
-      for (let index = glowCount; index < glows.length; index++) glows[index]?.setVisible(false)
-
-      for (const beam of beams) {
-        if (!isVisible(beam.x, beam.y, HEADLIGHT_LENGTH_PX)) continue
-        beamStamp.setScale(HEADLIGHT_WIDTH_PX / TEXTURE_SIZE, HEADLIGHT_LENGTH_PX / TEXTURE_SIZE)
-        // L'angle n'est calculé que pour l'affichage : faisceau vers le haut = angle 0.
-        beamStamp.setRotation(Math.atan2(beam.directionX, -beam.directionY))
-        shade.erase(beamStamp, beam.x - shade.x, beam.y - shade.y)
+      headlight.intensity = car === undefined ? 0 : HEADLIGHT.intensity * night
+      if (car !== undefined) {
+        headlight.position.set(car.x, 12, car.y)
+        headlight.target.position.set(car.x + car.headingX * 160, 0, car.y + car.headingY * 160)
       }
     },
   }

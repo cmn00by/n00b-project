@@ -136,7 +136,7 @@ palette commune, blocs de prompt figés, tailles par catégorie, planches de ré
 
 ## 8. Ce qu'on ne fait PAS (pour finir le projet)
 
-- Pas de 3D.
+- Pas de 3D réaliste : de la 3D simple, dessinée en basse résolution, pour un rendu pixel art (voir `decisions.md`).
 - Pas de grande histoire scénarisée en V1.
 - Pas de ville immense : mieux vaut 4 quartiers vivants que 20 quartiers vides.
 - Pas de violence réaliste ni de contenu choquant : le ton reste **cartoon et comique**.

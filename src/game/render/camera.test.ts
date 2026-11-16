@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { snapToPixelGrid } from './camera3d'
+import { snapToPixelGrid } from './camera'
 
 describe('snapToPixelGrid', () => {
   it('arrondit au multiple de la taille d’un pixel', () => {

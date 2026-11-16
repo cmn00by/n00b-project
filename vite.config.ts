@@ -4,13 +4,11 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   build: {
     target: 'es2022',
-    // Phaser seul pèse ~1,2 Mo (320 ko compressé) : c'est attendu, inutile d'avertir.
-    chunkSizeWarningLimit: 1300,
-    // Phaser est gros : on le met dans son propre fichier pour que le cache du navigateur le garde entre deux versions du jeu.
+    // three.js seul pèse ~560 ko (140 ko compressé) : c'est attendu, inutile d'avertir.
+    chunkSizeWarningLimit: 700,
     rollupOptions: {
-      // Deux pages : le jeu (Phaser) et l'essai 3D (three.js), pour comparer.
-      input: { main: 'index.html', three: 'three.html' },
-      output: { manualChunks: (id) => (id.includes('node_modules/phaser') ? 'phaser' : undefined) },
+      // three.js est gros : on le met dans son propre fichier pour que le cache du navigateur le garde entre deux versions du jeu.
+      output: { manualChunks: (id) => (id.includes('node_modules/three') ? 'three' : undefined) },
     },
   },
 })

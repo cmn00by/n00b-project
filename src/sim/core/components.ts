@@ -2,7 +2,7 @@
 // Expose : EntityId, EntityKind, les types de composants, Components, ComponentName, Entity.
 // Pourquoi : une entité (joueur, voiture, poubelle…) n'est qu'un identifiant et des composants. Pour qu'un objet
 // se comporte d'une façon, on lui ajoute le composant voulu : le système concerné s'en occupe sans une ligne de code en plus.
-// Règle : un composant contient des données simples (nombres, textes, ids), jamais de fonction ni d'objet Phaser,
+// Règle : un composant contient des données simples (nombres, textes, ids), jamais de fonction ni d'objet d'affichage (three.js),
 // pour que l'état complet se sauvegarde et s'envoie sur le réseau tel quel. Ajouter un type de composant est un ajout permis.
 
 /** L'identifiant d'une entité. Une entité en référence une autre par son id, jamais par un pointeur. */

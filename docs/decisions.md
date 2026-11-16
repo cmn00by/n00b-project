@@ -5,7 +5,23 @@ Une nouvelle décision s'ajoute **en haut**. Une décision remise en cause n'est
 
 ---
 
-## 2026-11-16 : Essai d'affichage en 3D pixel art (three.js) — en cours
+## 2026-11-16 : three.js devient le moteur d'affichage (remplace Phaser)
+
+**Choix** (cmn00by, après comparaison des deux versions) : l'affichage du jeu passe à **three.js** : la ville en vraie 3D, **dessinée en basse résolution puis agrandie** sans lissage,
+pour un rendu pixel art cohérent. Phaser est retiré, avec l'essai de relief 2.5D (#26, abandonné).
+
+**Ce qui ne change pas** : toute la simulation (noyau, marche, conduite, collisions), les données (carte, véhicules), les règles d'affichage pures
+(sol, immeubles, déco, fenêtres) et les textures générées.
+
+**Personnages et véhicules** : en **voxel** (blocs assemblés par le code) pour l'instant, comme dans l'essai : variété et animation sans dessin image par image.
+À confirmer à deux.
+
+**Raison** : le relief en Phaser abîmait le pixel art (toits ré-agrandis, tailles non entières, rotations) ; en 3D basse résolution, tout partage la même grille de pixels,
+et ombres et lumières sont réelles. La séparation simulation / affichage a permis de changer de moteur sans toucher aux règles du jeu.
+
+**Remplace** : « Stack technique » (Phaser 3) et l'essai « rendu 2.5D des immeubles ».
+
+## 2026-11-16 : Essai d'affichage en 3D pixel art (three.js) — retenu
 
 **Constat** : l'essai de relief en Phaser (#26, #29) se bat contre le pixel art : les toits sont ré-agrandis en continu, la déco est affichée à des tailles non entières, le feuillage tourne : des pixels inégaux qui scintillent.
 
@@ -28,7 +44,7 @@ Une nouvelle décision s'ajoute **en haut**. Une décision remise en cause n'est
 
 **Alternatives écartées** : éclairage par normal maps (il faudrait une carte de relief par image) ; un shader d'eau maison (deux couches qui glissent suffisent pour l'effet, et marchent partout).
 
-## 2026-11-16 : Essai de rendu 2.5D des immeubles (#26) — en cours
+## 2026-11-16 : Essai de rendu 2.5D des immeubles (#26) — abandonné (remplacé par three.js)
 
 **Essai** : sans changer la simulation (qui reste en 2D), l'affichage donne du volume aux immeubles. Les cases de bâtiment sont regroupées en blocs ; chaque bloc a une hauteur ;
 son toit est dessiné décalé vers l'extérieur de l'écran (`projectRaised`), et ses façades tournées vers la caméra relient le sol au toit. Les ombres portées sont dessinées au sol.
@@ -117,7 +133,7 @@ Grille de base proposée : **32 × 32 px** (à confirmer dans l'issue #4).
 **Raison** : l'équipe maîtrise déjà cette chaîne sur GRINTA. La cohérence est garantie par des blocs de prompt figés et des images de référence jointes à chaque génération.
 Les tuiles de route et les animations demanderont des retouches à la main (Aseprite ou Piskel).
 
-## 2026-11-15 : Stack technique (proposition, à valider)
+## 2026-11-15 : Stack technique (Phaser remplacé par three.js le 2026-11-16)
 
 **Choix**
 

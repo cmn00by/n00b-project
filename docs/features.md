@@ -63,7 +63,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 
 **V0**
 
-- [x] Projet Vite + TypeScript + Phaser 3, `npm run dev` affiche une scène vide (#2)
+- [x] Projet Vite + TypeScript (Phaser 3 au départ, remplacé par three.js), `npm run dev` affiche une scène (#2)
 - [x] Vitest configuré, un premier test qui passe (#2)
 - [x] Prettier configuré (style du `CLAUDE.md`) (#2)
 - [x] Structure des dossiers selon `docs/architecture.md` (#2)

@@ -1,16 +1,16 @@
-// Le joueur et les voitures de l'essai 3D, en style voxel : de petits blocs assemblés par le code.
-// Expose : createActors3d(), Actors3d.
-// Pourquoi : pas encore de visuels de personnages ni de voitures en 3D ; des blocs aux couleurs du jeu suffisent pour juger le rendu,
-// et c'est l'approche « voxel » proposée pour les personnages. Ils lisent l'état du monde, ne le modifient jamais, et sont dessinés
-// entre deux pas de simulation (interpolation), comme dans la version Phaser.
+// Le joueur et les voitures, en style voxel : de petits blocs assemblés par le code.
+// Expose : createActors(), Actors.
+// Pourquoi : des blocs aux couleurs du jeu, assemblés par le code : variété et animation sans dessin image par image
+// (l'approche « voxel » retenue pour l'instant pour les personnages et les véhicules, voir docs/decisions.md). Ils lisent l'état du monde, ne le modifient jamais, et sont dessinés
+// entre deux pas de simulation (interpolation), pour un mouvement fluide à toutes les fréquences d'écran.
 
 import * as THREE from 'three'
-import { findEntitiesWith } from '../sim/core'
-import type { EntityId, World } from '../sim/core'
-import { VEHICLE_REGISTRY } from '../data/vehicles'
-import { MISSING_VEHICLE_COLOR, VEHICLE_COLORS } from '../game/constants'
+import { findEntitiesWith } from '../../sim/core'
+import type { EntityId, World } from '../../sim/core'
+import { VEHICLE_REGISTRY } from '../../data/vehicles'
+import { MISSING_VEHICLE_COLOR, VEHICLE_COLORS } from '../constants'
 
-export interface Actors3d {
+export interface Actors {
   /** À appeler juste avant chaque pas de simulation : retient l'état d'avant le pas. */
   rememberStates(world: World): void
   /** À appeler à chaque image. */
@@ -105,7 +105,7 @@ function createCarModel(modelId: string): THREE.Group {
 /** L'angle (autour de la verticale) qui tourne l'avant d'un modèle (-z) vers le cap (headingX, headingY) de la simulation. */
 const yawOf = (headingX: number, headingY: number) => Math.atan2(-headingX, -headingY)
 
-export function createActors3d(scene: THREE.Scene): Actors3d {
+export function createActors(scene: THREE.Scene): Actors {
   const previous = new Map<EntityId, Snapshot>()
   const displayed = new Map<EntityId, { x: number; y: number }>()
   const cars = new Map<EntityId, THREE.Group>()
