@@ -2,7 +2,7 @@
 // Expose : EntityId, EntityKind, les types de composants, Components, ComponentName, Entity.
 // Pourquoi : une entité (joueur, voiture, poubelle…) n'est qu'un identifiant et des composants. Pour qu'un objet
 // se comporte d'une façon, on lui ajoute le composant voulu : le système concerné s'en occupe sans une ligne de code en plus.
-// Règle : un composant contient des données simples (nombres, textes, ids), jamais de fonction ni d'objet Phaser,
+// Règle : un composant contient des données simples (nombres, textes, ids), jamais de fonction ni d'objet d'affichage (three.js),
 // pour que l'état complet se sauvegarde et s'envoie sur le réseau tel quel. Ajouter un type de composant est un ajout permis.
 
 /** L'identifiant d'une entité. Une entité en référence une autre par son id, jamais par un pointeur. */
@@ -35,6 +35,22 @@ export interface Body {
 export interface LastFreePosition {
   x: number
   y: number
+}
+
+/** Un véhicule : son modèle (id de src/data/vehicles), vers où pointe son nez, et qui le conduit.
+ * Le cap est un vecteur de longueur 1 (et non un angle) : on le fait tourner avec de simples multiplications et une racine carrée,
+ * dont le résultat est identique sur toutes les machines (condition de la coop), alors que sin/cos peuvent différer à la dernière décimale. */
+export interface Vehicle {
+  modelId: string
+  headingX: number // le nez pointe vers (headingX, headingY) ; (0, -1) = vers le haut
+  headingY: number
+  driverId?: EntityId // l'entité au volant, s'il y en a une
+}
+
+/** Une entité qui conduit un véhicule. Son corps est mis de côté pendant la conduite (elle est dans la voiture) et lui est rendu à la sortie. */
+export interface Driver {
+  vehicleId: EntityId
+  storedBody: Body
 }
 
 /** La clé d'affichage de l'entité : lue par l'affichage uniquement (voir src/game/assets.ts). */
@@ -71,6 +87,8 @@ export interface Components {
   sprite?: Sprite
   lastFreePosition?: LastFreePosition
   pedestrian?: Pedestrian
+  vehicle?: Vehicle
+  driver?: Driver
 }
 
 /** Le nom d'un composant. */

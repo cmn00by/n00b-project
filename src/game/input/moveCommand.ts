@@ -1,6 +1,6 @@
 // La traduction des touches tenues en commande de déplacement.
 // Expose : PressedKeys, toMoveCommand().
-// Pourquoi : cette partie ne dépend pas de Phaser, donc elle se teste dans Node. Clavier, manette ou tactile
+// Pourquoi : cette partie ne dépend pas du navigateur, donc elle se teste dans Node. Clavier, manette ou tactile
 // finiront tous par produire la même commande 'player:move' : la simulation ne sait pas d'où elle vient.
 
 import type { Command, EntityId } from '../../sim/core'

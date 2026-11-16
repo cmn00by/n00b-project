@@ -1,9 +1,9 @@
 // La carte : la grille de cases de la ville, et ce qui bloque le passage.
-// Expose : TileKindDef, TileCoords, MapDef, TileMap, validateMapDef(), createTileMap(), isSolidTile(), isAreaFree(), getTileCenter().
+// Expose : TileKindDef, TileCoords, Facing, VehicleSpawn, MapDef, TileMap, validateMapDef(), createTileMap(), isSolidTile(), isAreaFree(), getTileCenter(), facingToHeading().
 // (Ranger la carte dans le monde : loadMap(), dans world.ts.)
 // Pourquoi : la carte est décrite en données (src/data/maps), sous forme de lignes de caractères faciles à lire et à modifier.
 // Le noyau la transforme en une grille simple (des tableaux de textes et de booléens) rangée dans le monde : elle se sauvegarde
-// et s'envoie sur le réseau telle quelle, et n'importe quelle brique peut savoir si un endroit est libre, sans connaître Phaser.
+// et s'envoie sur le réseau telle quelle, et n'importe quelle brique peut savoir si un endroit est libre, sans connaître l'affichage.
 // Plus tard, un chargeur de cartes Tiled produira la même TileMap : rien d'autre ne changera.
 
 import type { ContentDef, Registry } from './registry'
@@ -19,6 +19,15 @@ export interface TileCoords {
   tileY: number
 }
 
+/** Un sens, pour orienter un véhicule posé sur la carte. */
+export type Facing = 'up' | 'down' | 'left' | 'right'
+
+/** Un véhicule garé au départ : sa case, son modèle (id de src/data/vehicles) et le sens de son nez. */
+export interface VehicleSpawn extends TileCoords {
+  modelId: string
+  facing: Facing
+}
+
 /** Une carte décrite en données. */
 export interface MapDef extends ContentDef {
   /** Le nom affiché (en français). */
@@ -30,7 +39,7 @@ export interface MapDef extends ContentDef {
   /** Ce que veut dire chaque caractère : l'id d'un type de case. */
   legend: Readonly<Record<string, string>>
   /** Les points d'apparition, en cases. */
-  spawns: { player: TileCoords }
+  spawns: { player: TileCoords; vehicles?: readonly VehicleSpawn[] }
 }
 
 /** La carte chargée dans le monde : une grille lue ligne par ligne (index = tileY * width + tileX). */
@@ -76,6 +85,12 @@ export function validateMapDef(def: MapDef, tileKinds: Registry<TileKindDef>): s
   } else {
     const kind = tileKinds.find(def.legend[spawnRow[tileX] ?? ''] ?? '')
     if (kind?.isSolid) errors.push(`apparition du joueur (${tileX}, ${tileY}) sur une case qui bloque le passage`)
+  }
+
+  for (const spawn of def.spawns.vehicles ?? []) {
+    const row = def.rows[spawn.tileY]
+    if (row === undefined || spawn.tileX < 0 || spawn.tileX >= width) errors.push(`véhicule '${spawn.modelId}' (${spawn.tileX}, ${spawn.tileY}) hors de la carte`)
+    else if (tileKinds.find(def.legend[row[spawn.tileX] ?? ''] ?? '')?.isSolid) errors.push(`véhicule '${spawn.modelId}' (${spawn.tileX}, ${spawn.tileY}) sur une case qui bloque le passage`)
   }
 
   return errors
@@ -124,4 +139,12 @@ export function isAreaFree(map: TileMap, centerX: number, centerY: number, width
 /** Le centre d'une case, en pixels. */
 export function getTileCenter(map: TileMap, coords: TileCoords): { x: number; y: number } {
   return { x: (coords.tileX + 0.5) * map.tileSize, y: (coords.tileY + 0.5) * map.tileSize }
+}
+
+/** Le cap (vecteur de longueur 1) qui correspond à un sens. */
+export function facingToHeading(facing: Facing): { x: number; y: number } {
+  if (facing === 'up') return { x: 0, y: -1 }
+  if (facing === 'down') return { x: 0, y: 1 }
+  if (facing === 'left') return { x: -1, y: 0 }
+  return { x: 1, y: 0 }
 }

@@ -1,6 +1,6 @@
 # n00b-project : consignes pour Claude
 
-Mini monde ouvert parodique en 2D (navigateur), développé **à deux** : `cmn00by` (propriétaire du repo, relit et merge) et `Baghorror12` (contributeur).
+Mini monde ouvert parodique en pixel art 3D (navigateur), développé **à deux** : `cmn00by` (propriétaire du repo, relit et merge) et `Baghorror12` (contributeur).
 Ce fichier est lu automatiquement par Claude Code. Ses règles valent pour **les deux développeurs et leurs assistants IA**.
 En cas de doute : **demander, ne pas deviner.**
 
@@ -161,8 +161,8 @@ Les commits faits avec Claude se terminent par la ligne `Co-Authored-By` demand�
 
 ## 4. Architecture
 
-> Le jeu : un **mini monde ouvert parodique en vue de dessus, en 2D pixel art** (voir [docs/GDD.md](docs/GDD.md)).
-> Stack : **Phaser 3 + TypeScript + Vite**, **Vitest**, cartes **Tiled**, hébergement **Cloudflare Workers** (+ R2, puis D1 et Durable Objects).
+> Le jeu : un **mini monde ouvert parodique vu de haut, en pixel art 3D** (voir [docs/GDD.md](docs/GDD.md)).
+> Stack : **three.js + TypeScript + Vite** (3D dessinée en basse résolution puis agrandie), **Vitest**, cartes **Tiled**, hébergement **Cloudflare Workers** (+ R2, puis D1 et Durable Objects).
 > Raisons et alternatives : [docs/decisions.md](docs/decisions.md). Si la stack change, mettre à jour cette section **dans la même PR**.
 
 ### Développement modulaire (« LEGO ») : à lire avant de coder
@@ -181,18 +181,19 @@ Le détail est dans **[docs/architecture.md](docs/architecture.md)** (structure)
 
 ```
 src/
-  sim/                 la simulation : TypeScript pur, SANS Phaser, sans navigateur
+  sim/                 la simulation : TypeScript pur, SANS three.js, sans navigateur
     core/              le noyau stable : world, entities, components, events, commands, registry, rng, config (TUNING), step
     systems/           les briques de règles, un dossier chacune, listées dans systems/index.ts (SYSTEMS)
       driving/  pedestrians/  traffic/  wanted/  missions/  ...
   data/                les contenus en données, un dossier par type, chacun avec sa liste (VEHICLES, MISSIONS...)
     vehicles/  missions/  npcTypes/  props/  barks/  ...
-  game/                l'affichage Phaser
-    scenes/            BootScene, CityScene, HudScene, MenuScene
-    render/            un renderer par type d'entité (vehicleRenderer...)
-    fx/  audio/  hud/  les effets, sons et widgets, qui écoutent les événements
+  main.ts              le point d'entrée : simulation + affichage + boucle de jeu
+  game/                l'affichage three.js
+    render/            un module par sujet : ground, buildings, decor, actors, lighting, camera, textures (+ leurs règles pures testées)
+    decor/             où poser la déco et à quelle taille
+    fx/  audio/  hud/  les effets, sons et l'interface (HUD en HTML/CSS), qui écoutent les événements
     input/             clavier, manette, tactile → commandes
-    assets.ts          toutes les clés d'assets (ASSET_KEYS)
+    assets.ts          la liste de toutes les textures
   net/                 (V2) le client réseau de la coop
 worker/                les Workers Cloudflare (jeu, API, et plus tard salons coop en Durable Objects)
 public/
@@ -203,14 +204,14 @@ docs/                  la documentation du projet
 
 ### Les trois couches
 
-1. **La simulation (`src/sim`)** : c'est le jeu (règles, état, IA). Elle ne connaît **ni Phaser ni le navigateur**,
+1. **La simulation (`src/sim`)** : c'est le jeu (règles, état, IA). Elle ne connaît **ni three.js ni le navigateur**,
    pour être testée dans Node et, plus tard, tourner sur un serveur (Durable Object) pour la coop.
 2. **Les entrées (`src/game/input`)** : transforment clavier, souris, manette ou tactile en **commandes**.
    La simulation ne lit jamais le clavier directement.
-3. **L'affichage (`src/game/render`, `scenes`)** : lit l'état de la simulation et le dessine. **Il ne décide rien** :
-   aucune règle de jeu dans une scène Phaser.
+3. **L'affichage (`src/game/render`)** : lit l'état de la simulation et le dessine en 3D. **Il ne décide rien** :
+   aucune règle de jeu dans un module d'affichage.
 
-Le sens des dépendances est **unique** : `game → systems → core`, et `data → core` (types seulement). `sim` n'importe jamais `game`, `net` ni Phaser. Un système n'importe jamais un autre système.
+Le sens des dépendances est **unique** : `game → systems → core`, et `data → core` (types seulement). `sim` n'importe jamais `game`, `net` ni three.js. Un système n'importe jamais un autre système.
 
 ### La boucle
 
@@ -247,7 +248,8 @@ Le sens des dépendances est **unique** : `game → systems → core`, et `data 
 - TypeScript **strict**, pas de `any` (sauf exception justifiée en commentaire).
 - Formatage : Prettier, pas de point-virgule, guillemets simples, lignes de 200 caractères max.
   `npx prettier --no-semi --single-quote --print-width 200 --write <fichier>`
-- Phaser : une scène = un rôle. Les clés d'assets sont déclarées à un seul endroit (pas de chaînes `'car_red'` éparpillées). Les sprites ne portent pas de logique de jeu.
+- three.js : un module d'affichage par sujet (`create<Nom>()`), les règles pures à part et testées ; textures listées à un seul endroit (`src/game/assets.ts`) et toujours « pixel net » (`pixelTexture()`) ;
+  une réserve fixe de lumières (jamais en ajouter ou en retirer en jeu). Les objets affichés ne portent aucune logique de jeu. Détails : `docs/conventions.md`, section 12.
 - Contenus (missions, dialogues, véhicules) **en données** dans `src/data/`, pas en code : on doit pouvoir écrire une mission sans toucher à la simulation.
 - Respecter le style du code existant, même s'il diffère de ses habitudes.
 
@@ -299,7 +301,7 @@ Liste de contrôle :
 - [ ] Branche à jour avec `main`, sans conflit
 - [ ] Tests et build qui passent ; tests ajoutés pour la nouvelle logique de `src/sim`
 - [ ] Testé en jouant, sur ordinateur et sur mobile si l'interface change
-- [ ] Pas de `Math.random()` ni de Phaser dans `src/sim`, pas de valeur d'équilibrage en dur
+- [ ] Pas de `Math.random()` ni de three.js dans `src/sim`, pas de valeur d'équilibrage en dur
 - [ ] Test LEGO réussi (voir `docs/architecture.md`, section 10) et noms conformes à `docs/conventions.md`
 - [ ] `npm run lint` et `npm run check:cycles` passent
 - [ ] Anciennes sauvegardes toujours chargeables

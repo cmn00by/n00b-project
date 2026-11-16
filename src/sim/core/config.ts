@@ -35,4 +35,11 @@ export const TUNING = {
     spawnTries: 24, // nombre d'endroits tirés au hasard pour faire naître un piéton avant de laisser tomber (jusqu'à la prochaine tentative)
     walkableTileKinds: ['sidewalk'], // les types de case sur lesquels les piétons marchent (ids de src/data/tileKinds)
   },
+  driving: {
+    enterDistance: 48, // distance maximale entre le joueur et le centre d'un véhicule pour y monter, en px
+    exitGap: 4, // espace laissé entre le flanc du véhicule et le joueur qui en descend, en px
+    fullTurnSpeed: 80, // vitesse à partir de laquelle le volant tourne à fond, en px par seconde (on ne tourne pas à l'arrêt)
+    rollingDrag: 90, // ralentissement quand on n'accélère pas, en px par seconde²
+    handbrakeDrag: 160, // ralentissement supplémentaire au frein à main, en px par seconde²
+  },
 }

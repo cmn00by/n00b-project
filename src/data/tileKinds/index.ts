@@ -8,6 +8,11 @@ export const TILE_KINDS: TileKindDef[] = [
   { id: 'sidewalk', isSolid: false }, // trottoir et ruelles
   { id: 'grass', isSolid: false }, // herbe des parcs
   { id: 'building', isSolid: true }, // bâtiment : on ne traverse pas les murs
+  { id: 'plaza', isSolid: false }, // place pavée
+  { id: 'water', isSolid: true }, // mer et étang : ni à pied, ni en voiture
+  { id: 'sand', isSolid: false }, // plage
+  { id: 'dock', isSolid: false }, // pontons du port
+  { id: 'parking', isSolid: false }, // places de parking
 ]
 
 export const TILE_KIND_REGISTRY = createRegistry('Type de case', TILE_KINDS)

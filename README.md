@@ -1,6 +1,6 @@
 # n00b-project
 
-Un mini monde ouvert **parodique** en vue de dessus, en pixel art, qui tourne dans le navigateur.
+Un mini monde ouvert **parodique** vu de haut, en **pixel art 3D** (three.js), qui tourne dans le navigateur.
 Tu débarques dans une petite ville où tout le monde a une combine : livraisons absurdes, voitures « empruntées », police zélée mais incompétente.
 
 > 🚧 **Prototype en cours** : où on en est dans la [roadmap](docs/roadmap.md), ce qui a changé dans le [journal](CHANGELOG.md).

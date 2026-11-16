@@ -6,14 +6,14 @@ Les grandes étapes du jeu, et où on en est. Le détail de chaque bloc est dans
 
 ## Où on en est
 
-| Étape                           | Objectif                                                            | Avancement           |
-| ------------------------------- | ------------------------------------------------------------------- | -------------------- |
-| **Cadrage**                     | docs, règles, organisation                                          | ✅ terminé           |
-| **V0 : prototype codé**         | un quartier de test, à pied et en voiture, des piétons, une mission | 🚧 en cours (3 / 10) |
-| **V0.5 : visuels du prototype** | identité visuelle, bible, premier quartier dans Tiled               | ⏳ à venir           |
-| **V1 : solo**                   | 4 quartiers, police, ~10 missions, progression, sauvegarde          | ⏳ à venir           |
-| **V2 : coop**                   | 2 à 4 joueurs dans la même ville                                    | ⏳ à venir           |
-| **V3 : mini online**            | comptes, classements, ville persistante                             | ⏳ à venir           |
+| Étape                           | Objectif                                                            | Avancement                  |
+| ------------------------------- | ------------------------------------------------------------------- | --------------------------- |
+| **Cadrage**                     | docs, règles, organisation                                          | ✅ terminé                  |
+| **V0 : prototype codé**         | un quartier de test, à pied et en voiture, des piétons, une mission | 🚧 en cours (4 / 10)        |
+| **V0.5 : visuels du prototype** | identité visuelle, bible, ville variée, moteur 3D pixel art         | 🚧 ville et moteur 3D faits |
+| **V1 : solo**                   | 4 quartiers, police, ~10 missions, progression, sauvegarde          | ⏳ à venir                  |
+| **V2 : coop**                   | 2 à 4 joueurs dans la même ville                                    | ⏳ à venir                  |
+| **V3 : mini online**            | comptes, classements, ville persistante                             | ⏳ à venir                  |
 
 ---
 
@@ -36,14 +36,14 @@ Le jeu tourne avec des formes de couleur, sans visuels.
 **Phase 2 : bouger dans la ville**
 
 - [x] #6 Carte de test en données, avec les collisions (cmn00by)
-- [ ] #7 Déplacement à pied (Baghorror12)
-- [ ] #8 Conduite arcade (cmn00by)
+- [x] #8 Conduite arcade (cmn00by)
+- [ ] #10 Piétons (Baghorror12)
 
 **Phase 3 : une ville vivante**
 
 - [ ] #9 Moteur de missions (cmn00by)
-- [ ] #10 Piétons (Baghorror12)
 - [ ] #11 HUD (Baghorror12)
+- [ ] #21 Clavier ZQSD = WASD (Baghorror12)
 
 **Phase 4 : en ligne**
 
@@ -57,7 +57,9 @@ Le jeu tourne avec des formes de couleur, sans visuels.
 - [x] #15 Scripts de génération et de pixelisation
 - [x] #4 Identité visuelle : planches bible
 - [ ] #5 Premier quartier dans Tiled
-- [ ] Remplacer les formes de couleur par les visuels
+- [ ] #7 Animations à pied (la marche et la course sont faites dans #19)
+- [x] Remplacer les formes de couleur par les visuels : ville variée texturée (#29)
+- [x] Moteur d'affichage : three.js, 3D pixel art (#32)
 
 ## ⏳ V1 : solo
 
