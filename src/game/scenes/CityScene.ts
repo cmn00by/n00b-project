@@ -1,19 +1,21 @@
 // La ville : fait tourner la simulation, relie le clavier, dessine le joueur et fait suivre la caméra.
 // Cette scène ne décide d'aucune règle du jeu : elle transmet les commandes à la simulation et affiche son état.
-// Le sol est pour l'instant un quadrillage de repère ; la carte de test (#6) le remplacera.
+// La carte est la ville de test (#6), dessinée en formes de couleur en attendant les tuiles (#4).
 import Phaser from 'phaser'
-import { STEP_SECONDS, createSimulation, createWorld, spawnEntity } from '../../sim/core'
+import { STEP_SECONDS, createSimulation, createTileMap, createWorld, getTileCenter, loadMap, spawnEntity } from '../../sim/core'
 import type { Entity, Simulation } from '../../sim/core'
 import { SYSTEMS } from '../../sim/systems'
-import { CAMERA_ZOOM, COLORS, GAME_SEED, TILE_SIZE } from '../constants'
+import { MAP_REGISTRY } from '../../data/maps'
+import { TILE_KIND_REGISTRY } from '../../data/tileKinds'
+import { CAMERA_ZOOM, COLORS, GAME_SEED } from '../constants'
 import { createFixedStepLoop } from '../fixedStepLoop'
 import { createKeyboardInput, toMoveCommand } from '../input'
 import type { KeyboardInput } from '../input'
-import { createPlayerRenderer } from '../render'
+import { createPlayerRenderer, drawMap } from '../render'
 import type { PlayerRenderer } from '../render'
 
-/** Largeur et hauteur du quadrillage de repère, en cases. */
-const GRID_TILES = 100
+/** La carte jouée. Fixe pendant le prototype : le choix de la carte viendra avec les vraies parties. */
+const MAP_ID = 'test-town'
 
 export class CityScene extends Phaser.Scene {
   private simulation!: Simulation
@@ -27,23 +29,31 @@ export class CityScene extends Phaser.Scene {
   }
 
   create() {
-    this.simulation = createSimulation(createWorld(GAME_SEED), SYSTEMS)
-    this.player = spawnEntity(this.simulation.world, 'player', {
-      position: { x: 10 * TILE_SIZE, y: 10 * TILE_SIZE, angle: 0 },
+    const mapDef = MAP_REGISTRY.get(MAP_ID)
+    const map = createTileMap(mapDef, TILE_KIND_REGISTRY)
+    const world = createWorld(GAME_SEED)
+    loadMap(world, map)
+    this.simulation = createSimulation(world, SYSTEMS)
+
+    const spawn = getTileCenter(map, mapDef.spawns.player)
+    this.player = spawnEntity(world, 'player', {
+      position: { x: spawn.x, y: spawn.y, angle: 0 },
       body: { width: 24, height: 24, isSolid: true },
     })
 
     this.keyboard = createKeyboardInput(this)
     this.playerRenderer = createPlayerRenderer(this)
 
-    this.drawGrid()
-    this.drawHelp()
+    drawMap(this, map)
+    this.drawHelp(spawn)
 
     // Un premier dessin pour que la caméra ait un objet à suivre dès la première image.
     this.playerRenderer.draw(this.simulation.world, 1)
     const camera = this.cameras.main
     camera.setZoom(CAMERA_ZOOM)
     camera.setRoundPixels(true)
+    // La caméra ne montre jamais ce qui est hors de la ville.
+    camera.setBounds(0, 0, map.width * map.tileSize, map.height * map.tileSize)
     const target = this.playerRenderer.findDisplayObject(this.player.id)
     if (target !== undefined) camera.startFollow(target, true)
   }
@@ -60,19 +70,11 @@ export class CityScene extends Phaser.Scene {
     this.simulation.step(command === undefined ? [] : [command])
   }
 
-  /** Quadrillage de repère, à l'échelle des futures tuiles : sans lui, on ne verrait pas le carré bouger. */
-  private drawGrid() {
-    const size = GRID_TILES * TILE_SIZE
-    const grid = this.add.graphics()
-    grid.lineStyle(1, COLORS.gridLine, 1)
-    for (let line = 0; line <= GRID_TILES; line++) {
-      grid.lineBetween(line * TILE_SIZE, 0, line * TILE_SIZE, size)
-      grid.lineBetween(0, line * TILE_SIZE, size, line * TILE_SIZE)
-    }
-  }
-
   /** Rappel des touches, posé dans le monde près du point de départ (le vrai HUD viendra avec #11). */
-  private drawHelp() {
-    this.add.text(10 * TILE_SIZE, 8 * TILE_SIZE, 'Flèches, ZQSD ou WASD : se déplacer\nMaj : courir', { fontFamily: 'monospace', fontSize: '12px', color: COLORS.text, align: 'center' }).setOrigin(0.5)
+  private drawHelp(spawn: { x: number; y: number }) {
+    this.add
+      .text(spawn.x, spawn.y - 40, 'Flèches, ZQSD ou WASD : se déplacer\nMaj : courir', { fontFamily: 'monospace', fontSize: '12px', color: COLORS.text, align: 'center' })
+      .setOrigin(0.5)
+      .setDepth(20)
   }
 }
