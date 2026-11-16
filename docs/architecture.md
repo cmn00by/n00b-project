@@ -214,8 +214,8 @@ Un **composant** est un **petit paquet de données sans logique**. Un système a
 | `velocity`         | vx, vy                                   | movement, driving |
 | `body`             | taille, masse, solide ou non             | collision         |
 | `health`           | points de vie                            | damage            |
-| `driver`           | véhicule occupé                          | driving, input    |
-| `vehicle`          | modèle, vitesse, dégâts                  | driving, traffic  |
+| `driver`           | véhicule conduit, corps mis de côté      | driving           |
+| `vehicle`          | modèle, cap (vecteur), conducteur        | driving, traffic  |
 | `pedestrian`       | type, état d'IA, humeur                  | pedestrians       |
 | `wanted`           | niveau, minuteur                         | wanted            |
 | `interactable`     | action proposée (« monter », « parler ») | input, hud        |

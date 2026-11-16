@@ -5,6 +5,24 @@ Une nouvelle décision s'ajoute **en haut**. Une décision remise en cause n'est
 
 ---
 
+## 2026-11-16 : La conduite (#8)
+
+**Choix** :
+
+- **Physique arcade maison**, dans une brique `driving` : la vitesse est séparée en une part dans l'axe (moteur, freins) et une part de côté (le dérapage), que l'adhérence du modèle efface peu à peu ; le frein à main baisse l'adhérence. Simple à régler, et fun.
+- **Le cap est un vecteur** (`vehicle.headingX/Y`), pas un angle : la rotation n'utilise que `+ − × ÷` et `Math.sqrt`, identiques sur toutes les machines (coop). L'angle n'est calculé que par l'affichage.
+- **Corps du véhicule = rectangle aligné sur la grille qui englobe la voiture tournée** : les collisions restent celles de la brique `collision` (rectangles). Une voiture en diagonale est donc un peu « plus large » qu'en vrai : acceptable en arcade.
+- **Le joueur au volant n'a plus de corps** (mis de côté dans `driver.storedBody`) : il ne gêne pas sa propre voiture et ne peut pas être percuté. Il est posé sur une place libre en descendant.
+- **La brique `collision` s'étend aux entités** (voiture contre voiture, joueur contre voiture), coupe la vitesse sur l'axe bloqué et annonce `entity:blocked` avec la vitesse perdue (pour les dégâts, la police, les sons).
+- **La caméra regarde devant la voiture** au lieu de reculer : un zoom non entier rendrait les pixels flous.
+- **Vitesse maximale plafonnée à 16 px par pas** par les tests des données : au-delà, une voiture pourrait traverser un mur d'une case.
+
+**Changement du noyau** (ajouts seulement) : composants `vehicle` et `driver`, type `VehicleDef`, `space.ts` (`isSpaceClear`, `findSolidOverlaps`), événements `entity:blocked`, `vehicle:entered`, `vehicle:exited`, commandes `player:interact`, `vehicle:drive`, véhicules garés dans `MapDef`, `TUNING.driving`.
+
+**Alternatives écartées** : la physique Matter.js de Phaser (dans l'affichage, non déterministe d'une machine à l'autre) ; un angle avec `sin`/`cos` (résultat pouvant différer à la dernière décimale selon le navigateur).
+
+**Limites connues** : les collisions entre entités sont testées une à une (O(n²)) : à revoir quand le trafic (#5 du GDD) mettra beaucoup de voitures. Si deux briques réagissent un jour à `player:interact` (parler à un PNJ), il faudra décider laquelle a la priorité.
+
 ## 2026-11-16 : La carte et les collisions (#6)
 
 **Choix** :
