@@ -44,6 +44,7 @@ Le jeu tourne avec des formes de couleur, sans visuels.
 - [ ] #9 Moteur de missions (cmn00by)
 - [ ] #11 HUD (Baghorror12)
 - [ ] #21 Clavier ZQSD = WASD (Baghorror12)
+- [x] #20 Commandes tactiles (Baghorror12)
 
 **Phase 4 : en ligne**
 

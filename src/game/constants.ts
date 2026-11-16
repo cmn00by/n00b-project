@@ -31,6 +31,35 @@ export const DAY_NIGHT_TRANSITION_SECONDS = 1.6
 /** Couleur du halo des lampadaires. */
 export const LAMP_GLOW_COLOR = 0xffc870
 
+/** Réglages des commandes tactiles (joystick virtuel et boutons), en pixels d'écran : ils ne dépendent pas du zoom de la caméra. */
+export const TOUCH_CONTROLS = {
+  /** Rayon du joystick : jusqu'où le pouce peut s'éloigner de son point de départ. */
+  joystickRadius: 56,
+  /** En dessous de cette distance, le pouce ne fait rien : évite d'avancer sans le vouloir quand le doigt tremble. */
+  deadZone: 14,
+  /** Rayon du bouton d'action : « courir » à pied, « frein à main » en voiture. */
+  actionButtonRadius: 40,
+  /** Rayon du bouton « E » : monter dans un véhicule ou en descendre. */
+  interactButtonRadius: 32,
+  /** Les boutons réagissent un peu au-delà de leur dessin (multiple du rayon), car un pouce n'est pas précis. */
+  buttonGrab: 1.4,
+  /** Espace entre les deux boutons. */
+  buttonGap: 18,
+  /** Distance entre les commandes et les bords de l'écran. */
+  margin: 28,
+} as const
+
+/** Les couleurs des commandes tactiles (blanc chaud et violet sombre de la palette), pour qu'elles se lisent sur la ville sans la masquer. */
+export const TOUCH_STYLE = {
+  line: '#fff8ec',
+  fill: 'rgba(43, 30, 58, 0.45)',
+  pressedFill: 'rgba(255, 210, 63, 0.75)',
+  pressedText: '#2b1e3a',
+  /** Opacité du repère du joystick tant qu'aucun doigt n'est posé, et quand il est tenu. */
+  hintOpacity: 0.55,
+  heldOpacity: 0.95,
+} as const
+
 /** Réglages de l'affichage des piétons (leur apparence vient de la recette de leur type, src/data/npcTypes). */
 export const PEDESTRIAN_VIEW = {
   walkPhaseSpeed: 12, // vitesse du balancement des bras et des jambes en marchant, en radians par seconde

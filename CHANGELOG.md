@@ -27,6 +27,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 - Une ville de test : routes, trottoirs, ruelles, un parc et des immeubles qu'on ne traverse plus ; on glisse le long des murs (#6)
 - Un carré jaune se déplace dans la ville : flèches, ZQSD ou WASD pour marcher, Maj pour courir, la caméra le suit (#3)
 - Bible visuelle en Gemini 3 Pro : 7 planches de référence (personnages, animation, portraits, véhicules, sol, bâtiments, scène) et leurs prompts (#4)
+- Commandes tactiles : sur téléphone, un joystick qui apparaît sous le pouce gauche pour marcher et conduire, un bouton rond (courir à pied, frein à main en voiture) et un bouton « E » pour monter et descendre ; le jeu reconnaît tout seul un écran tactile et suit la dernière entrée utilisée (un toucher, une touche) ; `?controls=touch` ou `?controls=keyboard` force le mode (#20)
 
 ### Modifié
 
