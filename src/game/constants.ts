@@ -30,3 +30,26 @@ export const LIT_WINDOW_COLOR = 0xffd27a
 export const DAY_NIGHT_TRANSITION_SECONDS = 1.6
 /** Couleur du halo des lampadaires. */
 export const LAMP_GLOW_COLOR = 0xffc870
+
+/**
+ * Le HUD : santé, argent, recherche. Ces systèmes n'existent pas encore dans la simulation (blocs 7 et 11) : en attendant, le HUD affiche ces valeurs factices.
+ * Quand ils existeront, seul ce qui fournit l'état au HUD change (main.ts), pas l'affichage.
+ */
+export const HUD_PLACEHOLDER = {
+  health: 3, // points de vie factices
+  maxHealth: 5, // points de vie au maximum
+  money: 120, // argent factice, en euros
+  wantedLevel: 1, // niveau de recherche factice, de 0 à maxWantedLevel
+  maxWantedLevel: 3, // la jauge de recherche a 3 niveaux (docs/GDD.md)
+} as const
+
+/** L'allure du HUD : le blanc chaud, le rouge et le jaune vif de la palette, sur un fond violet sombre translucide qui laisse voir la ville. */
+export const HUD_STYLE = {
+  textColor: '#fff8ec',
+  panelFill: 'rgba(43, 30, 58, 0.55)',
+  heartColor: '#e5383b',
+  starColor: '#ffd23f',
+  emptyColor: '#6f6488', // une icône vide (cœur perdu, étoile pas encore gagnée)
+  iconScale: 3, // taille d'une « case » des icônes pixel art, en pixels d'écran
+  margin: 12, // distance au bord de l'écran
+} as const
