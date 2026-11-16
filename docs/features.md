@@ -91,7 +91,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 **V0**
 
 - [ ] Marcher dans 8 directions, courir (touche maintenue) (#7)
-- [ ] Collisions avec les murs et bâtiments de la carte (#7)
+- [x] Collisions avec les murs et bâtiments de la carte (brique `collision`, #6)
 - [ ] Animation de marche et de course (4 directions minimum) (#7)
 
 **V1**
@@ -117,7 +117,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 
 - [ ] Tuiles du Centre générées selon `style.md` (voir bloc 14, #4)
 - [ ] Un quartier dans **Tiled** : routes, trottoirs, bâtiments, calques de collision (#5)
-- [ ] Carte de test en données (grille de cases : route, trottoir, mur), collisions branchées sur la simulation (#6)
+- [x] Carte de test en données (grille de cases : route, trottoir, mur), collisions branchées sur la simulation (#6)
 - [ ] Chargement des cartes Tiled (quand #5 sera faite)
 - [ ] Calques d'objets dans Tiled : points d'apparition, zones, portes (#5)
 

@@ -5,6 +5,20 @@ Une nouvelle décision s'ajoute **en haut**. Une décision remise en cause n'est
 
 ---
 
+## 2026-11-16 : La carte et les collisions (#6)
+
+**Choix** :
+
+- **La carte est décrite en données** (`src/data/maps`) : des lignes de caractères et une légende vers des types de case (`src/data/tileKinds`). Facile à lire, à modifier et à valider par les tests. Un futur chargeur Tiled (#5) produira la même grille (`TileMap`).
+- **La grille vit dans le monde** (`world.map`, facultative) : de simples tableaux de textes et de booléens, qui se sauvegardent et s'envoient tels quels. N'importe quelle brique peut demander si un endroit est libre (`isAreaFree`).
+- **Une brique `collision` séparée**, dans une nouvelle tranche `SYSTEM_ORDER.collision` (350, après les déplacements) : elle compare chaque entité à sa dernière position libre et la ramène au contact du mur, axe par axe (on glisse le long des murs). Les briques qui déplacent (marche, puis conduite, piétons) n'ont rien à faire pour respecter les murs.
+
+**Changement du noyau** (ajouts seulement) : `map.ts`, `World.map`, `loadMap`, le composant `lastFreePosition`, la tranche `collision`. Relecture demandée aux deux, comme prévu par `architecture.md`.
+
+**Alternatives écartées** : intégrer les collisions dans `walking` (il aurait fallu les refaire pour chaque façon de bouger) ; la physique arcade de Phaser (elle vit dans l'affichage, alors que la simulation doit tourner sans Phaser, pour la coop).
+
+**Limite connue** : un déplacement de plus d'une case en un seul pas pourrait sauter un mur fin. Sans effet pour la marche ; la conduite rapide devra en tenir compte.
+
 ## 2026-11-15 : Les choix du noyau de la simulation (#3)
 
 **Choix** :
