@@ -5,6 +5,20 @@ Une nouvelle décision s'ajoute **en haut**. Une décision remise en cause n'est
 
 ---
 
+## 2026-11-15 : Les choix du noyau de la simulation (#3)
+
+**Choix** :
+
+- **Entités et composants maison**, rangés dans un dictionnaire par id (`world.entities`), sans bibliothèque ECS : l'état se sauvegarde et s'envoie tel quel (JSON), et l'ordre de parcours (ids croissants) est stable.
+- **`createSimulation(world, systems)`** plutôt que `step(world, commands)` seul : le noyau n'a pas le droit d'importer la liste `SYSTEMS` (elle vit dans `src/sim/systems`), on la lui passe donc une fois ; ensuite `simulation.step(commands)` avance d'un pas. Les commandes du pas sont lues par les systèmes dans `world.commands`.
+- **Le contrat `System` est dans `core/system.ts`** (singulier) : la règle de lint du noyau interdit tout import se terminant par `/systems`, qui attrapait aussi `core/systems.ts`.
+- **`Math.sqrt` plutôt que `Math.hypot` ou `Math.atan2`** dans la simulation : leur résultat peut différer à la dernière décimale selon le navigateur, alors que `sqrt` est exact partout. Condition de la coop (même simulation chez tous les joueurs).
+- **Une seule commande par entité et par pas** dans `walking` (la dernière) : envoyer deux fois la même demande ne doit pas doubler la vitesse.
+
+**Alternatives écartées** : une bibliothèque ECS (voir la décision sur l'architecture) ; renommer la règle de lint plutôt que le fichier (on ne touche pas aux garde-fous sans accord).
+
+**Raison** : un noyau petit, testable dans Node, et dont le résultat est identique sur toutes les machines.
+
 ## 2026-11-15 : Perspective 3/4 confirmée, Gemini 3 Pro pour les visuels
 
 **Choix** : personnages et bâtiments en vue **3/4**, avec **3 directions dessinées** (face, dos, profil gauche) et la droite en **miroir** ;
