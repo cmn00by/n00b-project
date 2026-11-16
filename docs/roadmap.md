@@ -64,7 +64,8 @@ Le jeu tourne avec des formes de couleur, sans visuels.
 
 ## ⏳ V1 : solo
 
-Voir les cases **V1** de chaque bloc dans [features.md](features.md) : 4 quartiers, trafic, environnement interactif, police, missions, dialogues, interface, progression, sauvegarde, audio, admin.
+Voir les cases **V1** de chaque bloc dans [features.md](features.md) : 4 quartiers, trafic, environnement interactif, police, missions, dialogues, interface, progression, sauvegarde, audio, admin,
+**garage** (acheter et personnaliser ses véhicules) et **personnage** (création et garde-robe).
 
 ## ⏳ V2 : coop · V3 : mini online · Mobile
 

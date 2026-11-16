@@ -91,6 +91,8 @@ Construites à partir de **briques réutilisables** décrites en données (JSON)
 ### La progression
 
 - Argent : acheter une planque, des véhicules, des tenues ridicules.
+- **L'aspect matériel** : ses voitures à soi, rangées au garage et **personnalisées** à l'atelier (peinture, pièces, néons, performances, autocollants), et un **personnage à soi**,
+  créé au début et habillé à la boutique. Tout est en **voxel assemblé par le code** : chaque combinaison est possible sans dessiner d'image (blocs 19 et 20 de [features.md](features.md)).
 - Réputation par quartier : débloque des contacts et des missions.
 - Sauvegarde locale (navigateur), puis en ligne avec un compte.
 
