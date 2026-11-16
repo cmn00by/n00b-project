@@ -24,6 +24,8 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 
 ### Technique
 
+- Règle ESLint du noyau corrigée : elle interdit tout import qui sort du dossier `core` au lieu de se fier aux noms de fichiers
+
 - Scripts de génération et de pixelisation des visuels, repris de GRINTA (#15)
 - Noyau de la simulation : `Rng` déterministe, `TUNING`, monde et entités à composants, bus d'événements, registres, commandes, boucle à pas fixe avec affichage interpolé, première brique `walking` (#3)
 
