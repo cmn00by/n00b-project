@@ -48,7 +48,7 @@ Le jeu tourne avec des formes de couleur, sans visuels.
 
 **Phase 4 : en ligne**
 
-- [ ] #12 Mise en ligne sur Cloudflare (cmn00by) : le Worker est en ligne, reste à connecter le repo dans Cloudflare (`docs/deploiement.md`)
+- [x] #12 Mise en ligne sur Cloudflare (cmn00by) : repo connecté, chaque merge sur `main` met le jeu en ligne (`docs/deploiement.md`)
 - [ ] #13 Première mission (Baghorror12)
 
 **Fini quand** : on lance le jeu en ligne, on marche, on vole une voiture, on dérape, les piétons fuient, et on réussit une livraison.
