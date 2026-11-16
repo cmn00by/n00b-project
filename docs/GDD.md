@@ -110,7 +110,7 @@ C'est inclus dans l'offre à 5 $. La condition, c'est que le moteur soit **pens�
 ## 6. Direction artistique
 
 - **Pixel art en vue de dessus**, couleurs vives et saturées, contours marqués.
-- Grille de **32 × 32 px** _(à confirmer)_, affichée en `pixelated` à l'échelle ×2 ou ×3. Détails dans [style.md](style.md).
+- Grille de **32 × 32 px**, ville en 3D dessinée en basse résolution puis agrandie en `pixelated` (×2 en 1080p). Palette et règles dans [style.md](style.md).
 - Interface façon téléphone et panneaux publicitaires parodiques.
 
 ### Production des graphismes

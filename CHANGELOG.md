@@ -51,6 +51,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 
 ### Documentation
 
+- Identité visuelle : la palette de `style.md` décrit ce qu'utilise le jeu (façades pastel, fenêtres, gris violet du HUD ajoutés ; les lumières de la 3D n'en font pas partie), grille de 32 px adoptée, règles mises à jour pour la 3D ; à valider à deux (#4)
 - Registre des générations et leçons tirées de la bible (#4)
 - Perspective 3/4 confirmée par un test (3 directions + miroir), véhicules en vue du dessus ; Gemini 3 Pro par défaut (#4)
 
