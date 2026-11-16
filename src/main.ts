@@ -10,9 +10,9 @@ import { spawnVehicle } from './sim/systems/driving'
 import { MAP_REGISTRY } from './data/maps'
 import { TILE_KIND_REGISTRY } from './data/tileKinds'
 import { VEHICLE_REGISTRY } from './data/vehicles'
-import { CAMERA_LOOKAHEAD_MAX_PX, CAMERA_LOOKAHEAD_SECONDS, CAMERA_LOOKAHEAD_SMOOTHING, DAY_NIGHT_TRANSITION_SECONDS, GAME_SEED } from './game/constants'
+import { CAMERA_LOOKAHEAD_MAX_PX, CAMERA_LOOKAHEAD_SECONDS, CAMERA_LOOKAHEAD_SMOOTHING, DAY_NIGHT_TRANSITION_SECONDS, GAME_SEED, HUD_PLACEHOLDER } from './game/constants'
 import { createFixedStepLoop } from './game/fixedStepLoop'
-import { createTouchControlsView } from './game/hud'
+import { createHudView, createTouchControlsView } from './game/hud'
 import { chooseStartMode, createKeyboard, createTouchInput, parseControlsOverride, switchMode, toDriveCommand, toMoveCommand } from './game/input'
 import type { ControlMode } from './game/input'
 import { createActors, createBuildings, createCamera, createDecor, createGround, createLighting, loadTextures } from './game/render'
@@ -65,6 +65,7 @@ async function start() {
   const actors = createActors(scene)
   const lighting = createLighting(scene, renderer)
   const keyboard = createKeyboard(window)
+  const hud = createHudView(document.body)
   const touch = createTouchInput(window)
   const touchView = createTouchControlsView(document.body)
   const fixedStepLoop = createFixedStepLoop(STEP_SECONDS)
@@ -77,6 +78,8 @@ async function start() {
     pixelScaleIndex = (pixelScaleIndex + 1) % PIXEL_SCALES.length
     resize()
   })
+  // Santé, argent et recherche n'existent pas encore dans la simulation : le HUD affiche des valeurs factices (voir HUD_PLACEHOLDER).
+  hud.update(HUD_PLACEHOLDER)
 
   // Le mode de commandes : clavier ou tactile, choisi selon l'appareil, puis il suit la dernière entrée utilisée (un toucher, une touche). ?controls=touch|keyboard le force.
   const help = document.getElementById('help')
