@@ -30,3 +30,21 @@ export const LIT_WINDOW_COLOR = 0xffd27a
 export const DAY_NIGHT_TRANSITION_SECONDS = 1.6
 /** Couleur du halo des lampadaires. */
 export const LAMP_GLOW_COLOR = 0xffc870
+
+/** Réglages des commandes tactiles (joystick virtuel et boutons), en pixels d'écran : ils ne dépendent pas du zoom de la caméra. */
+export const TOUCH_CONTROLS = {
+  /** Rayon du joystick : jusqu'où le pouce peut s'éloigner de son point de départ. */
+  joystickRadius: 56,
+  /** En dessous de cette distance, le pouce ne fait rien : évite d'avancer sans le vouloir quand le doigt tremble. */
+  deadZone: 14,
+  /** Rayon du bouton d'action : « courir » à pied, « frein à main » en voiture. */
+  actionButtonRadius: 40,
+  /** Rayon du bouton « E » : monter dans un véhicule ou en descendre. */
+  interactButtonRadius: 32,
+  /** Les boutons réagissent un peu au-delà de leur dessin (multiple du rayon), car un pouce n'est pas précis. */
+  buttonGrab: 1.4,
+  /** Espace entre les deux boutons. */
+  buttonGap: 18,
+  /** Distance entre les commandes et les bords de l'écran. */
+  margin: 28,
+} as const
