@@ -7,8 +7,8 @@ function createFakeSystem(id: string, order: number): System {
 }
 
 describe('SYSTEM_ORDER', () => {
-  it("range les tranches dans l'ordre : entrées, IA, physique, règles, nettoyage", () => {
-    const values = [SYSTEM_ORDER.input, SYSTEM_ORDER.ai, SYSTEM_ORDER.physics, SYSTEM_ORDER.rules, SYSTEM_ORDER.cleanup]
+  it("range les tranches dans l'ordre : entrées, IA, physique, collisions, règles, nettoyage", () => {
+    const values = [SYSTEM_ORDER.input, SYSTEM_ORDER.ai, SYSTEM_ORDER.physics, SYSTEM_ORDER.collision, SYSTEM_ORDER.rules, SYSTEM_ORDER.cleanup]
     expect(values).toEqual([...values].sort((first, second) => first - second))
   })
 })
