@@ -1,11 +1,11 @@
-// Le chargement des textures de l'essai 3D, toutes en pixel art net (filtre « au plus proche », jamais lissé).
-// Expose : Textures3d, loadTextures3d(), pixelTexture().
+// Le chargement des textures du jeu, toutes en pixel art net (filtre « au plus proche », jamais lissé).
+// Expose : Textures, loadTextures(), pixelTexture().
 
 import * as THREE from 'three'
-import { PROP_TEXTURES, ROOF_TEXTURES, TILE_TEXTURES } from '../game/assets'
-import type { PropTexture, RoofTexture, TileTexture } from '../game/assets'
+import { PROP_TEXTURES, ROOF_TEXTURES, TILE_TEXTURES } from '../assets'
+import type { PropTexture, RoofTexture, TileTexture } from '../assets'
 
-export interface Textures3d {
+export interface Textures {
   tiles: Record<TileTexture, THREE.Texture>
   roofs: Record<RoofTexture, THREE.Texture>
   props: Record<PropTexture, THREE.Texture>
@@ -26,7 +26,7 @@ async function loadAll<K extends string>(names: readonly K[], folder: string): P
   return Object.fromEntries(entries) as Record<K, THREE.Texture>
 }
 
-export async function loadTextures3d(): Promise<Textures3d> {
+export async function loadTextures(): Promise<Textures> {
   const [tiles, roofs, props] = await Promise.all([loadAll(TILE_TEXTURES, 'tiles'), loadAll(ROOF_TEXTURES, 'roofs'), loadAll(PROP_TEXTURES, 'props')])
   return { tiles, roofs, props }
 }

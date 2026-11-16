@@ -1,19 +1,19 @@
-// Les immeubles de l'essai 3D : de vraies boîtes, avec leur toit généré sur le dessus et des façades dessinées par le code.
-// Expose : createBuildings3d(), Buildings3d.
-// Pourquoi : en 3D, le relief n'est plus un effet : la caméra voit vraiment les façades, et le soleil projette de vraies ombres.
+// Les immeubles : de vraies boîtes, avec leur toit généré sur le dessus et des façades dessinées par le code.
+// Expose : createBuildings(), Buildings.
+// Pourquoi : en vraie 3D, le relief n'est pas un effet : la caméra voit vraiment les façades, et le soleil projette de vraies ombres.
 // Les fenêtres sont aussi peintes dans une seconde texture « lumineuse » : la nuit, une partie d'entre elles s'allument.
 
 import * as THREE from 'three'
-import type { TileMap } from '../sim/core'
-import type { RoofTexture } from '../game/assets'
-import { FACADE_COLORS, LIT_WINDOW_COLOR, WINDOW_COLOR } from '../game/constants'
-import { hashToUnit } from '../game/hash'
-import { findBuildingBlocks } from '../game/render/buildingBlocks'
+import type { TileMap } from '../../sim/core'
+import type { RoofTexture } from '../assets'
+import { FACADE_COLORS, LIT_WINDOW_COLOR, WINDOW_COLOR } from '../constants'
+import { hashToUnit } from '../hash'
+import { findBuildingBlocks } from './buildingBlocks'
 import { computeFacadeWindows } from './facadeLayout'
-import { pixelTexture } from './textures3d'
-import type { Textures3d } from './textures3d'
+import { pixelTexture } from './textures'
+import type { Textures } from './textures'
 
-export interface Buildings3d {
+export interface Buildings {
   /** `night` va de 0 (jour) à 1 (pleine nuit) : règle l'éclat des fenêtres allumées. */
   setNight(night: number): void
 }
@@ -86,7 +86,7 @@ function createFacade(width: number, height: number, color: number, seed: number
   return { map: pixelTexture(new THREE.CanvasTexture(facade.canvas)), glow: pixelTexture(new THREE.CanvasTexture(glow.canvas)) }
 }
 
-export function createBuildings3d(scene: THREE.Scene, map: TileMap, textures: Textures3d): Buildings3d {
+export function createBuildings(scene: THREE.Scene, map: TileMap, textures: Textures): Buildings {
   const facadeMaterials: THREE.MeshLambertMaterial[] = []
 
   for (const block of findBuildingBlocks(map)) {

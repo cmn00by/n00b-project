@@ -2,7 +2,7 @@
 // Expose : GroundTile, Segment, GroundLayout, computeGroundLayout().
 // Pourquoi : la carte ne dit que « route », « trottoir »… ; l'affichage en déduit les détails qui rendent la ville crédible :
 // des tirets entre les deux voies, des passages piétons à chaque carrefour, des plaques d'égout ici et là, des fleurs dans l'herbe.
-// Pur calcul, sans Phaser : testé dans Node. Les variations viennent d'un hasard stable (toujours la même ville).
+// Pur calcul, sans three.js : testé dans Node. Les variations viennent d'un hasard stable (toujours la même ville).
 
 import type { TileMap } from '../../sim/core'
 import type { TileTexture } from '../assets'

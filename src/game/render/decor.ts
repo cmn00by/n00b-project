@@ -1,17 +1,17 @@
-// La déco de l'essai 3D : arbres, bancs, lampadaires… en découpes debout dans la scène, à l'échelle du jeu, avec une ombre au sol.
-// Expose : createDecor3d(), Decor3d, LampPost.
-// Pourquoi : mêmes règles de placement (placeDecor.ts) et mêmes tailles (propStyles.ts) que la version Phaser. Les images toujours
+// La déco de la ville : arbres, bancs, lampadaires… en découpes debout dans la scène, à l'échelle du jeu, avec une ombre au sol.
+// Expose : createDecor(), Decor, LampPost.
+// Pourquoi : placement par des règles (placeDecor.ts) et tailles à l'échelle du jeu (propStyles.ts). Les images toujours
 // tournées vers la caméra gardent leur pixel art intact ; le feuillage ondule autour de son pied.
 // Affichage seulement : la déco ne bloque pas encore le passage (voir docs/decisions.md).
 
 import * as THREE from 'three'
-import type { TileMap } from '../sim/core'
-import { LAMP_GLOW_COLOR } from '../game/constants'
-import { placeDecor } from '../game/decor/placeDecor'
-import { PROP_STYLES } from '../game/decor/propStyles'
-import { hashToUnit } from '../game/hash'
+import type { TileMap } from '../../sim/core'
+import { LAMP_GLOW_COLOR } from '../constants'
+import { placeDecor } from '../decor/placeDecor'
+import { PROP_STYLES } from '../decor/propStyles'
+import { hashToUnit } from '../hash'
 import { createGlowTexture } from './glowTexture'
-import type { Textures3d } from './textures3d'
+import type { Textures } from './textures'
 
 /** Un lampadaire : sa position au sol (coordonnées de la simulation) et la hauteur de sa lampe. */
 export interface LampPost {
@@ -20,7 +20,7 @@ export interface LampPost {
   lampHeight: number
 }
 
-export interface Decor3d {
+export interface Decor {
   update(timeSeconds: number, night: number): void
   lamps: readonly LampPost[]
 }
@@ -29,7 +29,7 @@ export interface Decor3d {
 const TALL_STRETCH = 1.35
 const SWAY_RADIANS = 0.045
 
-export function createDecor3d(scene: THREE.Scene, map: TileMap, textures: Textures3d): Decor3d {
+export function createDecor(scene: THREE.Scene, map: TileMap, textures: Textures): Decor {
   const shadowMaterial = new THREE.MeshBasicMaterial({ color: 0x2b1e3a, transparent: true, opacity: 0.32, depthWrite: false })
   const shadowGeometry = new THREE.CircleGeometry(0.5, 12)
   const glowTexture = createGlowTexture()

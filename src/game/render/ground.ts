@@ -1,16 +1,16 @@
-// Le sol de l'essai 3D : toute la ville peinte une fois dans une grande texture posée à plat, et l'eau animée dessous.
-// Expose : createGround3d(), Ground3d.
-// Pourquoi : mêmes règles que le sol Phaser (groundLayout.ts) ; seule la façon de l'afficher change. L'eau n'est pas peinte :
+// Le sol de la ville : toute la ville peinte une fois dans une grande texture posée à plat, et l'eau animée dessous.
+// Expose : createGround(), Ground.
+// Pourquoi : les règles (groundLayout.ts) disent quoi peindre ; ici on le peint dans une texture. L'eau n'est pas peinte :
 // la texture du sol est transparente à cet endroit, et deux couches d'eau qui glissent se voient à travers.
 
 import * as THREE from 'three'
-import type { TileMap } from '../sim/core'
-import { computeGroundLayout } from '../game/render/groundLayout'
-import type { Segment } from '../game/render/groundLayout'
-import { pixelTexture } from './textures3d'
-import type { Textures3d } from './textures3d'
+import type { TileMap } from '../../sim/core'
+import { computeGroundLayout } from './groundLayout'
+import type { Segment } from './groundLayout'
+import { pixelTexture } from './textures'
+import type { Textures } from './textures'
 
-export interface Ground3d {
+export interface Ground {
   update(timeSeconds: number): void
 }
 
@@ -26,7 +26,7 @@ function strokeSegment(context: CanvasRenderingContext2D, segment: Segment, thic
   else context.fillRect(segment.x1 - half, Math.min(segment.y1, segment.y2), thickness, Math.abs(segment.y2 - segment.y1))
 }
 
-export function createGround3d(scene: THREE.Scene, map: TileMap, textures: Textures3d): Ground3d {
+export function createGround(scene: THREE.Scene, map: TileMap, textures: Textures): Ground {
   const width = map.width * map.tileSize
   const height = map.height * map.tileSize
   const layout = computeGroundLayout(map)

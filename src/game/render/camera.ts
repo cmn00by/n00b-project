@@ -1,5 +1,5 @@
-// La caméra de l'essai 3D : elle suit le joueur (ou sa voiture) de haut et de biais, et se cale sur la grille de pixels.
-// Expose : createCamera3d(), Camera3d, snapToPixelGrid().
+// La caméra du jeu : elle suit le joueur (ou sa voiture) de haut et de biais, et se cale sur la grille de pixels.
+// Expose : createCamera(), GameCamera, snapToPixelGrid().
 // Pourquoi : la scène est dessinée en basse résolution puis agrandie. Si la caméra bouge d'une fraction de pixel, tous les pixels de la ville
 // « nagent ». En calant la cible sur la taille d'un pixel à l'écran, la ville glisse pixel par pixel, nette.
 
@@ -10,7 +10,7 @@ const TILTS_DEGREES = [62, 76, 48] as const
 const DISTANCE = 620
 const FIELD_OF_VIEW_DEGREES = 40
 
-export interface Camera3d {
+export interface GameCamera {
   camera: THREE.PerspectiveCamera
   /** Place la caméra au-dessus de la cible (en coordonnées de la simulation : x à droite, y vers le bas). */
   follow(targetX: number, targetY: number, screenHeightPx: number): void
@@ -23,7 +23,7 @@ export function snapToPixelGrid(value: number, step: number): number {
   return step > 0 ? Math.round(value / step) * step : value
 }
 
-export function createCamera3d(aspect: number): Camera3d {
+export function createCamera(aspect: number): GameCamera {
   const camera = new THREE.PerspectiveCamera(FIELD_OF_VIEW_DEGREES, aspect, 10, 4000)
   let tiltIndex = 0
 

@@ -3,7 +3,7 @@
 // (Ranger la carte dans le monde : loadMap(), dans world.ts.)
 // Pourquoi : la carte est décrite en données (src/data/maps), sous forme de lignes de caractères faciles à lire et à modifier.
 // Le noyau la transforme en une grille simple (des tableaux de textes et de booléens) rangée dans le monde : elle se sauvegarde
-// et s'envoie sur le réseau telle quelle, et n'importe quelle brique peut savoir si un endroit est libre, sans connaître Phaser.
+// et s'envoie sur le réseau telle quelle, et n'importe quelle brique peut savoir si un endroit est libre, sans connaître l'affichage.
 // Plus tard, un chargeur de cartes Tiled produira la même TileMap : rien d'autre ne changera.
 
 import type { ContentDef, Registry } from './registry'

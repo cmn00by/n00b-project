@@ -1,7 +1,7 @@
 // Le système de déplacement à pied : déplace le joueur selon ses commandes.
 // Expose : walkingSystem.
 // Pourquoi : c'est la première brique du jeu, écrite comme exemple pour toutes les suivantes. Elle ne connaît
-// ni le clavier (elle lit des commandes), ni Phaser, ni aucun autre système. Les collisions viendront dans une autre brique.
+// ni le clavier (elle lit des commandes), ni l'affichage, ni aucun autre système. Les collisions viendront dans une autre brique.
 
 import { SYSTEM_ORDER, findCommands, findEntity } from '../../core'
 import type { CommandOf, EntityId, System } from '../../core'

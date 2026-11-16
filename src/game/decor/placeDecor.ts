@@ -3,7 +3,7 @@
 // Pourquoi : décorer à la main une ville entière serait long ; on décrit des règles (des arbres dans l'herbe, un lampadaire régulièrement
 // le long des trottoirs, une fontaine au centre de la place, des parasols sur la plage…) et le placement en découle, toujours identique.
 // C'est de l'affichage seulement : la déco ne bloque pas encore le passage (elle deviendra des objets de la simulation avec le bloc
-// « environnement interactif » de docs/features.md). Pur calcul, sans Phaser : testé dans Node.
+// « environnement interactif » de docs/features.md). Pur calcul, sans three.js : testé dans Node.
 
 import type { TileMap } from '../../sim/core'
 import type { PropTexture } from '../assets'
