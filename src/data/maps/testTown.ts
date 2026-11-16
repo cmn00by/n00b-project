@@ -47,5 +47,13 @@ export const testTown: MapDef = {
     '####.####.==.####.####.####.==.###.#####',
   ],
   // Au coin du trottoir, près du carrefour en haut à gauche du parc.
-  spawns: { player: { tileX: 12, tileY: 10 } },
+  spawns: {
+    player: { tileX: 12, tileY: 10 },
+    // Sur les routes, garées le long des trottoirs.
+    vehicles: [
+      { tileX: 11, tileY: 12, modelId: 'mamie-car', facing: 'up' },
+      { tileX: 16, tileY: 9, modelId: 'delivery-van', facing: 'left' },
+      { tileX: 28, tileY: 16, modelId: 'sports-car', facing: 'down' },
+    ],
+  },
 }
