@@ -37,6 +37,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 
 ### Technique
 
+- Mise en ligne : un Worker Cloudflare sert le jeu ; `/api/sante` répond, `/api/` est réservé au serveur du jeu (les futurs salons multijoueurs) ; `npm run deploy` et `npm run preview:worker` ; voir `docs/deploiement.md` (#12)
 - Brique `pedestrians` (naissance, promenade, états, peur) et types de PNJ en données pures (`src/data/npcTypes` : personnalité, vitesses, apparence), prêts pour le futur panneau admin ; le noyau gagne le composant `pedestrian` et l'événement `pedestrian:scared` ; la brique reçoit ses types par un registre : `createPedestriansSystem(NPC_TYPE_REGISTRY)` ; l'apparence est tirée par l'affichage d'après l'id du piéton (#10)
 - Bascule du moteur d'affichage : le code 3D rejoint `src/game` (`render/`, `input/`), ESLint interdit three.js dans la simulation ; le clavier lit la position physique des touches (#21)
 - Brique `driving` (physique arcade déterministe, cap en vecteur), modèles de véhicules en données, `isSpaceClear` dans le noyau ; la brique `collision` bloque aussi contre les autres entités, coupe la vitesse au choc et annonce `entity:blocked` (#8)
