@@ -12,8 +12,8 @@ import { CAMERA_LOOKAHEAD_MAX_PX, CAMERA_LOOKAHEAD_SECONDS, CAMERA_LOOKAHEAD_SMO
 import { createFixedStepLoop } from '../fixedStepLoop'
 import { createKeyboardInput, toDriveCommand, toMoveCommand } from '../input'
 import type { KeyboardInput } from '../input'
-import { createPlayerRenderer, createVehicleRenderer, drawMap } from '../render'
-import type { PlayerRenderer, VehicleRenderer } from '../render'
+import { createBuildingRelief, createPlayerRenderer, createVehicleRenderer, drawMap } from '../render'
+import type { BuildingRelief, PlayerRenderer, VehicleRenderer } from '../render'
 
 /** La carte jouée. Fixe pendant le prototype : le choix de la carte viendra avec les vraies parties. */
 const MAP_ID = 'test-town'
@@ -24,6 +24,7 @@ export class CityScene extends Phaser.Scene {
   private keyboard!: KeyboardInput
   private playerRenderer!: PlayerRenderer
   private vehicleRenderer!: VehicleRenderer
+  private buildingRelief!: BuildingRelief
   private readonly fixedStepLoop = createFixedStepLoop(STEP_SECONDS)
   /** L'entité que la caméra suit (le joueur à pied, ou sa voiture) et l'objet affiché correspondant. */
   private cameraTarget: { entityId: EntityId; displayObject: Phaser.GameObjects.GameObject } | undefined
@@ -56,6 +57,9 @@ export class CityScene extends Phaser.Scene {
     this.vehicleRenderer = createVehicleRenderer(this)
 
     drawMap(this, map)
+    this.buildingRelief = createBuildingRelief(this, map)
+    // Essai #26 : R coupe ou remet le relief, pour comparer.
+    this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.R).on('down', () => this.buildingRelief.setEnabled(!this.buildingRelief.isEnabled()))
     this.drawHelp(spawn)
 
     const camera = this.cameras.main
@@ -93,6 +97,9 @@ export class CityScene extends Phaser.Scene {
     this.playerRenderer.draw(world, alpha)
     this.followCameraTarget()
     this.updateLookahead(deltaSeconds)
+    // Le relief se calcule depuis le centre de la caméra.
+    const camera = this.cameras.main
+    this.buildingRelief.update({ x: camera.midPoint.x, y: camera.midPoint.y })
   }
 
   /** La caméra suit le joueur à pied, ou sa voiture quand il conduit (le joueur n'est alors plus dessiné : il est dans la voiture). */
@@ -125,7 +132,7 @@ export class CityScene extends Phaser.Scene {
 
   /** Rappel des touches, posé dans le monde près du point de départ (le vrai HUD viendra avec #11). */
   private drawHelp(spawn: { x: number; y: number }) {
-    const help = 'Flèches, ZQSD ou WASD : se déplacer · Maj : courir\nE ou Entrée : monter / descendre · Espace : frein à main'
+    const help = 'Flèches, ZQSD ou WASD : se déplacer · Maj : courir\nE ou Entrée : monter / descendre · Espace : frein à main\nR : relief des immeubles (essai)'
     this.add
       .text(spawn.x, spawn.y - 44, help, { fontFamily: 'monospace', fontSize: '10px', color: COLORS.text, align: 'center' })
       .setOrigin(0.5)
