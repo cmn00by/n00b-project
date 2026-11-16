@@ -5,6 +5,16 @@ Une nouvelle décision s'ajoute **en haut**. Une décision remise en cause n'est
 
 ---
 
+## 2026-11-16 : Essai d'affichage en 3D pixel art (three.js) — en cours
+
+**Constat** : l'essai de relief en Phaser (#26, #29) se bat contre le pixel art : les toits sont ré-agrandis en continu, la déco est affichée à des tailles non entières, le feuillage tourne : des pixels inégaux qui scintillent.
+
+**Essai** : la même ville et la même simulation, affichées en vraie 3D avec three.js, **dessinées en basse résolution puis agrandies sans lissage** : tout partage la même grille de pixels. Immeubles en boîtes (toits générés, façades par le code), vraies ombres (dures), lumière de nuit réelle (lampadaires proches, phares). Page `three.html`, à côté du jeu.
+
+**À décider après comparaison, à deux** : garder Phaser ou passer l'affichage à three.js. La simulation ne change pas dans les deux cas.
+
+**Ajout d'une dépendance** : `three` (et ses types), sur la branche d'essai seulement.
+
 ## 2026-11-16 : Une ville variée, texturée, de jour et de nuit
 
 **Choix** :
