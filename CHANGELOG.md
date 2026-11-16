@@ -19,6 +19,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 
 ### Ajouté
 
+- Les missions : un repère jaune marque leur départ, on y entre pour les lancer ; un repère turquoise montre où aller, un panneau affiche la consigne et le chrono ; réussite, échec (chrono écoulé) ou abandon. Une mission d'essai : récupérer un colis au parking et le livrer au port en deux minutes. Les missions s'écrivent en données, sans coder (`docs/missions.md`) (#9)
 - Des piétons peuplent la ville : ils naissent hors de l'écran sur les trottoirs, se promènent case par case, s'arrêtent parfois, regardent puis fuient quand on court vers eux (une pastille « ! » rouge s'allume), et disparaissent quand on s'éloigne ; chacun est assemblé en blocs avec ses propres couleurs et son accessoire (#10)
 - Essai d'affichage en 3D pixel art (three.js) sur la page `three.html`, à comparer avec le jeu : même ville, même simulation ; vraies ombres, lampadaires et phares qui éclairent les façades
 - Une vraie petite ville, variée et texturée : pavillons et jardins, place pavée avec fontaine et bancs, parc et étang, centre-ville, parking, plage, mer et pontons ; passages piétons, marquages, plaques d'égout, lampadaires, arbres qui ondulent au vent, eau animée, toits variés (piscine, panneaux solaires, linge qui sèche…), façades pastel avec leurs fenêtres ; N pour passer à la nuit (immeubles assombris, fenêtres allumées, halos des lampadaires, phares des voitures)

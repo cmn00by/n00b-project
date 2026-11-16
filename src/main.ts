@@ -9,13 +9,15 @@ import { SYSTEMS } from './sim/systems'
 import { spawnVehicle } from './sim/systems/driving'
 import { MAP_REGISTRY } from './data/maps'
 import { TILE_KIND_REGISTRY } from './data/tileKinds'
+import { MISSION_REGISTRY } from './data/missions'
 import { VEHICLE_REGISTRY } from './data/vehicles'
 import { CAMERA_LOOKAHEAD_MAX_PX, CAMERA_LOOKAHEAD_SECONDS, CAMERA_LOOKAHEAD_SMOOTHING, DAY_NIGHT_TRANSITION_SECONDS, GAME_SEED, HUD_PLACEHOLDER } from './game/constants'
 import { createFixedStepLoop } from './game/fixedStepLoop'
-import { createHudView, createTouchControlsView } from './game/hud'
+import { createHudView, createMissionPanelView, createTouchControlsView } from './game/hud'
 import { chooseStartMode, createKeyboard, createTouchInput, parseControlsOverride, switchMode, toDriveCommand, toMoveCommand } from './game/input'
 import type { ControlMode } from './game/input'
-import { createActors, createBuildings, createCamera, createDecor, createGround, createLighting, loadTextures } from './game/render'
+import { describeMissions } from './game/missionGuide'
+import { createActors, createBuildings, createCamera, createDecor, createGround, createLighting, createMissionMarkers, loadTextures } from './game/render'
 
 /** Combien de pixels de la fenêtre pour un pixel de la scène : c'est ce qui donne le grain pixel art. P passe de l'un à l'autre. */
 const PIXEL_SCALES = [3, 4, 2] as const
@@ -66,6 +68,12 @@ async function start() {
   const lighting = createLighting(scene, renderer)
   const keyboard = createKeyboard(window)
   const hud = createHudView(document.body)
+  const missionMarkers = createMissionMarkers(scene)
+  const missionPanel = createMissionPanelView(document.body)
+  // Les messages de mission : le panneau écoute la simulation, il ne décide de rien.
+  world.events.on('mission:started', ({ missionId }) => missionPanel.showMessage(MISSION_REGISTRY.get(missionId).briefing, true))
+  world.events.on('mission:succeeded', ({ money }) => missionPanel.showMessage(`Mission réussie ! +${money} €`, true))
+  world.events.on('mission:failed', ({ reason }) => missionPanel.showMessage(reason === 'time-out' ? 'Trop tard… Mission échouée' : 'Mission abandonnée', false))
   const touch = createTouchInput(window)
   const touchView = createTouchControlsView(document.body)
   const fixedStepLoop = createFixedStepLoop(STEP_SECONDS)
@@ -148,6 +156,9 @@ async function start() {
       headlight = { x: carPosition.x + headingX * halfLength, y: carPosition.y + headingY * halfLength, headingX, headingY }
     }
 
+    const missionGuide = describeMissions(player.missionProgress, MISSION_REGISTRY.all, map)
+    missionMarkers.update(missionGuide.markers, displaySeconds)
+    missionPanel.update(missionGuide.panel)
     ground.update(displaySeconds)
     decor.update(displaySeconds, night)
     buildings.setNight(night)
