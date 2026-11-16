@@ -31,6 +31,12 @@ export interface GameCommands {
   'mission:abandon': {
     entityId: EntityId
   }
+  /** Dépenser de l'argent (un achat en boutique, une amende…). Refusée, sans rien retirer, si le portefeuille ne suffit pas. */
+  'economy:spend': {
+    entityId: EntityId // celui qui paie
+    amount: number // en euros entiers, positif
+    reason: string // ce qui est payé, pour les messages et les statistiques : 'vehicle:sports-car', 'fine'…
+  }
   /** Le joueur au volant conduit (touches tenues). Une commande par pas tant qu'il agit. */
   'vehicle:drive': {
     entityId: EntityId // l'entité au volant (pas le véhicule)

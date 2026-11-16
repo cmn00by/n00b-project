@@ -32,13 +32,13 @@ export const DAY_NIGHT_TRANSITION_SECONDS = 1.6
 export const LAMP_GLOW_COLOR = 0xffc870
 
 /**
- * Le HUD : santé, argent, recherche. Ces systèmes n'existent pas encore dans la simulation (blocs 7 et 11) : en attendant, le HUD affiche ces valeurs factices.
+ * Le HUD : santé, argent, recherche. L'argent vient de la simulation (brique economy, #52) ; la santé et la recherche n'existent pas encore (bloc 7) :
+ * en attendant, le HUD affiche ces valeurs factices.
  * Quand ils existeront, seul ce qui fournit l'état au HUD change (main.ts), pas l'affichage.
  */
 export const HUD_PLACEHOLDER = {
   health: 3, // points de vie factices
   maxHealth: 5, // points de vie au maximum
-  money: 120, // argent factice, en euros
   wantedLevel: 1, // niveau de recherche factice, de 0 à maxWantedLevel
   maxWantedLevel: 3, // la jauge de recherche a 3 niveaux (docs/GDD.md)
 } as const

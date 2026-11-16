@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { TEST_SEED, createSimulation, createTileMap, createWorld, getTileCenter, loadMap, spawnEntity, validateDefs, validateMissionDef, validateMissionPlaces } from '../../sim/core'
+import { TEST_SEED, TUNING, createSimulation, createTileMap, createWorld, getTileCenter, loadMap, spawnEntity, validateDefs, validateMissionDef, validateMissionPlaces } from '../../sim/core'
 import { SYSTEMS } from '../../sim/systems'
 import { MAP_REGISTRY } from '../maps'
 import { TILE_KIND_REGISTRY } from '../tileKinds'
@@ -46,5 +46,7 @@ describe('la mission d’essai, dans la vraie ville et avec toutes les briques',
     expect(player.missionProgress?.active?.missionId).toBe('essai-livraison')
     for (const objective of mission.objectives) visit(objective.place)
     expect(succeeded).toEqual(['essai-livraison'])
+    // La brique economy a versé la récompense.
+    expect(player.wallet?.money).toBe(TUNING.economy.startingMoney + mission.reward.money)
   })
 })

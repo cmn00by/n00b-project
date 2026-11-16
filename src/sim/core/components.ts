@@ -103,6 +103,11 @@ export interface MissionProgress {
   waitingToLeaveId?: string
 }
 
+/** L'argent d'une entité (le joueur), en euros entiers : jamais de virgule, pour que le compte soit le même sur toutes les machines (coop). */
+export interface Wallet {
+  money: number
+}
+
 /** Tous les composants possibles : chacun est facultatif sur une entité. */
 export interface Components {
   position?: Position
@@ -114,6 +119,7 @@ export interface Components {
   vehicle?: Vehicle
   driver?: Driver
   missionProgress?: MissionProgress
+  wallet?: Wallet
 }
 
 /** Le nom d'un composant. */

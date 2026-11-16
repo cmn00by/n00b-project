@@ -70,7 +70,7 @@ export function validateMissionDef(def: MissionDef): string[] {
   if (def.title.trim() === '') errors.push('le titre est vide')
   if (def.objectives.length === 0) errors.push('il faut au moins un objectif')
   if (!isPositive(def.timeLimitSeconds)) errors.push('timeLimitSeconds doit être un nombre positif')
-  if (!Number.isFinite(def.reward.money) || def.reward.money < 0) errors.push('la récompense doit être un nombre positif ou nul')
+  if (!Number.isInteger(def.reward.money) || def.reward.money < 0) errors.push('la récompense doit être un nombre entier d’euros, positif ou nul')
   if (!isPositive(def.start.radiusTiles)) errors.push('le rayon du départ doit être positif')
 
   const carried = new Set<string>()
