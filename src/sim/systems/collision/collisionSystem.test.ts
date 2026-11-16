@@ -97,7 +97,29 @@ describe('collisionSystem', () => {
     expect(ghost.lastFreePosition).toBeUndefined()
   })
 
-  it('ne fait rien sans carte chargée', () => {
+  it('bloque contre une autre entité solide, et coupe la vitesse sur l’axe bloqué', () => {
+    const { simulation, entity } = createRoom(15, 15)
+    spawnEntity(simulation.world, 'prop', { position: { x: 15, y: 35, angle: 0 }, body: { width: 6, height: 6, isSolid: true } })
+    entity.velocity = { vx: 40, vy: 120 }
+    const impacts: number[] = []
+    simulation.world.events.on('entity:blocked', (event) => impacts.push(event.impactSpeed))
+    moveTo(entity, 15, 30)
+    simulation.step()
+    expect(entity.position).toMatchObject({ x: 15, y: 29 }) // au contact de la caisse (haut de la caisse = 32, bas de l'entité = 32)
+    expect(entity.velocity).toEqual({ vx: 40, vy: 0 })
+    expect(impacts).toEqual([120])
+  })
+
+  it("n'annonce rien quand le déplacement est libre", () => {
+    const { simulation, entity } = createRoom(15, 15)
+    let blocked = 0
+    simulation.world.events.on('entity:blocked', () => (blocked += 1))
+    moveTo(entity, 18, 15)
+    simulation.step()
+    expect(blocked).toBe(0)
+  })
+
+  it('ne fait rien sans carte chargée ni obstacle', () => {
     const world = createTestWorld()
     const simulation = createSimulation(world, [collisionSystem])
     const entity = spawnEntity(world, 'player', { position: { x: -100, y: -100, angle: 0 }, body: { width: 6, height: 6, isSolid: true } })

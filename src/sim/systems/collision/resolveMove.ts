@@ -1,10 +1,7 @@
 // Le calcul d'un déplacement qui respecte les murs.
 // Expose : resolveMove().
-// Pourquoi : quand une entité entre dans un mur, on ne l'arrête pas net : on garde la partie du déplacement qui est possible,
+// Pourquoi : quand une entité entre dans un mur (ou une autre entité), on ne l'arrête pas net : on garde la partie du déplacement qui est possible,
 // axe par axe. Ainsi le joueur qui marche en diagonale contre un mur glisse le long du mur au lieu de rester collé.
-
-import { isAreaFree } from '../../core'
-import type { TileMap } from '../../core'
 
 /** Une position, en pixels. */
 export interface Point {
@@ -12,11 +9,8 @@ export interface Point {
   y: number
 }
 
-/** Une taille de rectangle, en pixels. */
-export interface Size {
-  width: number
-  height: number
-}
+/** Dit si l'entité peut se trouver centrée sur (x, y). */
+export type IsFreeAt = (x: number, y: number) => boolean
 
 /**
  * La position finale d'un rectangle qui voulait aller de `from` (une position libre) à `to`.
@@ -24,10 +18,10 @@ export interface Size {
  * pas de vide entre l'entité et le mur, et on glisse le long du mur quand on y arrive en diagonale.
  * Valable tant qu'un déplacement fait moins d'une case par pas (sinon on pourrait sauter un mur fin).
  */
-export function resolveMove(map: TileMap, from: Point, to: Point, size: Size): Point {
-  if (isAreaFree(map, to.x, to.y, size.width, size.height)) return { x: to.x, y: to.y }
-  const x = advanceAxis(from.x, to.x, (candidate) => isAreaFree(map, candidate, from.y, size.width, size.height))
-  const y = advanceAxis(from.y, to.y, (candidate) => isAreaFree(map, x, candidate, size.width, size.height))
+export function resolveMove(from: Point, to: Point, isFreeAt: IsFreeAt): Point {
+  if (isFreeAt(to.x, to.y)) return { x: to.x, y: to.y }
+  const x = advanceAxis(from.x, to.x, (candidate) => isFreeAt(candidate, from.y))
+  const y = advanceAxis(from.y, to.y, (candidate) => isFreeAt(x, candidate))
   return { x, y }
 }
 
