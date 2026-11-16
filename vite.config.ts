@@ -7,6 +7,10 @@ export default defineConfig({
     // Phaser seul pèse ~1,2 Mo (320 ko compressé) : c'est attendu, inutile d'avertir.
     chunkSizeWarningLimit: 1300,
     // Phaser est gros : on le met dans son propre fichier pour que le cache du navigateur le garde entre deux versions du jeu.
-    rollupOptions: { output: { manualChunks: (id) => (id.includes('node_modules/phaser') ? 'phaser' : undefined) } },
+    rollupOptions: {
+      // Deux pages : le jeu (Phaser) et l'essai 3D (three.js), pour comparer.
+      input: { main: 'index.html', three: 'three.html' },
+      output: { manualChunks: (id) => (id.includes('node_modules/phaser') ? 'phaser' : undefined) },
+    },
   },
 })
