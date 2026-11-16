@@ -1,5 +1,10 @@
 // La porte d'entrée du module render : les autres modules n'importent que ce fichier.
-export { drawMap } from './mapRenderer'
+export { createGround } from './groundRenderer'
+export type { Ground } from './groundRenderer'
+export { createDecor } from './decorRenderer'
+export type { Decor, DecorLight } from './decorRenderer'
+export { createLighting } from './lighting'
+export type { LightBeam, LightSpot, Lighting } from './lighting'
 export { createPlayerRenderer } from './playerRenderer'
 export type { PlayerRenderer } from './playerRenderer'
 export { createVehicleRenderer } from './vehicleRenderer'

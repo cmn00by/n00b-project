@@ -22,6 +22,11 @@ export const TILE_COLORS: Readonly<Record<string, number>> = {
   sidewalk: 0xbdb4a6, // béton
   grass: 0x5db65a, // herbe
   building: 0xc9533f, // tuile de toit
+  plaza: 0xdcd4c4, // pavés
+  water: 0x3e9be0, // eau
+  sand: 0xe3b676, // sable
+  dock: 0x8e5b36, // bois
+  parking: 0x565a6e, // asphalte
 }
 
 /** Couleur d'une case dont le type n'a pas (encore) de couleur : un rose voyant, pour qu'on la remarque. */
@@ -57,3 +62,21 @@ export const SHADOW_COLOR = 0x3a2f5b
 export const SHADOW_ALPHA = 0.45
 /** Teinte des façades selon leur côté (multiplie la couleur du toit) : le côté au soleil est plus clair. */
 export const WALL_SHADES = { north: 0.62, south: 0.82, west: 0.9, east: 0.7 } as const
+
+/** Couleurs des façades (pastels de la palette), tirées au hasard pour chaque immeuble. */
+export const FACADE_COLORS: readonly number[] = [0xe9c8a0, 0xd9a6a0, 0xa8c6d9, 0xc8d9a8, 0xf2efe6, 0xe3b676, 0xd4b8e0]
+/** Fenêtres le jour, et fenêtres allumées la nuit. */
+export const WINDOW_COLOR = 0x5a7a99
+export const LIT_WINDOW_COLOR = 0xffd27a
+/** La teinte vers laquelle tire la ville la nuit (bleu nuit). */
+export const NIGHT_TINT = 0x2a2a5a
+/** L'obscurité de la nuit : couleur et opacité maximale du voile. */
+export const NIGHT_SHADE_COLOR = 0x0c0a24
+export const NIGHT_SHADE_ALPHA = 0.72
+/** Durée du passage du jour à la nuit, en secondes. */
+export const DAY_NIGHT_TRANSITION_SECONDS = 1.6
+/** Phares des voitures la nuit : portée et largeur du faisceau, en px. */
+export const HEADLIGHT_LENGTH_PX = 120
+export const HEADLIGHT_WIDTH_PX = 70
+/** Couleur du halo des lampadaires. */
+export const LAMP_GLOW_COLOR = 0xffc870
