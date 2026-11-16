@@ -5,6 +5,22 @@ Une nouvelle décision s'ajoute **en haut**. Une décision remise en cause n'est
 
 ---
 
+## 2026-11-16 : Les piétons : types en données pures, personnages voxel assemblés par le code
+
+**Choix** : un type de PNJ est une **fiche en JSON pur** (`NpcTypeDef` : vitesses, plages de courage, de patience et de pause, et une recette d'apparence `look`), sans aucune fonction.
+La brique `pedestrians` ne connaît aucun type par son nom et reçoit le registre des types à sa création. Les piétons sont des personnages **en voxel assemblés par le code** (tête, cheveux, corps,
+bras, jambes, accessoire), dont les couleurs et l'accessoire sont tirés d'après l'id du piéton dans la recette de son type.
+
+**Raison** : le panneau admin devra pouvoir éditer les types de PNJ sans toucher au code ; une fiche en données pures se lit, se modifie et se sauvegarde telle quelle.
+Un personnage assemblé par le code évite de dessiner et d'animer un sprite par variante : ajouter une couleur dans une liste varie toute la foule.
+Tirer l'apparence de l'id (hasard d'affichage) garde la simulation déterministe et sans rien à sauvegarder pour l'affichage.
+
+**Alternatives écartées** : un sprite par variante de PNJ (trop de dessin et d'animation) ; des types de PNJ écrits en code avec des fonctions (non éditables par l'admin) ;
+tirer l'apparence dans la simulation avec `Rng` (alourdit le composant et les sauvegardes pour un détail d'affichage).
+
+**Conséquences** : la brique lit les **commandes des joueurs** (direction et course) pour savoir ce qui fait peur, faute de vitesse stockée par `walking` ; les voitures (#8) fourniront la leur de la même façon.
+Le noyau gagne le composant `pedestrian` et l'événement `pedestrian:scared`.
+
 ## 2026-11-16 : three.js devient le moteur d'affichage (remplace Phaser)
 
 **Choix** (cmn00by, après comparaison des deux versions) : l'affichage du jeu passe à **three.js** : la ville en vraie 3D, **dessinée en basse résolution puis agrandie** sans lissage,

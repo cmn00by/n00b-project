@@ -19,6 +19,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 
 ### Ajouté
 
+- Des piétons peuplent la ville : ils naissent hors de l'écran sur les trottoirs, se promènent case par case, s'arrêtent parfois, regardent puis fuient quand on court vers eux (une pastille « ! » rouge s'allume), et disparaissent quand on s'éloigne ; chacun est assemblé en blocs avec ses propres couleurs et son accessoire (#10)
 - Essai d'affichage en 3D pixel art (three.js) sur la page `three.html`, à comparer avec le jeu : même ville, même simulation ; vraies ombres, lampadaires et phares qui éclairent les façades
 - Une vraie petite ville, variée et texturée : pavillons et jardins, place pavée avec fontaine et bancs, parc et étang, centre-ville, parking, plage, mer et pontons ; passages piétons, marquages, plaques d'égout, lampadaires, arbres qui ondulent au vent, eau animée, toits variés (piscine, panneaux solaires, linge qui sèche…), façades pastel avec leurs fenêtres ; N pour passer à la nuit (immeubles assombris, fenêtres allumées, halos des lampadaires, phares des voitures)
 - Essai de rendu 2.5D : les immeubles prennent du relief (façades en perspective, toits décalés) et projettent leur ombre au sol ; R pour comparer avec et sans (#26)
@@ -33,6 +34,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 
 ### Technique
 
+- Brique `pedestrians` (naissance, promenade, états, peur) et types de PNJ en données pures (`src/data/npcTypes` : personnalité, vitesses, apparence), prêts pour le futur panneau admin ; le noyau gagne le composant `pedestrian` et l'événement `pedestrian:scared` ; la brique reçoit ses types par un registre : `createPedestriansSystem(NPC_TYPE_REGISTRY)` ; l'apparence est tirée par l'affichage d'après l'id du piéton (#10)
 - Bascule du moteur d'affichage : le code 3D rejoint `src/game` (`render/`, `input/`), ESLint interdit three.js dans la simulation ; le clavier lit la position physique des touches (#21)
 - Brique `driving` (physique arcade déterministe, cap en vecteur), modèles de véhicules en données, `isSpaceClear` dans le noyau ; la brique `collision` bloque aussi contre les autres entités, coupe la vitesse au choc et annonce `entity:blocked` (#8)
 - Format de carte en données (`MapDef`), carte chargée dans le monde (`world.map`), brique `collision` et tranche `SYSTEM_ORDER.collision` (#6)

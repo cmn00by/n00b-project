@@ -10,7 +10,7 @@ Le « plateau LEGO » sur lequel toutes les briques s'emboîtent. Petit, stable,
 | `world.ts`      | `World` (l'état complet, dont la carte `map`), `createWorld(seed)`, `createTestWorld()`, `loadMap()`                                  |
 | `space.ts`      | `isSpaceClear`, `findSolidOverlaps` : un endroit est-il libre de murs et d'entités solides ?                                          |
 | `map.ts`        | `MapDef` (carte en données), `TileMap` (grille), `createTileMap`, `validateMapDef`, `isSolidTile`, `isAreaFree`, `getTileCenter`      |
-| `npcType.ts`    | `NpcTypeDef` (fiche d'un type de PNJ, données pures pour le futur panneau admin), `validateNpcTypeDef`                                |
+| `npcType.ts`    | `NpcTypeDef` et `NpcLook` (type de PNJ et apparence : données pures pour l'admin), `validateNpcTypeDef`                               |
 | `entities.ts`   | `spawnEntity`, `despawnEntity`, `findEntity`, `getEntity`, `findEntitiesWith`                                                         |
 | `events.ts`     | le bus d'événements typé et le catalogue `GameEvents`                                                                                 |
 | `commands.ts`   | le catalogue `GameCommands` (`player:move`…) et `findCommands`                                                                        |
