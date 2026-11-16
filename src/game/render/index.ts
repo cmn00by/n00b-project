@@ -2,3 +2,5 @@
 export { drawMap } from './mapRenderer'
 export { createPlayerRenderer } from './playerRenderer'
 export type { PlayerRenderer } from './playerRenderer'
+export { createVehicleRenderer } from './vehicleRenderer'
+export type { VehicleRenderer } from './vehicleRenderer'

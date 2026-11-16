@@ -29,3 +29,22 @@ export const MISSING_TILE_COLOR = 0xff6fa8
 
 /** Bordure des toits : un ton plus sombre, pour distinguer les bâtiments voisins. */
 export const BUILDING_EDGE_COLOR = 0x9e3b33
+
+/** Couleur provisoire de chaque modèle de véhicule (id de src/data/vehicles), d'après la bible visuelle, en attendant les sprites (#4). */
+export const VEHICLE_COLORS: Readonly<Record<string, number>> = {
+  'mamie-car': 0x8ed4b4, // vert menthe pastel
+  'delivery-van': 0xf2efe6, // blanc
+  'sports-car': 0xffd23f, // jaune vif
+}
+
+/** Couleur d'un véhicule dont le modèle n'a pas (encore) de couleur. */
+export const MISSING_VEHICLE_COLOR = 0xff6fa8
+
+/** Pare-brise : il montre où est l'avant de la voiture. */
+export const WINDSHIELD_COLOR = 0x3e4152
+
+/** Au volant, la caméra regarde devant la voiture : de combien de secondes de trajet, et au plus de combien de pixels. */
+export const CAMERA_LOOKAHEAD_SECONDS = 0.3
+export const CAMERA_LOOKAHEAD_MAX_PX = 110
+/** Vitesse à laquelle la caméra rejoint ce point d'avance (plus grand = plus vif). */
+export const CAMERA_LOOKAHEAD_SMOOTHING = 3
