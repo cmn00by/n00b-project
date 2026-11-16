@@ -57,7 +57,7 @@ export const HUD_STYLE = {
 /** Les repères des missions sur la carte : un anneau au sol, une colonne de lumière et un losange qui flotte. */
 export const MISSION_MARKER_VIEW = {
   startColor: 0xffd23f, // un départ de mission (jaune de la palette)
-  objectiveColor: 0x4fd1c5, // l'objectif en cours (turquoise, distinct du jaune)
+  objectiveColor: 0x2ec4b6, // l'objectif en cours (turquoise de la palette, distinct du jaune)
   beamHeight: 140, // hauteur de la colonne de lumière, en px
   beamOpacity: 0.4,
   diamondSize: 12, // taille du losange, en px
