@@ -35,6 +35,9 @@ export const TUNING = {
     spawnTries: 24, // nombre d'endroits tirés au hasard pour faire naître un piéton avant de laisser tomber (jusqu'à la prochaine tentative)
     walkableTileKinds: ['sidewalk'], // les types de case sur lesquels les piétons marchent (ids de src/data/tileKinds)
   },
+  economy: {
+    startingMoney: 120, // l'argent du joueur au début de la partie, en euros
+  },
   driving: {
     enterDistance: 48, // distance maximale entre le joueur et le centre d'un véhicule pour y monter, en px
     exitGap: 4, // espace laissé entre le flanc du véhicule et le joueur qui en descend, en px

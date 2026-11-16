@@ -345,7 +345,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 
 **V1**
 
-- [ ] L'argent du joueur dans la simulation : gagné (récompense des missions, `mission:succeeded`), dépensé, affiché par le HUD à la place de la valeur factice (#52)
+- [x] L'argent du joueur dans la simulation : gagné (récompense des missions, `mission:succeeded`), dépensé, affiché par le HUD à la place de la valeur factice (#52)
 - [ ] Argent gagné (missions, distributeurs, petits jobs) et perdu (amendes, hôpital, réparations)
 - [ ] Réputation par quartier, qui débloque contacts et missions
 - [ ] Planque : point de sauvegarde et garage pour stocker un véhicule

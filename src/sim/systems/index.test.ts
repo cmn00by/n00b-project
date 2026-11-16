@@ -11,6 +11,10 @@ describe('SYSTEMS', () => {
     expect(SYSTEMS.map((system) => system.id)).toContain('pedestrians')
   })
 
+  it('enregistre la brique de l’argent', () => {
+    expect(SYSTEMS.map((system) => system.id)).toContain('economy')
+  })
+
   it('enregistre le moteur de missions', () => {
     expect(SYSTEMS.map((system) => system.id)).toContain('missions')
   })

@@ -107,8 +107,6 @@ async function start() {
     clearTimeout(noticeTimer)
     noticeTimer = setTimeout(() => (notice.style.opacity = '0'), NOTICE_MILLISECONDS)
   })
-  // Santé, argent et recherche n'existent pas encore dans la simulation : le HUD affiche des valeurs factices (voir HUD_PLACEHOLDER).
-  hud.update(HUD_PLACEHOLDER)
 
   // Le mode de commandes : clavier ou tactile, choisi selon l'appareil, puis il suit la dernière entrée utilisée (un toucher, une touche). ?controls=touch|keyboard le force.
   const help = document.getElementById('help')
@@ -180,6 +178,8 @@ async function start() {
     const missionGuide = describeMissions(player.missionProgress, MISSION_REGISTRY.all, map)
     missionMarkers.update(missionGuide.markers, displaySeconds)
     missionPanel.update(missionGuide.panel)
+    // L'argent vient de la simulation (brique economy) ; la santé et la recherche n'existent pas encore : valeurs factices (HUD_PLACEHOLDER).
+    hud.update({ ...HUD_PLACEHOLDER, money: player.wallet?.money ?? 0 })
     ground.update(displaySeconds)
     decor.update(displaySeconds, night)
     buildings.setNight(night)

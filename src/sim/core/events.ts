@@ -30,6 +30,12 @@ export interface GameEvents {
   'mission:succeeded': { entityId: EntityId; missionId: string; money: number }
   /** La mission d'un joueur a échoué (brique missions) : chrono écoulé, ou abandon. */
   'mission:failed': { entityId: EntityId; missionId: string; reason: 'time-out' | 'abandoned' }
+  /** De l'argent a été gagné (brique economy). balance : le nouveau solde. */
+  'economy:earned': { entityId: EntityId; amount: number; reason: string; balance: number }
+  /** De l'argent a été dépensé (brique economy). */
+  'economy:spent': { entityId: EntityId; amount: number; reason: string; balance: number }
+  /** Une dépense a été refusée : pas assez d'argent (brique economy). Le solde n'a pas changé. */
+  'economy:refused': { entityId: EntityId; amount: number; reason: string; balance: number }
 }
 
 /** Une fonction appelée quand l'événement a lieu. */

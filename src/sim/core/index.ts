@@ -18,6 +18,7 @@ export type {
   Sprite,
   Vehicle,
   Velocity,
+  Wallet,
 } from './components'
 export { TEST_SEED, createTestWorld, createWorld, loadMap } from './world'
 export type { World } from './world'
