@@ -460,7 +460,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 
 **Objectif** : jouable sur téléphone.
 
-- [ ] Joystick virtuel et boutons tactiles qui produisent les mêmes commandes que le clavier
+- [x] Joystick virtuel et boutons tactiles qui produisent les mêmes commandes que le clavier (#20)
 - [ ] Interface adaptée aux petits écrans
 - [ ] Performances : tester sur un téléphone d'entrée de gamme
 
