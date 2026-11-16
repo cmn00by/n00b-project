@@ -1,12 +1,23 @@
-# game : l'affichage Phaser
+# game : l'affichage (three.js) et les entrées
 
-- `scenes/` : une scène par rôle (`BootScene`, `CityScene`, puis `HudScene`, `MenuScene`). `CityScene` fait tourner la simulation, relie le clavier et dessine.
-- `render/` : le sol (`groundRenderer`, règles dans `groundLayout`), la déco (`decorRenderer`), le relief des immeubles (`buildingRelief`), la nuit (`lighting`), et un renderer par type d'entité (`playerRenderer`) ; lit l'état du monde, ne le modifie jamais, interpole entre deux pas de simulation.
-- `input/` : clavier, manette, tactile → commandes. Le clavier lit les touches (flèches, ZQSD, WASD, Maj), `moveCommand.ts` les traduit en commande `player:move`.
-- `fixedStepLoop.ts` : combien de pas de simulation (30 par seconde) jouer à chaque image affichée, et la part de pas écoulée pour l'interpolation.
-- `fx/`, `hud/` : effets et widgets, qui écoutent les événements.
-- `decor/` : où poser la déco (`placeDecor`) et à quelle taille (`propStyles`, à l'échelle du jeu).
-- `assets.ts` : toutes les clés d'assets et leur chargement.
-- `hash.ts` : un hasard d'affichage stable (toujours la même ville). `constants.ts` : taille de case, zoom de la caméra, couleurs provisoires.
+La ville est construite en **vraie 3D**, puis **dessinée en basse résolution** (1 pixel de scène = 3 pixels d'écran, touche P) et agrandie sans lissage :
+tous les éléments partagent la même grille de pixels. Aucune règle de jeu ici : elles vivent dans `src/sim`. Voir [docs/architecture.md](../../docs/architecture.md), section 9.
 
-Aucune règle de jeu ici : elles vivent dans `src/sim`. Voir [docs/architecture.md](../../docs/architecture.md), section 9.
+Le point d'entrée est `src/main.ts` : il crée la simulation, l'affichage et la boucle de jeu (pas fixe + interpolation).
+
+| Dossier / fichier                             | Rôle                                                                                                                                              |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `render/ground.ts`                            | le sol peint une fois dans une texture (règles : `groundLayout.ts`), l'eau animée dessous                                                         |
+| `render/buildings.ts`                         | les immeubles en boîtes : toit généré, façades dessinées par le code (`facadeLayout.ts`), fenêtres allumées la nuit ; blocs : `buildingBlocks.ts` |
+| `render/decor.ts`                             | la déco en découpes debout, à l'échelle, ombres au sol, feuillage qui ondule, halos des lampadaires                                               |
+| `render/actors.ts`                            | le joueur et les voitures en voxel, interpolés entre deux pas                                                                                     |
+| `render/lighting.ts`                          | soleil et ombres dures, ciel, nuit, lampadaires proches en vraies lumières, phares                                                                |
+| `render/camera.ts`                            | la caméra de biais, calée sur la grille de pixels (touche C : inclinaison)                                                                        |
+| `render/textures.ts`                          | le chargement des textures, toutes « pixel net » (`pixelTexture()`)                                                                               |
+| `decor/`                                      | où poser la déco (`placeDecor`) et à quelle taille (`propStyles`, à l'échelle du jeu)                                                             |
+| `input/`                                      | clavier par position physique (`keyboard.ts`) ; touches → commandes (`moveCommand.ts`, `driveCommand.ts`)                                         |
+| `assets.ts`                                   | la liste de toutes les textures                                                                                                                   |
+| `constants.ts`, `hash.ts`, `fixedStepLoop.ts` | constantes d'affichage, hasard d'affichage stable, boucle à pas fixe                                                                              |
+| `fx/`, `hud/`                                 | à venir : effets (qui écoutent les événements) et interface en HTML/CSS par-dessus la scène                                                       |
+
+Les règles pures (`groundLayout`, `buildingBlocks`, `facadeLayout`, `placeDecor`, `moveCommand`, `driveCommand`, `fixedStepLoop`) sont **testées dans Node**.

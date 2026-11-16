@@ -18,7 +18,7 @@ La structure des modules est décrite dans [architecture.md](architecture.md), l
 9. [Événements et commandes](#9-événements-et-commandes)
 10. [Systèmes, composants, renderers](#10-systèmes-composants-renderers)
 11. [Tests](#11-tests)
-12. [Phaser](#12-phaser)
+12. [Affichage (three.js)](#12-affichage-threejs)
 13. [Les mots du jeu (glossaire)](#13-les-mots-du-jeu-glossaire)
 
 ---
@@ -33,7 +33,7 @@ La structure des modules est décrite dans [architecture.md](architecture.md), l
 | **Docs**, issues, PR, commits                                                     | **français**                   | `feat: ajoute la police`                       |
 | **Fichiers d'assets**                                                             | **français**, sans accent      | `poubelle-casse.png` (voir `style.md`)         |
 
-**Pourquoi l'anglais dans le code** : Phaser, TypeScript et toutes les docs techniques sont en anglais ; un mélange `getVitesse()` est plus dur à lire.
+**Pourquoi l'anglais dans le code** : three.js, TypeScript et toutes les docs techniques sont en anglais ; un mélange `getVitesse()` est plus dur à lire.
 On utilise **le glossaire** (section 13) pour toujours traduire un mot du jeu de la même façon.
 
 ## 2. Le tableau récapitulatif
@@ -56,8 +56,8 @@ On utilise **le glossaire** (section 13) pour toujours traduire un mot du jeu de
 | Événement                           | `'domaine:fait-au-passe'`                  | `'vehicle:crashed'`                            |
 | Commande                            | `'domaine:verbe'`                          | `'vehicle:enter'`                              |
 | Système                             | `<nom>System`                              | `drivingSystem`                                |
-| Renderer                            | `<nom>Renderer`                            | `vehicleRenderer`                              |
-| Scène Phaser                        | `<Nom>Scene`                               | `CityScene`, `HudScene`                        |
+| Module d'affichage                  | `create<Nom>()` dans `render/<nom>.ts`     | `createBuildings()`                            |
+| Texture                             | nom du fichier sans extension              | `textures.roofs.piscine`                       |
 | Clé d'asset                         | nom du fichier sans extension              | `'mamie-car-abime'`                            |
 | Branche Git                         | `<type>/<n°issue>-<description>`           | `feature/7-deplacement-a-pied` (voir `git.md`) |
 
@@ -157,15 +157,15 @@ export const TUNING = {
 
 ## 10. Systèmes, composants, renderers
 
-| Élément              | Nom                     | Fichier                               | Exemple                               |
-| -------------------- | ----------------------- | ------------------------------------- | ------------------------------------- |
-| Module de simulation | nom du domaine          | `src/sim/systems/<nom>/`              | `wanted/`                             |
-| Système              | `<nom>System`           | `<nom>System.ts`                      | `wantedSystem` dans `wantedSystem.ts` |
-| Id du système        | `'<nom>'` en kebab-case |                                       | `id: 'wanted'`                        |
-| Composant            | nom court au singulier  | déclaré dans `core/components.ts`     | `wanted`, `vehicle`, `health`         |
-| Renderer             | `<entité>Renderer`      | `src/game/render/<entité>Renderer.ts` | `vehicleRenderer`                     |
-| Effet visuel         | `<nom>Fx`               | `src/game/fx/<nom>Fx.ts`              | `sparksFx`                            |
-| Widget d'interface   | `<Nom>Widget`           | `src/game/hud/<Nom>Widget.ts`         | `WantedWidget`                        |
+| Élément              | Nom                     | Fichier                           | Exemple                               |
+| -------------------- | ----------------------- | --------------------------------- | ------------------------------------- |
+| Module de simulation | nom du domaine          | `src/sim/systems/<nom>/`          | `wanted/`                             |
+| Système              | `<nom>System`           | `<nom>System.ts`                  | `wantedSystem` dans `wantedSystem.ts` |
+| Id du système        | `'<nom>'` en kebab-case |                                   | `id: 'wanted'`                        |
+| Composant            | nom court au singulier  | déclaré dans `core/components.ts` | `wanted`, `vehicle`, `health`         |
+| Module d'affichage   | `create<Nom>()`         | `src/game/render/<nom>.ts`        | `createActors()`                      |
+| Effet visuel         | `<nom>Fx`               | `src/game/fx/<nom>Fx.ts`          | `sparksFx`                            |
+| Widget d'interface   | `<Nom>Widget`           | `src/game/hud/<Nom>Widget.ts`     | `WantedWidget`                        |
 
 ## 11. Tests
 
@@ -181,12 +181,14 @@ describe('computeWantedLevel', () => {
 
 - Les mondes de test viennent de `createTestWorld()` avec une **graine fixe**.
 
-## 12. Phaser
+## 12. Affichage (three.js)
 
-- **Scènes** : `<Nom>Scene`, une scène = un rôle : `BootScene` (chargement), `CityScene` (le monde), `HudScene` (l'interface), `MenuScene`.
-- **Clés d'assets** : le nom du fichier sans extension (`'mamie-car'`), déclarées **une seule fois** dans `src/game/assets.ts` (`ASSET_KEYS`).
-  Jamais de chaîne `'mamie-car'` écrite à la main ailleurs.
-- **Animations** : `'<clé>:<action>-<direction>'` : `'joueur:walk-down'`, `'gege-docker:idle-left'`.
+- **Modules d'affichage** : `src/game/render/<nom>.ts`, créés par `create<Nom>(scene, …)`, qui renvoient un objet (`Ground`, `Buildings`, `Decor`…) avec `update()`.
+  Les règles pures qu'ils affichent ont leur propre fichier testé (`groundLayout.ts`, `facadeLayout.ts`…).
+- **Textures** : chargées une fois par `loadTextures()` à partir des listes de `src/game/assets.ts` (`TILE_TEXTURES`, `ROOF_TEXTURES`, `PROP_TEXTURES`),
+  et toujours passées par `pixelTexture()`. Jamais de chemin `'assets/…png'` écrit à la main ailleurs.
+- **Repère** : x de three.js = x de la simulation, **z de three.js = y de la simulation**, y de three.js = la hauteur. 1 unité = 1 pixel du monde.
+- **Orientation** : un modèle regarde vers **-z** (le haut de la carte) ; son cap se convertit avec `Math.atan2(-headingX, -headingY)`.
 - **Calques Tiled** : `kebab-case` en anglais, documentés dans `docs/carte.md` : `ground`, `collisions`, `spawns`, `roads`, `zones`.
 
 ## 13. Les mots du jeu (glossaire)

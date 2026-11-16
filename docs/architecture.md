@@ -25,7 +25,7 @@ Les noms (fichiers, fonctions, types, événements) suivent [conventions.md](con
 ## 1. Le principe en une image
 
 ```
-                    ┌──────────────────────── src/sim (le jeu, sans Phaser) ───────────────────────┐
+                    ┌──────────────────────── src/sim (le jeu, sans three.js) ───────────────────────┐
                     │                                                                                │
  clavier ─► input ─►│ commandes ─► ┌─────────────┐   step()   ┌──────────────────────────────────┐   │
  manette            │              │    core     │ ─────────► │ systèmes (briques)               │   │
@@ -37,7 +37,7 @@ Les noms (fichiers, fonctions, types, événements) suivent [conventions.md](con
                     │              src/data : missions, véhicules, dialogues… (registres)           │
                     └─────────────────────┼────────────────────────────────────────────────────────┘
                                           │ lit l'état + écoute les événements
-                    ┌─────────────────────┴──────── src/game (Phaser) ───────────────────────────────┐
+                    ┌─────────────────────┴──────── src/game (three.js) ───────────────────────────────┐
                     │ renderers (une brique par type d'entité) · fx · audio · hud                     │
                     └─────────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -58,14 +58,14 @@ src/game  ──►  src/sim/systems  ──►  src/sim/core
     └────────────────┴──► src/data ───────┘   (les données utilisent les types du noyau)
 ```
 
-| Couche              | Peut importer                               | Ne doit **jamais** importer                      |
-| ------------------- | ------------------------------------------- | ------------------------------------------------ |
-| `src/sim/core`      | rien d'autre du projet                      | `systems`, `data`, `game`, Phaser, le navigateur |
-| `src/sim/systems/*` | `core`, `data`                              | **un autre système**, `game`, Phaser             |
-| `src/data`          | les **types** de `core`                     | `systems`, `game`                                |
-| `src/game`          | `core`, `systems` (leur `index.ts`), `data` | l'intérieur d'un module (voir 3)                 |
-| `src/net` (V2)      | `core`                                      | `game`                                           |
-| `worker/`           | `core`, `systems`, `data` (pour la coop)    | `game`, Phaser                                   |
+| Couche              | Peut importer                               | Ne doit **jamais** importer                        |
+| ------------------- | ------------------------------------------- | -------------------------------------------------- |
+| `src/sim/core`      | rien d'autre du projet                      | `systems`, `data`, `game`, three.js, le navigateur |
+| `src/sim/systems/*` | `core`, `data`                              | **un autre système**, `game`, three.js             |
+| `src/data`          | les **types** de `core`                     | `systems`, `game`                                  |
+| `src/game`          | `core`, `systems` (leur `index.ts`), `data` | l'intérieur d'un module (voir 3)                   |
+| `src/net` (V2)      | `core`                                      | `game`                                             |
+| `worker/`           | `core`, `systems`, `data` (pour la coop)    | `game`, three.js                                   |
 
 Ces règles sont **vérifiées automatiquement** (section 11) : une PR qui les enfreint ne passe pas.
 
@@ -226,7 +226,7 @@ Un **composant** est un **petit paquet de données sans logique**. Un système a
 
 **Règles**
 
-- Un composant contient **des données simples** (nombres, textes, identifiants), **jamais de fonction ni d'objet Phaser**. Ainsi l'état complet se sauvegarde et s'envoie sur le réseau tel quel.
+- Un composant contient **des données simples** (nombres, textes, identifiants), **jamais de fonction ni d'objet d'affichage (three.js)**. Ainsi l'état complet se sauvegarde et s'envoie sur le réseau tel quel.
 - Une entité référence une autre entité **par son `id`**, jamais par un pointeur direct.
 - Les types de composants sont déclarés dans `core/components.ts`. En ajouter un est un **ajout** permis.
 
@@ -300,13 +300,22 @@ export const VEHICLES: VehicleDef[] = [mamieCar, deliveryVan, sportsCar, golfCar
 
 ## 9. L'affichage, les entrées et le son
 
-Le côté Phaser suit **les mêmes principes LEGO**.
+L'affichage utilise **three.js** et suit **les mêmes principes LEGO** (décision : [decisions.md](decisions.md)).
 
-- **Renderers** : une brique par type d'entité (`vehicleRenderer`, `pedestrianRenderer`, `propRenderer`…), enregistrée dans `src/game/render/index.ts`.
-  Elle lit les composants et dessine. **Elle ne modifie jamais l'état du monde.**
+**Le rendu pixel art** : la ville est construite en vraie 3D, **dessinée en basse résolution** (1 pixel de scène = 3 pixels d'écran)
+puis agrandie sans lissage. Toutes les textures sont réglées « pixel net » (`pixelTexture()`), et la caméra est **calée sur la grille de pixels**
+pour que la ville ne « nage » pas quand elle bouge.
+
+- **Modules d'affichage** (`src/game/render/`) : un module par sujet (`ground`, `buildings`, `decor`, `actors`, `lighting`, `camera`), créé par une fonction
+  `create<Nom>()` qui renvoie un objet avec ses méthodes (`update()`…). Ils lisent l'état du monde et dessinent. **Ils ne modifient jamais l'état du monde.**
+- **Règles pures** à part : ce qu'on dessine (où poser un passage piéton, une fenêtre, un arbre) est calculé par des fonctions sans three.js
+  (`groundLayout`, `buildingBlocks`, `facadeLayout`, `decor/placeDecor`), **testées dans Node**. Le module three.js ne fait que les afficher.
+- **Interpolation** : la simulation avance à 30 pas par seconde ; l'affichage retient l'état d'avant chaque pas et dessine entre les deux (`actors.rememberStates()`).
+- **Lumières** : une **réserve fixe** de lumières, déplacées d'une image à l'autre (three.js recompile ses shaders si on en ajoute ou en retire en jeu).
 - **Effets et sons** : ils **écoutent les événements** (`vehicle:crashed` → étincelles + son). Ajouter un effet ne touche ni la simulation ni les autres effets.
 - **Entrées** : chaque périphérique (clavier, manette, tactile) est une brique qui produit des **commandes** ; la simulation ne sait pas d'où elles viennent.
-- **Interface (HUD)** : chaque widget (santé, argent, recherche, mini-carte) est une brique qui lit l'état.
+  Le clavier lit la **position physique** des touches (ZQSD = WASD).
+- **Interface (HUD)** : en **HTML et CSS** par-dessus la scène (texte net à toutes les tailles) ; chaque widget (santé, argent, recherche, mini-carte) lit l'état.
 
 ## 10. Recettes : ajouter une brique
 
@@ -348,13 +357,13 @@ Si une case ne peut pas être cochée, l'expliquer dans la PR.
 
 À mettre en place avec le socle (issue #2), pour que les règles ne reposent pas sur la mémoire :
 
-| Outil                                                                                 | Ce qu'il vérifie                                                                                                             | Commande               |
-| ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
-| **ESLint** + règles d'imports (`no-restricted-imports` ou `eslint-plugin-boundaries`) | le sens des dépendances (section 2), les imports uniquement par `index.ts`, pas de Phaser ni de `Math.random` dans `src/sim` | `npm run lint`         |
-| **madge**                                                                             | aucune dépendance circulaire                                                                                                 | `npm run check:cycles` |
-| **TypeScript strict**                                                                 | les types des composants, événements et contenus                                                                             | `npm run build`        |
-| **Tests de registres**                                                                | ids uniques, références valides, bornes                                                                                      | `npm test`             |
-| **Test de déterminisme**                                                              | même graine + mêmes commandes = même monde                                                                                   | `npm test`             |
+| Outil                                                                                 | Ce qu'il vérifie                                                                                                               | Commande               |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------- |
+| **ESLint** + règles d'imports (`no-restricted-imports` ou `eslint-plugin-boundaries`) | le sens des dépendances (section 2), les imports uniquement par `index.ts`, pas de three.js ni de `Math.random` dans `src/sim` | `npm run lint`         |
+| **madge**                                                                             | aucune dépendance circulaire                                                                                                   | `npm run check:cycles` |
+| **TypeScript strict**                                                                 | les types des composants, événements et contenus                                                                               | `npm run build`        |
+| **Tests de registres**                                                                | ids uniques, références valides, bornes                                                                                        | `npm test`             |
+| **Test de déterminisme**                                                              | même graine + mêmes commandes = même monde                                                                                     | `npm test`             |
 
 Une GitHub Action lancera `lint`, `check:cycles`, `test` et `build` sur chaque PR : **une PR rouge ne se merge pas.**
 
@@ -363,9 +372,9 @@ Une GitHub Action lancera `lint`, `check:cycles`, `test` et `build` sur chaque P
 - Un système qui **importe un autre système**.
 - Importer **l'intérieur** d'un module au lieu de son `index.ts`.
 - Une **dépendance circulaire**.
-- **Phaser, le DOM, `Math.random()` ou `Date.now()`** dans `src/sim`.
+- **three.js, le DOM, `Math.random()` ou `Date.now()`** dans `src/sim`.
 - Une **variable globale** ou un singleton qui garde de l'état hors de `World`.
-- Une **fonction ou un objet Phaser dans un composant**.
+- Une **fonction ou un objet three.js dans un composant**.
 - **Modifier le noyau** pour ajouter du contenu, ou sans PR dédiée.
 - Un **`if (id === 'mamie-car')`** dans un système : le comportement particulier d'un contenu passe par ses données.
 - Un renderer, un effet ou un widget qui **modifie l'état** du monde.

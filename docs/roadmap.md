@@ -6,14 +6,14 @@ Les grandes étapes du jeu, et où on en est. Le détail de chaque bloc est dans
 
 ## Où on en est
 
-| Étape                           | Objectif                                                            | Avancement           |
-| ------------------------------- | ------------------------------------------------------------------- | -------------------- |
-| **Cadrage**                     | docs, règles, organisation                                          | ✅ terminé           |
-| **V0 : prototype codé**         | un quartier de test, à pied et en voiture, des piétons, une mission | 🚧 en cours (4 / 10) |
-| **V0.5 : visuels du prototype** | identité visuelle, bible, premier quartier dans Tiled               | ⏳ à venir           |
-| **V1 : solo**                   | 4 quartiers, police, ~10 missions, progression, sauvegarde          | ⏳ à venir           |
-| **V2 : coop**                   | 2 à 4 joueurs dans la même ville                                    | ⏳ à venir           |
-| **V3 : mini online**            | comptes, classements, ville persistante                             | ⏳ à venir           |
+| Étape                           | Objectif                                                            | Avancement                  |
+| ------------------------------- | ------------------------------------------------------------------- | --------------------------- |
+| **Cadrage**                     | docs, règles, organisation                                          | ✅ terminé                  |
+| **V0 : prototype codé**         | un quartier de test, à pied et en voiture, des piétons, une mission | 🚧 en cours (4 / 10)        |
+| **V0.5 : visuels du prototype** | identité visuelle, bible, ville variée, moteur 3D pixel art         | 🚧 ville et moteur 3D faits |
+| **V1 : solo**                   | 4 quartiers, police, ~10 missions, progression, sauvegarde          | ⏳ à venir                  |
+| **V2 : coop**                   | 2 à 4 joueurs dans la même ville                                    | ⏳ à venir                  |
+| **V3 : mini online**            | comptes, classements, ville persistante                             | ⏳ à venir                  |
 
 ---
 
@@ -58,7 +58,8 @@ Le jeu tourne avec des formes de couleur, sans visuels.
 - [x] #4 Identité visuelle : planches bible
 - [ ] #5 Premier quartier dans Tiled
 - [ ] #7 Animations à pied (la marche et la course sont faites dans #19)
-- [ ] Remplacer les formes de couleur par les visuels
+- [x] Remplacer les formes de couleur par les visuels : ville variée texturée (#29)
+- [x] Moteur d'affichage : three.js, 3D pixel art (#32)
 
 ## ⏳ V1 : solo
 

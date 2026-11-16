@@ -7,6 +7,11 @@ Toute génération d'image **part des blocs de prompt de ce document**, sans exc
 > [STYLE](#41-le-bloc-style-toujours-en-premier), [FOND](#42-le-bloc-fond), du bloc de la catégorie, puis de la description.
 > Ne jamais réécrire un bloc « à sa façon ». Toujours joindre les images de référence prévues. Générer seulement avec un budget donné par le propriétaire du repo.
 
+> **Rendu en jeu (depuis le 2026-11-16)** : le jeu est en **3D dessinée en basse résolution** (three.js, voir `docs/decisions.md`).
+> Les **sols** et les **toits** (vus de dessus) sont des textures plaquées sur le sol et le dessus des immeubles ; les **façades** sont dessinées par le code ;
+> la **déco** est affichée en découpes debout ; **personnages et véhicules** sont pour l'instant en **voxel** (blocs assemblés par le code).
+> Les **portraits** de dialogue restent des images. Les règles de ce guide (palette, blocs de prompt, bible) s'appliquent à toutes les textures générées.
+
 ## Sommaire
 
 1. [L'univers en une phrase](#1-lunivers-en-une-phrase)
@@ -466,7 +471,7 @@ public/assets/
 
 - Noms en **français**, **minuscules**, mots séparés par des **tirets**, sans accent.
 - Un même objet garde le **même préfixe** pour toutes ses variantes (`poubelle`, `poubelle-casse`).
-- Les clés de chargement Phaser reprennent le nom de fichier sans extension, déclarées à **un seul endroit** du code.
+- Les textures sont chargées sous le nom du fichier sans extension, listées à **un seul endroit** du code (`src/game/assets.ts`).
 
 ## 10. Contrôle qualité
 
