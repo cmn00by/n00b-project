@@ -48,3 +48,14 @@ export const TOUCH_CONTROLS = {
   /** Distance entre les commandes et les bords de l'écran. */
   margin: 28,
 } as const
+
+/** Les couleurs des commandes tactiles (blanc chaud et violet sombre de la palette), pour qu'elles se lisent sur la ville sans la masquer. */
+export const TOUCH_STYLE = {
+  line: '#fff8ec',
+  fill: 'rgba(43, 30, 58, 0.45)',
+  pressedFill: 'rgba(255, 210, 63, 0.75)',
+  pressedText: '#2b1e3a',
+  /** Opacité du repère du joystick tant qu'aucun doigt n'est posé, et quand il est tenu. */
+  hintOpacity: 0.55,
+  heldOpacity: 0.95,
+} as const
