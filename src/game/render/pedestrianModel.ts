@@ -4,7 +4,8 @@
 // changer une couleur ou un accessoire dans la recette d'un type de PNJ suffit à varier toute la foule. Il regarde vers -z, comme les autres modèles.
 
 import * as THREE from 'three'
-import { PEDESTRIAN_VIEW } from '../constants'
+import { CHARACTER_VIEW, PEDESTRIAN_VIEW } from '../constants'
+import { addOutline } from './outline'
 import type { PedestrianAppearance } from './pedestrianAppearance'
 
 export interface PedestrianModel {
@@ -96,9 +97,11 @@ export function createPedestrianModel(appearance: PedestrianAppearance): Pedestr
   for (const side of [-1, 1]) body.add(placed(block(2, 2.5, 1, PEDESTRIAN_VIEW.glassesColor), side * 3, 27, -5.6))
   if (accessory !== undefined) body.add(...createAccessory(accessory, accessoryColor))
 
+  addOutline(body, CHARACTER_VIEW.outlineColor, CHARACTER_VIEW.outlineThickness)
+
   const alertMark = createAlertMark()
   const root = new THREE.Group()
   root.add(body, alertMark)
-  root.scale.setScalar(appearance.heightScale)
+  root.scale.setScalar(appearance.heightScale * CHARACTER_VIEW.scale)
   return { root, body, legs, arms, alertMark }
 }

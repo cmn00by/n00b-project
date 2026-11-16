@@ -15,10 +15,10 @@ import { createFixedStepLoop } from './game/fixedStepLoop'
 import { createHudView, createTouchControlsView } from './game/hud'
 import { chooseStartMode, createKeyboard, createTouchInput, parseControlsOverride, switchMode, toDriveCommand, toMoveCommand } from './game/input'
 import type { ControlMode } from './game/input'
-import { createActors, createBuildings, createCamera, createDecor, createGround, createLighting, loadTextures } from './game/render'
+import { PIXEL_SCALE_CHOICES, choosePixelScale, createActors, createBuildings, createCamera, createDecor, createGround, createLighting, describePixelScale, loadTextures } from './game/render'
 
-/** Combien de pixels de la fenêtre pour un pixel de la scène : c'est ce qui donne le grain pixel art. P passe de l'un à l'autre. */
-const PIXEL_SCALES = [3, 4, 2] as const
+/** Combien de temps le message d'un réglage (touche P) reste affiché, en millisecondes. */
+const NOTICE_MILLISECONDS = 1500
 const MAP_ID = 'test-town'
 
 async function start() {
@@ -31,10 +31,11 @@ async function start() {
   container.appendChild(renderer.domElement)
   const scene = new THREE.Scene()
   const camera3d = createCamera(16 / 9)
+  // Combien de pixels de la fenêtre pour un pixel de la scène : c'est ce qui donne le grain pixel art. Automatique par défaut, P passe aux tailles fixes.
   let pixelScaleIndex = 0
   let lowHeight = 270
   const resize = () => {
-    const scale = PIXEL_SCALES[pixelScaleIndex] ?? 3
+    const scale = choosePixelScale(PIXEL_SCALE_CHOICES[pixelScaleIndex] ?? 'auto', window.innerHeight)
     const lowWidth = Math.max(160, Math.floor(window.innerWidth / scale))
     lowHeight = Math.max(90, Math.floor(window.innerHeight / scale))
     renderer.setSize(lowWidth, lowHeight, false)
@@ -74,9 +75,17 @@ async function start() {
   const lookahead = { x: 0, y: 0 }
   keyboard.onPress('KeyN', () => (nightTarget = nightTarget === 0 ? 1 : 0))
   keyboard.onPress('KeyC', () => camera3d.nextTilt())
+  const notice = document.getElementById('notice')
+  let noticeTimer: ReturnType<typeof setTimeout> | undefined
   keyboard.onPress('KeyP', () => {
-    pixelScaleIndex = (pixelScaleIndex + 1) % PIXEL_SCALES.length
+    pixelScaleIndex = (pixelScaleIndex + 1) % PIXEL_SCALE_CHOICES.length
     resize()
+    const choice = PIXEL_SCALE_CHOICES[pixelScaleIndex] ?? 'auto'
+    if (notice === null) return
+    notice.textContent = describePixelScale(choice, choosePixelScale(choice, window.innerHeight))
+    notice.style.opacity = '1'
+    clearTimeout(noticeTimer)
+    noticeTimer = setTimeout(() => (notice.style.opacity = '0'), NOTICE_MILLISECONDS)
   })
   // Santé, argent et recherche n'existent pas encore dans la simulation : le HUD affiche des valeurs factices (voir HUD_PLACEHOLDER).
   hud.update(HUD_PLACEHOLDER)
