@@ -6,5 +6,6 @@ La liste de tous les systèmes, `SYSTEMS`, est dans `index.ts` : ajouter une bri
 Systèmes actuels :
 
 - [`walking`](walking/README.md) : le déplacement à pied (marcher, courir). Sert d'exemple pour écrire les suivants.
+- [`pedestrians`](pedestrians/README.md) : la foule (naissance autour du joueur, promenade sur les trottoirs, peur et fuite). Reçoit ses types de PNJ par un registre de `src/data`.
 
 Recette pour ajouter un système : [docs/architecture.md](../../../docs/architecture.md), section 10.

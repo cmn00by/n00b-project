@@ -11,6 +11,7 @@ Le point d'entrée est `src/main.ts` : il crée la simulation, l'affichage et la
 | `render/buildings.ts`                         | les immeubles en boîtes : toit généré, façades dessinées par le code (`facadeLayout.ts`), fenêtres allumées la nuit ; blocs : `buildingBlocks.ts` |
 | `render/decor.ts`                             | la déco en découpes debout, à l'échelle, ombres au sol, feuillage qui ondule, halos des lampadaires                                               |
 | `render/actors.ts`                            | le joueur et les voitures en voxel, interpolés entre deux pas                                                                                     |
+| `render/pedestrianActors.ts`                  | les piétons en blocs, qui marchent, s'arrêtent, se retournent, avec la pastille « ! » de la fuite (modèle, pose, apparence : `pedestrian*.ts`)    |
 | `render/lighting.ts`                          | soleil et ombres dures, ciel, nuit, lampadaires proches en vraies lumières, phares                                                                |
 | `render/camera.ts`                            | la caméra de biais, calée sur la grille de pixels (touche C : inclinaison)                                                                        |
 | `render/textures.ts`                          | le chargement des textures, toutes « pixel net » (`pixelTexture()`)                                                                               |
