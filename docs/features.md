@@ -19,34 +19,38 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 
 ## Vue d'ensemble
 
-| #   | Bloc                                                                   | Profil | Difficulté | Dépend de | Responsable                             |
-| --- | ---------------------------------------------------------------------- | ------ | ---------- | --------- | --------------------------------------- |
-| 0   | [Socle technique](#0-socle-technique)                                  | 🔧     | ⭐⭐       | aucun     | cmn00by (#2), Baghorror12 (#3)          |
-| 1   | [Déplacement à pied](#1-déplacement-à-pied)                            | 🔧     | ⭐         | 0         | Baghorror12                             |
-| 2   | [Ville et carte](#2-ville-et-carte)                                    | 🎨     | ⭐⭐       | 0         | cmn00by (carte de test)                 |
-| 3   | [Conduite et véhicules](#3-conduite-et-véhicules)                      | 🔧     | ⭐⭐⭐     | 1, 2      | cmn00by                                 |
-| 4   | [PNJ piétons](#4-pnj-piétons)                                          | 🔧     | ⭐⭐       | 1, 2      | Baghorror12                             |
-| 5   | [Trafic](#5-trafic)                                                    | 🔧     | ⭐⭐⭐     | 2, 3      | _à attribuer_                           |
-| 6   | [Environnement interactif](#6-environnement-interactif)                | 🔧🎨   | ⭐⭐       | 1, 2      | _à attribuer_                           |
-| 7   | [Police et recherche](#7-police-et-recherche)                          | 🔧     | ⭐⭐⭐     | 3, 4      | _à attribuer_                           |
-| 8   | [Missions](#8-missions)                                                | 🔧🎨   | ⭐⭐       | 1, 3      | cmn00by (moteur), Baghorror12 (contenu) |
-| 9   | [Dialogues et humour](#9-dialogues-et-humour)                          | 🎨     | ⭐         | 4         | _à attribuer_                           |
-| 10  | [Interface (HUD, menus, téléphone)](#10-interface-hud-menus-téléphone) | 🔧🎨   | ⭐⭐       | 0         | Baghorror12                             |
-| 11  | [Progression et économie](#11-progression-et-économie)                 | 🔧🎨   | ⭐⭐       | 8         | _à attribuer_                           |
-| 12  | [Sauvegarde](#12-sauvegarde)                                           | 🔧     | ⭐         | 11        | _à attribuer_                           |
-| 13  | [Audio](#13-audio)                                                     | 🎨     | ⭐         | 0         | _à attribuer_                           |
-| 14  | [Graphismes et assets](#14-graphismes-et-assets)                       | 🎨     | ⭐⭐       | aucun     | plus tard                               |
-| 15  | [Mise en ligne et admin](#15-mise-en-ligne-et-admin)                   | 🔧     | ⭐⭐       | 0         | cmn00by                                 |
-| 16  | [Coop](#16-coop-v2)                                                    | 🔧     | ⭐⭐⭐     | V1 finie  | plus tard                               |
-| 17  | [Mini online](#17-mini-online-v3)                                      | 🔧     | ⭐⭐⭐     | 16        | plus tard                               |
-| 18  | [Mobile](#18-mobile)                                                   | 🔧🎨   | ⭐⭐       | 10        | plus tard                               |
+| #   | Bloc                                                                                           | Profil | Difficulté | Dépend de | Responsable                             |
+| --- | ---------------------------------------------------------------------------------------------- | ------ | ---------- | --------- | --------------------------------------- |
+| 0   | [Socle technique](#0-socle-technique)                                                          | 🔧     | ⭐⭐       | aucun     | cmn00by (#2), Baghorror12 (#3)          |
+| 1   | [Déplacement à pied](#1-déplacement-à-pied)                                                    | 🔧     | ⭐         | 0         | Baghorror12                             |
+| 2   | [Ville et carte](#2-ville-et-carte)                                                            | 🎨     | ⭐⭐       | 0         | cmn00by (carte de test)                 |
+| 3   | [Conduite et véhicules](#3-conduite-et-véhicules)                                              | 🔧     | ⭐⭐⭐     | 1, 2      | cmn00by                                 |
+| 4   | [PNJ piétons](#4-pnj-piétons)                                                                  | 🔧     | ⭐⭐       | 1, 2      | Baghorror12                             |
+| 5   | [Trafic](#5-trafic)                                                                            | 🔧     | ⭐⭐⭐     | 2, 3      | _à attribuer_                           |
+| 6   | [Environnement interactif](#6-environnement-interactif)                                        | 🔧🎨   | ⭐⭐       | 1, 2      | _à attribuer_                           |
+| 7   | [Police et recherche](#7-police-et-recherche)                                                  | 🔧     | ⭐⭐⭐     | 3, 4      | _à attribuer_                           |
+| 8   | [Missions](#8-missions)                                                                        | 🔧🎨   | ⭐⭐       | 1, 3      | cmn00by (moteur), Baghorror12 (contenu) |
+| 9   | [Dialogues et humour](#9-dialogues-et-humour)                                                  | 🎨     | ⭐         | 4         | _à attribuer_                           |
+| 10  | [Interface (HUD, menus, téléphone)](#10-interface-hud-menus-téléphone)                         | 🔧🎨   | ⭐⭐       | 0         | Baghorror12                             |
+| 11  | [Progression et économie](#11-progression-et-économie)                                         | 🔧🎨   | ⭐⭐       | 8         | _à attribuer_                           |
+| 12  | [Sauvegarde](#12-sauvegarde)                                                                   | 🔧     | ⭐         | 11        | _à attribuer_                           |
+| 13  | [Audio](#13-audio)                                                                             | 🎨     | ⭐         | 0         | _à attribuer_                           |
+| 14  | [Graphismes et assets](#14-graphismes-et-assets)                                               | 🎨     | ⭐⭐       | aucun     | plus tard                               |
+| 15  | [Mise en ligne et admin](#15-mise-en-ligne-et-admin)                                           | 🔧     | ⭐⭐       | 0         | cmn00by                                 |
+| 16  | [Coop](#16-coop-v2)                                                                            | 🔧     | ⭐⭐⭐     | V1 finie  | plus tard                               |
+| 17  | [Mini online](#17-mini-online-v3)                                                              | 🔧     | ⭐⭐⭐     | 16        | plus tard                               |
+| 18  | [Mobile](#18-mobile)                                                                           | 🔧🎨   | ⭐⭐       | 10        | plus tard                               |
+| 19  | [Garage : véhicules à soi et personnalisation](#19-garage-véhicules-à-soi-et-personnalisation) | 🔧🎨   | ⭐⭐⭐     | 3, 11     | _à attribuer_                           |
+| 20  | [Personnage : création et garde-robe](#20-personnage-création-et-garde-robe)                   | 🔧🎨   | ⭐⭐       | 4, 11     | _à attribuer_                           |
 
 ### L'ordre de construction
 
 ```
 0 Socle ──┬─► 1 À pied ──┬─► 3 Conduite ──┬─► 5 Trafic
           │              │                ├─► 7 Police ◄── 4 PNJ
-          ├─► 2 Ville ───┤                └─► 8 Missions ─► 11 Progression ─► 12 Sauvegarde
+          ├─► 2 Ville ───┤                └─► 8 Missions ─► 11 Progression ─┬─► 12 Sauvegarde
+          │              │                                                  ├─► 19 Garage (véhicules, personnalisation)
+          │              │                                                  └─► 20 Personnage (création, garde-robe)
           │              ├─► 4 PNJ ─► 9 Dialogues
           │              └─► 6 Environnement
           ├─► 10 Interface
@@ -162,7 +166,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 **Plus tard**
 
 - [ ] Deux-roues (scooter, vélo de livraison)
-- [ ] Personnalisation au garage (peinture, klaxons ridicules)
+- [ ] Personnalisation au garage : voir le bloc **19**
 
 **Dépend de** : 1, 2. **Fichiers** : `src/sim/systems/driving/`, `src/data/vehicles/`, `src/game/render/vehicleRenderer.ts`.
 **Profil** : 🔧 ⭐⭐⭐ (le cœur du jeu : à soigner et à régler longtemps).
@@ -341,10 +345,11 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 
 **V1**
 
+- [ ] L'argent du joueur dans la simulation : gagné (récompense des missions, `mission:succeeded`), dépensé, affiché par le HUD à la place de la valeur factice (#52)
 - [ ] Argent gagné (missions, distributeurs, petits jobs) et perdu (amendes, hôpital, réparations)
 - [ ] Réputation par quartier, qui débloque contacts et missions
 - [ ] Planque : point de sauvegarde et garage pour stocker un véhicule
-- [ ] Boutiques : véhicules, tenues ridicules, améliorations
+- [ ] Boutiques : véhicules et pièces (bloc **19**), tenues (bloc **20**)
 - [ ] Prix et gains dans `TUNING`, équilibrés pour une V1 d'environ 2 heures
 
 **Plus tard**
@@ -470,6 +475,60 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 - [ ] Performances : tester sur un téléphone d'entrée de gamme
 
 **Dépend de** : 10. **Profil** : 🔧🎨 ⭐⭐.
+
+## 19. Garage : véhicules à soi et personnalisation
+
+**Objectif** : l'aspect **matériel** d'un mini GTA. On achète ses voitures, on les retrouve au garage, on les transforme à son goût, et on a envie de les montrer.
+
+**Comment** : les véhicules sont déjà des **blocs assemblés par le code** (voxel). Une personnalisation est donc **une recette en données** (couleurs et pièces) que l'affichage
+assemble, comme l'apparence des piétons. Pas une image par variante : toutes les combinaisons sont possibles sans rien dessiner. Les **autocollants** (logos, flammes,
+numéros de course) sont des images **générées par IA** puis pixelisées (chaîne de `docs/style.md`), plaquées sur le capot, le toit et les portières.
+
+**V1**
+
+- [ ] Posséder des véhicules : la liste des véhicules du joueur (modèle + personnalisation), sauvegardable telle quelle (#53)
+- [ ] **Concession** sur la carte (un repère comme les missions) : choisir un modèle, voir son prix et ses réglages, l'acheter (#53)
+- [ ] **Garage** (lié à la planque du bloc 11) : y ranger un véhicule, en ressortir un ; un véhicule volé peut y être gardé (#53)
+- [ ] **Atelier** : peinture (palette, deux tons, bandes), jantes, aileron, galerie de toit, pare-buffle, pot d'échappement, néons sous la caisse (beaux de nuit), klaxons ridicules (#54)
+- [ ] **Performances** : moteur, freins, adhérence, qui modifient les réglages du modèle (bornés, en données) (#54)
+- [ ] Écran d'atelier : aperçu de la voiture qui tourne, essai des pièces avant d'acheter (#54)
+- [ ] Pièces et prix en données (`src/data/vehicleParts/`), validés par les tests (#54)
+- [ ] Autocollants générés par IA, à poser sur la voiture (#55)
+
+**Plus tard**
+
+- [ ] Garage de repeinte qui fait baisser la recherche (bloc 7)
+- [ ] Assurance parodique : récupérer sa voiture détruite contre une franchise absurde
+- [ ] Montrer sa voiture en coop (bloc 16)
+
+**Dépend de** : 3, 11. **Fichiers** : `src/sim/systems/garage/`, `src/data/vehicleParts/`, `src/game/render/vehicleModel.ts`, `src/game/hud/` (écrans).
+**Profil** : 🔧🎨 ⭐⭐⭐.
+**Fini quand** : après une mission, on court à l'atelier mettre des néons roses sur sa voiture de mamie.
+
+## 20. Personnage : création et garde-robe
+
+**Objectif** : un personnage **à soi**, qu'on crée au début et qu'on habille au fil de la partie.
+
+**Comment** : le joueur est assemblé **comme les piétons** : une apparence en données (teint, cheveux, haut, bas, accessoire, taille), que l'affichage assemble.
+Créer son personnage = choisir ces valeurs au lieu de les tirer au hasard ; une tenue achetée = une pièce de plus dans la liste.
+
+**V1**
+
+- [ ] Le joueur utilise le même modèle que les piétons (`pedestrianModel.ts`), avec son apparence à lui, sauvegardée (#56)
+- [ ] Création au premier lancement : teint, coiffure et couleur, haut, bas, accessoire ; aperçu qui tourne ; bouton « au hasard » (#56)
+- [ ] **Boutique de vêtements** sur la carte : tenues ridicules (costume de hot-dog, survêtement doré, casque de chantier…), en données (`src/data/outfits/`) (#57)
+- [ ] Garde-robe à la planque : changer de tenue (#57)
+- [ ] Nouvelles pièces de modèle : coiffures, chapeaux, lunettes, sacs (le modèle en blocs les assemble) (#56)
+
+**Plus tard**
+
+- [ ] Tenues qui ont un effet (gilet fluo : la police vous laisse tranquille quelques secondes)
+- [ ] Les PNJ commentent votre tenue (bloc 9)
+- [ ] Se reconnaître entre joueurs en coop (bloc 16)
+
+**Dépend de** : 4 (le modèle des piétons), 11. **Fichiers** : `src/data/outfits/`, `src/game/render/pedestrianModel.ts`, `src/game/hud/` (écrans).
+**Profil** : 🔧🎨 ⭐⭐.
+**Fini quand** : on reconnaît son personnage au premier coup d'œil, et on a une tenue préférée.
 
 ---
 

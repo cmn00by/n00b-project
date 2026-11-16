@@ -5,6 +5,18 @@ Une nouvelle décision s'ajoute **en haut**. Une décision remise en cause n'est
 
 ---
 
+## 2026-11-16 : Personnalisation des véhicules et du personnage : voxel en données, autocollants générés
+
+**Choix** : un véhicule personnalisé et le personnage du joueur sont des **recettes en données** (couleurs, pièces, tenue) que l'affichage assemble en blocs, comme les piétons.
+Les **autocollants** (logos, flammes, numéros) sont des images **générées par IA** puis pixelisées, plaquées sur les faces de la voiture. Blocs 19 et 20 de `features.md`.
+
+**Raison** : toutes les combinaisons sans dessiner une image par variante ; des recettes qui se sauvegardent et s'envoient sur le réseau (coop) ; des pièces qui s'ajoutent en données.
+
+**Alternatives écartées** : des sprites générés par variante (une image par couleur et par pièce : impossible à combiner, et une image plate tourne mal dans la vue 3D) ;
+des modèles 3D détaillés (hors du style pixel art, et chers à produire).
+
+---
+
 ## 2026-11-16 : Les missions en données, et une brique par sorte d'objectif
 
 **Choix** : une mission est une **fiche en JSON pur** (`MissionDef` dans `sim/core/mission.ts` : départ, objectifs, chronos, récompense), écrite dans `src/data/missions/` en TypeScript
