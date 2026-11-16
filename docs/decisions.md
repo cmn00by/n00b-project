@@ -5,6 +5,17 @@ Une nouvelle décision s'ajoute **en haut**. Une décision remise en cause n'est
 
 ---
 
+## 2026-11-16 : Essai de rendu 2.5D des immeubles (#26) — en cours
+
+**Essai** : sans changer la simulation (qui reste en 2D), l'affichage donne du volume aux immeubles. Les cases de bâtiment sont regroupées en blocs ; chaque bloc a une hauteur ;
+son toit est dessiné décalé vers l'extérieur de l'écran (`projectRaised`), et ses façades tournées vers la caméra relient le sol au toit. Les ombres portées sont dessinées au sol.
+Touche **R** pour comparer.
+
+**À décider après l'essai** : garder ou non. Si oui : la hauteur des immeubles passe dans les données de la carte (aujourd'hui provisoire, déduite de la position), et la planche bible des bâtiments
+est refaite en « toits vus de dessus + textures de façade » (`docs/style.md`, section 5.5), puisque les façades ne sont plus peintes sur l'image.
+
+**Alternatives** : vraie 3D (Three.js, caméra fixe) : bien plus lourd, changement de moteur ; ombres et éclairage seuls (normal maps) : moins de volume, mais compatibles avec la bible actuelle.
+
 ## 2026-11-16 : La conduite (#8)
 
 **Choix** :

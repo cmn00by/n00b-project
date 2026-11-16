@@ -19,6 +19,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 
 ### Ajouté
 
+- Essai de rendu 2.5D : les immeubles prennent du relief (façades en perspective, toits décalés) et projettent leur ombre au sol ; R pour comparer avec et sans (#26)
 - On peut conduire ! E pour monter dans une voiture garée et en descendre ; trois modèles (la Mamie, la Livreuse, la Frimeuse) ; accélérer, freiner, reculer, déraper, frein à main sur Espace ; la caméra regarde devant la voiture (#8)
 - Une ville de test : routes, trottoirs, ruelles, un parc et des immeubles qu'on ne traverse plus ; on glisse le long des murs (#6)
 - Un carré jaune se déplace dans la ville : flèches, ZQSD ou WASD pour marcher, Maj pour courir, la caméra le suit (#3)
