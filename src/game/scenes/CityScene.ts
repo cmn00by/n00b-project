@@ -73,7 +73,7 @@ export class CityScene extends Phaser.Scene {
   /** Rappel des touches, posé dans le monde près du point de départ (le vrai HUD viendra avec #11). */
   private drawHelp(spawn: { x: number; y: number }) {
     this.add
-      .text(spawn.x, spawn.y - 40, 'Flèches, ZQSD ou WASD : se déplacer\nMaj : courir', { fontFamily: 'monospace', fontSize: '12px', color: COLORS.text, align: 'center' })
+      .text(spawn.x, spawn.y - 40, 'Flèches ou ZQSD / WASD selon le clavier : se déplacer\nMaj : courir', { fontFamily: 'monospace', fontSize: '12px', color: COLORS.text, align: 'center' })
       .setOrigin(0.5)
       .setDepth(20)
   }

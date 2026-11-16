@@ -23,6 +23,10 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 - Un carré jaune se déplace dans la ville : flèches, ZQSD ou WASD pour marcher, Maj pour courir, la caméra le suit (#3)
 - Bible visuelle en Gemini 3 Pro : 7 planches de référence (personnages, animation, portraits, véhicules, sol, bâtiments, scène) et leurs prompts (#4)
 
+### Modifié
+
+- Le clavier lit la place des touches : ZQSD sur un clavier AZERTY, WASD sur un QWERTY, sans que les lettres de l'autre disposition déplacent aussi le joueur (#21)
+
 ### Technique
 
 - Format de carte en données (`MapDef`), carte chargée dans le monde (`world.map`), brique `collision` et tranche `SYSTEM_ORDER.collision` (#6)

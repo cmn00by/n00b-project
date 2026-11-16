@@ -1,21 +1,16 @@
-// Le clavier : lit les touches tenues.
+// Le clavier : suit les touches tenues, repérées par leur place physique sur le clavier.
 // Expose : createKeyboardInput().
-// Pourquoi : flèches, ZQSD (clavier français) et WASD (clavier anglais) déplacent le joueur, Maj le fait courir.
-// Cette brique ne décide de rien : elle lit les touches, et moveCommand.ts les traduit en commande.
+// Pourquoi : la rangée W-A-S-D d'un QWERTY et Z-Q-S-D d'un AZERTY déplacent le joueur, les flèches aussi, Maj le fait courir.
+// Cette brique ne décide de rien : elle suit les touches, physicalKeys.ts les lit et moveCommand.ts les traduit en commande.
 
 import Phaser from 'phaser'
 import type { PressedKeys } from './moveCommand'
+import { readPressedKeys } from './physicalKeys'
 
 const { KeyCodes } = Phaser.Input.Keyboard
 
-/** Les touches associées à chaque action. */
-const KEY_CODES_BY_ACTION = {
-  up: [KeyCodes.UP, KeyCodes.Z, KeyCodes.W],
-  down: [KeyCodes.DOWN, KeyCodes.S],
-  left: [KeyCodes.LEFT, KeyCodes.Q, KeyCodes.A],
-  right: [KeyCodes.RIGHT, KeyCodes.D],
-  run: [KeyCodes.SHIFT],
-} as const
+/** Les flèches font défiler la page web : on empêche ce défilement pendant qu'on joue. */
+const CAPTURED_KEY_CODES = [KeyCodes.UP, KeyCodes.DOWN, KeyCodes.LEFT, KeyCodes.RIGHT]
 
 export interface KeyboardInput {
   /** Les touches de déplacement tenues à cet instant. */
@@ -26,25 +21,33 @@ export function createKeyboardInput(scene: Phaser.Scene): KeyboardInput {
   const keyboard = scene.input.keyboard
   if (keyboard === null) throw new Error('Le clavier est indisponible sur cet appareil')
 
-  // Phaser empêche au passage la page de défiler quand on appuie sur une flèche.
-  const keysByAction = {
-    up: KEY_CODES_BY_ACTION.up.map((code) => keyboard.addKey(code)),
-    down: KEY_CODES_BY_ACTION.down.map((code) => keyboard.addKey(code)),
-    left: KEY_CODES_BY_ACTION.left.map((code) => keyboard.addKey(code)),
-    right: KEY_CODES_BY_ACTION.right.map((code) => keyboard.addKey(code)),
-    run: KEY_CODES_BY_ACTION.run.map((code) => keyboard.addKey(code)),
+  keyboard.addCapture(CAPTURED_KEY_CODES)
+
+  // Les places de touches actuellement enfoncées (valeurs de KeyboardEvent.code, comme 'KeyW').
+  const heldCodes = new Set<string>()
+  const onKeyDown = (event: KeyboardEvent): void => {
+    heldCodes.add(event.code)
   }
-  const isAnyDown = (keys: Phaser.Input.Keyboard.Key[]): boolean => keys.some((key) => key.isDown)
+  const onKeyUp = (event: KeyboardEvent): void => {
+    heldCodes.delete(event.code)
+  }
+  // Si la fenêtre perd le focus pendant qu'une touche est tenue, on ne reçoit jamais son relâchement : sans ça le joueur continuerait d'avancer tout seul.
+  const onBlur = (): void => {
+    heldCodes.clear()
+  }
+
+  keyboard.on('keydown', onKeyDown)
+  keyboard.on('keyup', onKeyUp)
+  scene.game.events.on(Phaser.Core.Events.BLUR, onBlur)
+  scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+    keyboard.off('keydown', onKeyDown)
+    keyboard.off('keyup', onKeyUp)
+    scene.game.events.off(Phaser.Core.Events.BLUR, onBlur)
+  })
 
   return {
     readPressedKeys() {
-      return {
-        up: isAnyDown(keysByAction.up),
-        down: isAnyDown(keysByAction.down),
-        left: isAnyDown(keysByAction.left),
-        right: isAnyDown(keysByAction.right),
-        run: isAnyDown(keysByAction.run),
-      }
+      return readPressedKeys(heldCodes)
     },
   }
 }
