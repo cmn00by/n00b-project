@@ -5,6 +5,20 @@ Une nouvelle décision s'ajoute **en haut**. Une décision remise en cause n'est
 
 ---
 
+## 2026-11-16 : Les missions en données, et une brique par sorte d'objectif
+
+**Choix** : une mission est une **fiche en JSON pur** (`MissionDef` dans `sim/core/mission.ts` : départ, objectifs, chronos, récompense), écrite dans `src/data/missions/` en TypeScript
+pour être vérifiée par le compilateur. Le moteur (brique `missions`) reçoit leur registre et n'en connaît aucune par son nom. Chaque **sorte d'objectif** (`reach`, `pickup`, `deliver`)
+est un petit module de `missions/objectives/`. L'avancement est un composant du joueur (`missionProgress`), les chronos se comptent en pas de simulation.
+La récompense est **annoncée** par l'événement `mission:succeeded` ; l'argent viendra avec la brique d'économie.
+
+**Raison** : écrire une mission sans toucher au moteur (#13), la valider par les tests (cases dans la carte, objet livré après avoir été ramassé), et garder un état sauvegardable et partageable (coop).
+
+**Alternatives écartées** : des fichiers `.json` chargés à l'exécution (pas de vérification du compilateur, et rien à gagner tant qu'il n'y a pas d'éditeur) ; un script par mission
+(du code au lieu de données : impossible à éditer depuis le futur panneau admin) ; l'avancement dans une entité « mission » séparée (plus de liens à suivre pour rien).
+
+---
+
 ## 2026-11-16 : Mise en ligne par Workers Builds, /api/ réservé aux salons multijoueurs
 
 **Choix** : un seul Worker (`n00b-project`) sert le jeu (`dist/`, en assets statiques) et réserve les adresses **`/api/`** au serveur du jeu.

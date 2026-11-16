@@ -79,6 +79,30 @@ export interface Pedestrian {
   heading: { x: number; y: number }
 }
 
+/** La mission en cours d'un joueur : laquelle, l'objectif atteint, les chronos (en pas de simulation) et les objets qu'il porte. */
+export interface ActiveMission {
+  /** L'id de sa fiche dans src/data/missions. */
+  missionId: string
+  /** L'objectif en cours (son rang dans la fiche, à partir de 0). */
+  objectiveIndex: number
+  /** Pas restants avant la fin du chrono de la mission (absent : pas de chrono). */
+  stepsLeft?: number
+  /** Pas restants avant la fin du chrono de l'objectif en cours (absent : pas de chrono). */
+  objectiveStepsLeft?: number
+  /** Les objets ramassés et pas encore livrés (ids libres, donnés par la fiche). */
+  carriedItems: string[]
+}
+
+/** Où en est un joueur dans les missions (brique missions). */
+export interface MissionProgress {
+  /** La mission en cours, s'il y en a une. */
+  active?: ActiveMission
+  /** Les missions réussies : elles ne sont plus proposées. */
+  completedIds: string[]
+  /** Une mission qui vient d'échouer alors que le joueur est sur son départ : elle ne repart que quand il en est sorti. */
+  waitingToLeaveId?: string
+}
+
 /** Tous les composants possibles : chacun est facultatif sur une entité. */
 export interface Components {
   position?: Position
@@ -89,6 +113,7 @@ export interface Components {
   pedestrian?: Pedestrian
   vehicle?: Vehicle
   driver?: Driver
+  missionProgress?: MissionProgress
 }
 
 /** Le nom d'un composant. */

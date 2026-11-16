@@ -54,6 +54,29 @@ export const HUD_STYLE = {
   margin: 12, // distance au bord de l'écran
 } as const
 
+/** Les repères des missions sur la carte : un anneau au sol, une colonne de lumière et un losange qui flotte. */
+export const MISSION_MARKER_VIEW = {
+  startColor: 0xffd23f, // un départ de mission (jaune de la palette)
+  objectiveColor: 0x2ec4b6, // l'objectif en cours (turquoise de la palette, distinct du jaune)
+  beamHeight: 140, // hauteur de la colonne de lumière, en px
+  beamOpacity: 0.4,
+  diamondSize: 12, // taille du losange, en px
+  diamondHeight: 70, // hauteur du losange au-dessus du sol, en px
+  bobHeight: 6, // de combien il monte et descend, en px
+  bobSpeed: 2.5, // vitesse de ce mouvement, en radians par seconde
+  spinSpeed: 1.6, // vitesse de rotation du losange, en radians par seconde
+} as const
+
+/** Le panneau de la mission en cours, en haut au centre. */
+export const MISSION_PANEL_STYLE = {
+  titleColor: '#ffd23f',
+  textColor: '#fff8ec',
+  urgentColor: '#e5383b', // le chrono quand il reste peu de temps
+  urgentSeconds: 15, // en dessous, le chrono passe en rouge
+  panelFill: 'rgba(43, 30, 58, 0.7)',
+  messageSeconds: 6, // durée d'un message (mission réussie, échouée), en secondes
+} as const
+
 /** Réglages des commandes tactiles (joystick virtuel et boutons), en pixels d'écran : ils ne dépendent pas du zoom de la caméra. */
 export const TOUCH_CONTROLS = {
   /** Rayon du joystick : jusqu'où le pouce peut s'éloigner de son point de départ. */

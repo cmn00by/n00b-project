@@ -22,6 +22,14 @@ export interface GameEvents {
   'vehicle:entered': { vehicleId: EntityId; driverId: EntityId }
   /** Une entité est descendue d'un véhicule (brique driving). */
   'vehicle:exited': { vehicleId: EntityId; driverId: EntityId }
+  /** Un joueur a commencé une mission (brique missions). */
+  'mission:started': { entityId: EntityId; missionId: string }
+  /** Un joueur a rempli un objectif de sa mission (brique missions). objectiveIndex : son rang, à partir de 0. */
+  'mission:objective-completed': { entityId: EntityId; missionId: string; objectiveIndex: number }
+  /** Un joueur a réussi sa mission (brique missions). L'économie, quand elle existera, versera `money`. */
+  'mission:succeeded': { entityId: EntityId; missionId: string; money: number }
+  /** La mission d'un joueur a échoué (brique missions) : chrono écoulé, ou abandon. */
+  'mission:failed': { entityId: EntityId; missionId: string; reason: 'time-out' | 'abandoned' }
 }
 
 /** Une fonction appelée quand l'événement a lieu. */

@@ -266,8 +266,9 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 
 **V0**
 
-- [ ] Moteur de missions : étapes, objectifs (chaque type d'objectif est une brique enregistrée), conditions de réussite et d'échec (#9)
-- [ ] Format de mission en données (`src/data/missions/`), documenté dans `docs/missions.md` (#9)
+- [x] Moteur de missions : étapes, objectifs (chaque type d'objectif est une brique enregistrée), conditions de réussite et d'échec (#9)
+- [x] Format de mission en données (`src/data/missions/`), documenté dans `docs/missions.md` (#9)
+- [x] Repères à l'écran (départ, objectif en cours) et panneau de mission avec chrono (#9)
 - [ ] Une mission de livraison complète : prendre un colis, aller à un point, chrono (#13)
 
 **V1**
