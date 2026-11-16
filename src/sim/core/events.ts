@@ -5,6 +5,8 @@
 // Règles : un événement décrit un fait passé ('domaine:fait-au-passe'), avec des données simples et suffisantes.
 // Un écouteur ne suppose jamais qu'un autre écouteur existe.
 
+import type { EntityId } from './components'
+
 /**
  * Le catalogue de tous les événements du jeu : leur nom et les données qu'ils transportent.
  * Une brique qui émet un nouvel événement l'ajoute ici (c'est un ajout permis) et dans la fiche de son README.md.
@@ -12,6 +14,8 @@
 export interface GameEvents {
   /** Un pas de simulation vient de se terminer (émis par step()). */
   'world:stepped': { stepCount: number }
+  /** Un piéton vient d'avoir peur et prend la fuite (émis par la brique pedestrians). Les effets (cri, bulle) pourront s'y brancher. */
+  'pedestrian:scared': { entityId: EntityId }
 }
 
 /** Une fonction appelée quand l'événement a lieu. */
