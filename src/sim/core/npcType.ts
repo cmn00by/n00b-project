@@ -1,5 +1,5 @@
 // Les types de PNJ : la fiche d'un genre de piéton (vitesses, personnalité, apparence), décrite en données.
-// Expose : NumberRange, NPC_ACCESSORIES, NpcAccessory, NpcLook, NpcTypeDef, validateNpcTypeDef().
+// Expose : NumberRange, NPC_ACCESSORIES, NpcAccessory, NpcLook, ReactionWeights, NpcTypeDef, validateNpcTypeDef().
 // Pourquoi : un type de PNJ est UNIQUEMENT des données (nombres et textes, aucune fonction) : il se lit, se modifie et se sauvegarde en JSON tel quel.
 // C'est ce qui permettra au futur panneau admin d'éditer les types de PNJ sans toucher au code. Le comportement (marcher, fuir…) est dans la brique pedestrians :
 // elle lit ces données, elle ne connaît aucun type par son nom. Ajouter un type = un fichier dans src/data/npcTypes + une ligne dans sa liste.
@@ -38,6 +38,22 @@ export interface NpcLook {
   heightScale: NumberRange
 }
 
+/**
+ * Les chances relatives de chaque réaction quand un piéton remarque quelqu'un qui fonce sur lui sans être assez près pour fuir.
+ * Ce ne sont pas des pourcentages : seul le rapport compte (2, 1, 1, 0 = la moitié du temps il regarde, un quart curieux, un quart il filme, jamais il ne râle).
+ * Un poids à 0 interdit la réaction à ce type de PNJ.
+ */
+export interface ReactionWeights {
+  /** Il s'arrête et regarde, sans rien faire de plus. */
+  stare: number
+  /** Il s'approche pour voir de plus près, puis regarde. */
+  curious: number
+  /** Il s'arrête et filme avec son téléphone. */
+  filming: number
+  /** Il s'arrête et proteste, sans coups. */
+  angry: number
+}
+
 /** La fiche d'un type de PNJ. */
 export interface NpcTypeDef extends ContentDef {
   /** Le nom affiché (en français). */
@@ -60,6 +76,8 @@ export interface NpcTypeDef extends ContentDef {
   patience: NumberRange
   /** La durée d'une pause quand il s'arrête, en secondes : le bas de la plage pour un impatient, le haut pour un patient. */
   pauseSeconds: NumberRange
+  /** Ce qu'il fait quand il remarque quelqu'un qui fonce sur lui : chaque PNJ tire sa réaction selon ces poids. */
+  reactionWeights: ReactionWeights
 }
 
 function checkRange(label: string, range: NumberRange, lowest: number, highest?: number): string[] {
@@ -97,6 +115,13 @@ function checkLook(look: NpcLook): string[] {
   return errors
 }
 
+function checkReactionWeights(weights: ReactionWeights): string[] {
+  const values = [weights.stare, weights.curious, weights.filming, weights.angry]
+  if (values.some((value) => !Number.isFinite(value) || value < 0)) return ['reactionWeights : chaque poids doit être un nombre supérieur ou égal à 0']
+  if (values.every((value) => value === 0)) return ['reactionWeights : au moins un poids doit dépasser 0']
+  return []
+}
+
 /** Vérifie la fiche d'un type de PNJ et renvoie les erreurs trouvées (vide si tout va bien). À passer à validateDefs comme `checkDef`. */
 export function validateNpcTypeDef(def: NpcTypeDef): string[] {
   const errors: string[] = []
@@ -107,6 +132,7 @@ export function validateNpcTypeDef(def: NpcTypeDef): string[] {
   errors.push(...checkRange('courage', def.courage, 0, 1))
   errors.push(...checkRange('patience', def.patience, 0, 1))
   errors.push(...checkRange('pauseSeconds', def.pauseSeconds, 0))
+  errors.push(...checkReactionWeights(def.reactionWeights))
   errors.push(...checkLook(def.look))
   return errors
 }

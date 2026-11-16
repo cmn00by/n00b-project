@@ -18,4 +18,6 @@ export const retraite: NpcTypeDef = {
   courage: { min: 0.5, max: 1 },
   patience: { min: 0.6, max: 1 },
   pauseSeconds: { min: 3, max: 8 },
+  // Il regarde et il râle volontiers, il filme rarement : le téléphone n'est pas son fort.
+  reactionWeights: { stare: 2, curious: 1, filming: 0.5, angry: 3 },
 }

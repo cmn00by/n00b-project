@@ -55,3 +55,23 @@ describe('findThreats', () => {
     expect(findThreats(world)).toEqual([])
   })
 })
+
+describe('findThreats : les véhicules', () => {
+  it('compte un véhicule en mouvement avec sa direction et sa vitesse', () => {
+    const world = createTestWorld()
+    spawnEntity(world, 'vehicle', { position: { x: 50, y: 60, angle: 0 }, velocity: { vx: 0, vy: -200 }, vehicle: { modelId: 'test', headingX: 0, headingY: -1 } })
+    expect(findThreats(world)).toEqual([{ x: 50, y: 60, directionX: 0, directionY: -200, speed: 200 }])
+  })
+
+  it('ne compte pas un véhicule à l’arrêt', () => {
+    const world = createTestWorld()
+    spawnEntity(world, 'vehicle', { position: { x: 50, y: 60, angle: 0 }, velocity: { vx: 0, vy: 0 }, vehicle: { modelId: 'test', headingX: 0, headingY: -1 } })
+    expect(findThreats(world)).toEqual([])
+  })
+
+  it('ignore une entité qui a une vitesse sans être un véhicule', () => {
+    const world = createTestWorld()
+    spawnEntity(world, 'prop', { position: { x: 50, y: 60, angle: 0 }, velocity: { vx: 300, vy: 0 } })
+    expect(findThreats(world)).toEqual([])
+  })
+})

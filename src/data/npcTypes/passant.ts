@@ -18,4 +18,6 @@ export const passant: NpcTypeDef = {
   courage: { min: 0.2, max: 0.8 },
   patience: { min: 0.2, max: 0.8 },
   pauseSeconds: { min: 1, max: 4 },
+  // Le passant moyen : il regarde, il est curieux, et il sort volontiers son téléphone.
+  reactionWeights: { stare: 3, curious: 2, filming: 3, angry: 1 },
 }

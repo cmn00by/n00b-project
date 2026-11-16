@@ -32,6 +32,10 @@ export const TUNING = {
     minSeparation: 18, // distance minimale que deux piétons gardent entre eux, en px
     scaringSpeed: 80, // vitesse (px par seconde) au-delà de laquelle ce qui fonce sur un piéton lui fait peur : le joueur qui court (110) oui, qui marche (60) non
     noticeSeconds: 1.2, // un piéton qui remarque quelqu'un qui fonce sur lui s'arrête et le regarde au moins cette durée, en secondes
+    curiousSeconds: 3, // un piéton curieux regarde au moins cette durée après s'être approché, en secondes
+    curiousStopDistance: 60, // un curieux s'approche jusqu'à cette distance de ce qui l'intrigue, puis s'arrête pour regarder, en px
+    filmingSeconds: 4, // un piéton qui filme garde son téléphone levé au moins cette durée, en secondes
+    angrySeconds: 2.5, // un piéton qui râle continue au moins cette durée, en secondes
     spawnTries: 24, // nombre d'endroits tirés au hasard pour faire naître un piéton avant de laisser tomber (jusqu'à la prochaine tentative)
     walkableTileKinds: ['sidewalk'], // les types de case sur lesquels les piétons marchent (ids de src/data/tileKinds)
   },
