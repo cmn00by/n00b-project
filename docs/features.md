@@ -174,9 +174,10 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 
 **V0**
 
-- [ ] Piétons qui apparaissent autour du joueur et disparaissent hors champ (pas de PNJ simulés partout) (#10)
-- [ ] Marche sur les trottoirs, d'un point à un autre (#10)
-- [ ] Machine à états simple : se promener, s'arrêter, fuir (#10)
+- [x] Piétons qui apparaissent autour du joueur et disparaissent hors champ (pas de PNJ simulés partout) (#10)
+- [x] Marche sur les trottoirs, d'un point à un autre (#10)
+- [x] Machine à états simple : se promener, s'arrêter, fuir (#10)
+- [x] Types de PNJ en données (personnalité, vitesses, apparence en recette), personnages en voxel assemblés par le code (#10)
 
 **V1**
 
@@ -191,7 +192,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 - [ ] Routines (aller au travail le matin, au bar le soir)
 - [ ] PNJ qui interagissent entre eux (disputes, conversations)
 
-**Dépend de** : 1, 2. **Fichiers** : `src/sim/systems/pedestrians/`, `src/data/npcTypes/`, `src/game/render/pedestrianRenderer.ts`.
+**Dépend de** : 1, 2. **Fichiers** : `src/sim/systems/pedestrians/`, `src/data/npcTypes/`, `src/game/render/pedestrianActors.ts` (avec `pedestrianModel.ts`, `pedestrianAppearance.ts`).
 **Profil** : 🔧 ⭐⭐.
 **Fini quand** : quand on fait n'importe quoi dans la rue, les gens fuient, râlent ou filment.
 
@@ -425,6 +426,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 
 - [ ] Assets lourds servis depuis R2
 - [ ] Panneau admin (Worker séparé, protégé par Cloudflare Access) : modifier les valeurs de `TUNING` et les publier
+- [ ] Dans le panneau admin : éditer les types de PNJ (personnalité, vitesses, couleurs et accessoires de leur apparence), qui sont des données pures (`src/data/npcTypes`)
 - [ ] Retours des joueurs : un formulaire dans le jeu, lu dans l'admin (D1)
 - [ ] Mesure d'audience anonyme simple (D1)
 
@@ -460,7 +462,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 
 **Objectif** : jouable sur téléphone.
 
-- [ ] Joystick virtuel et boutons tactiles qui produisent les mêmes commandes que le clavier
+- [x] Joystick virtuel et boutons tactiles (courir ou frein à main, monter et descendre) qui produisent les mêmes commandes que le clavier (#20)
 - [ ] Interface adaptée aux petits écrans
 - [ ] Performances : tester sur un téléphone d'entrée de gamme
 

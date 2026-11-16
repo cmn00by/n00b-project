@@ -12,8 +12,9 @@ import { TILE_KIND_REGISTRY } from './data/tileKinds'
 import { VEHICLE_REGISTRY } from './data/vehicles'
 import { CAMERA_LOOKAHEAD_MAX_PX, CAMERA_LOOKAHEAD_SECONDS, CAMERA_LOOKAHEAD_SMOOTHING, DAY_NIGHT_TRANSITION_SECONDS, GAME_SEED, HUD_PLACEHOLDER } from './game/constants'
 import { createFixedStepLoop } from './game/fixedStepLoop'
-import { createHudView } from './game/hud'
-import { createKeyboard, toDriveCommand, toMoveCommand } from './game/input'
+import { createHudView, createTouchControlsView } from './game/hud'
+import { chooseStartMode, createKeyboard, createTouchInput, parseControlsOverride, switchMode, toDriveCommand, toMoveCommand } from './game/input'
+import type { ControlMode } from './game/input'
 import { createActors, createBuildings, createCamera, createDecor, createGround, createLighting, loadTextures } from './game/render'
 
 /** Combien de pixels de la fenêtre pour un pixel de la scène : c'est ce qui donne le grain pixel art. P passe de l'un à l'autre. */
@@ -65,6 +66,8 @@ async function start() {
   const lighting = createLighting(scene, renderer)
   const keyboard = createKeyboard(window)
   const hud = createHudView(document.body)
+  const touch = createTouchInput(window)
+  const touchView = createTouchControlsView(document.body)
   const fixedStepLoop = createFixedStepLoop(STEP_SECONDS)
   let night = 0
   let nightTarget = 0
@@ -77,13 +80,33 @@ async function start() {
   })
   // Santé, argent et recherche n'existent pas encore dans la simulation : le HUD affiche des valeurs factices (voir HUD_PLACEHOLDER).
   hud.update(HUD_PLACEHOLDER)
+
+  // Le mode de commandes : clavier ou tactile, choisi selon l'appareil, puis il suit la dernière entrée utilisée (un toucher, une touche). ?controls=touch|keyboard le force.
+  const help = document.getElementById('help')
+  const keyboardHelp = help?.innerHTML ?? ''
+  const override = parseControlsOverride(window.location.search)
+  let mode: ControlMode = chooseStartMode(override, window.matchMedia('(pointer: coarse)').matches)
+  const applyMode = (newMode: ControlMode) => {
+    mode = newMode
+    touch.setEnabled(mode === 'touch')
+    touchView.setVisible(mode === 'touch')
+    if (help === null) return
+    // Au toucher, l'aide passe en haut de l'écran : le bas est pris par les commandes.
+    help.innerHTML = mode === 'touch' ? 'Joystick à gauche : se déplacer, conduire<br />Bouton rond : courir (à pied), frein à main (en voiture) · E : monter, descendre' : keyboardHelp
+    help.style.top = mode === 'touch' ? '10px' : 'auto'
+    help.style.bottom = mode === 'touch' ? 'auto' : '10px'
+  }
+  applyMode(mode)
+  touch.onTouchUsed(() => applyMode(switchMode('touch', override)))
+  window.addEventListener('keydown', () => applyMode(switchMode('keyboard', override)))
   document.getElementById('loading')?.remove()
 
   const runSimulationStep = () => {
     actors.rememberStates(world)
     const commands: Command[] = []
-    if (keyboard.consumeInteract()) commands.push({ type: 'player:interact', entityId: player.id })
-    const command = player.driver !== undefined ? toDriveCommand(player.id, keyboard.readDriveKeys()) : toMoveCommand(player.id, keyboard.readPressedKeys())
+    const input = mode === 'touch' ? touch : keyboard
+    if (input.consumeInteract()) commands.push({ type: 'player:interact', entityId: player.id })
+    const command = player.driver !== undefined ? toDriveCommand(player.id, input.readDriveKeys()) : toMoveCommand(player.id, input.readPressedKeys())
     if (command !== undefined) commands.push(command)
     simulation.step(commands)
   }
@@ -129,6 +152,7 @@ async function start() {
     decor.update(displaySeconds, night)
     buildings.setNight(night)
     lighting.update(cameraFocus, night, decor.lamps, headlight)
+    if (mode === 'touch') touchView.update(touch.readState(), { isDriving: player.driver !== undefined, screenWidth: window.innerWidth, screenHeight: window.innerHeight })
     renderer.render(scene, camera3d.camera)
     requestAnimationFrame(frame)
   }

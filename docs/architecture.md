@@ -298,6 +298,21 @@ export const VEHICLES: VehicleDef[] = [mamieCar, deliveryVan, sportsCar, golfCar
   lancée par les tests : ids en double, référence vers un sprite ou un id inexistant, valeur hors bornes → le test échoue.
 - Les nombres d'équilibrage **propres à un contenu** vont dans ses données ; les réglages **généraux** vont dans `TUNING`.
 
+### Une brique qui a du contenu : le registre en paramètre
+
+Quand le comportement d'une brique dépend de contenus (ici les types de PNJ), la brique **ne connaît aucun contenu par son nom** et ne les importe pas :
+`SYSTEMS` lui passe le **registre** quand il la crée.
+
+```ts
+// src/sim/systems/index.ts
+export const SYSTEMS: System[] = [walkingSystem, drivingSystem, collisionSystem, createPedestriansSystem(NPC_TYPE_REGISTRY)]
+```
+
+Ajouter un type de PNJ = un fichier dans `src/data/npcTypes` + une ligne dans sa liste ; la brique `pedestrians` n'est pas touchée.
+Pour que l'admin puisse les éditer, un contenu est du **JSON pur** : nombres, textes et listes, **aucune fonction**.
+Ce qui est purement visuel (couleurs, accessoire, taille) vit dans une **recette** du contenu (`look`) ; l'affichage en tire l'apparence de chaque instance d'après son id,
+sans rien demander à la simulation.
+
 ## 9. L'affichage, les entrées et le son
 
 L'affichage utilise **three.js** et suit **les mêmes principes LEGO** (décision : [decisions.md](decisions.md)).

@@ -2,7 +2,7 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>n00b-project</title>
     <style>
       html,
@@ -11,6 +11,12 @@
         height: 100%;
         background: #2b1e3a;
         overflow: hidden;
+        /* Au toucher, un doigt qui glisse commande le jeu : la page ne défile pas, ne zoome pas, ne rebondit pas. */
+        touch-action: none;
+        overscroll-behavior: none;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
       }
       #game {
         position: fixed;
