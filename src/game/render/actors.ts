@@ -8,7 +8,8 @@ import * as THREE from 'three'
 import { findEntitiesWith } from '../../sim/core'
 import type { EntityId, World } from '../../sim/core'
 import { VEHICLE_REGISTRY } from '../../data/vehicles'
-import { MISSING_VEHICLE_COLOR, VEHICLE_COLORS } from '../constants'
+import { CHARACTER_VIEW, MISSING_VEHICLE_COLOR, VEHICLE_COLORS } from '../constants'
+import { addOutline } from './outline'
 import { createPedestrianActors } from './pedestrianActors'
 import { computeYaw } from './pedestrianPose'
 
@@ -69,6 +70,8 @@ function createPlayerModel() {
     eye.position.set(side * 3, 27, -5.6)
     group.add(eye)
   }
+  addOutline(group, CHARACTER_VIEW.outlineColor, CHARACTER_VIEW.outlineThickness)
+  group.scale.setScalar(CHARACTER_VIEW.scale)
   return { group, legs, arms }
 }
 
