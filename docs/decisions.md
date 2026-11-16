@@ -19,6 +19,19 @@ La récompense est **annoncée** par l'événement `mission:succeeded` ; l'argen
 
 ---
 
+## 2026-11-16 : Mise en ligne par Workers Builds, /api/ réservé aux salons multijoueurs
+
+**Choix** : un seul Worker (`n00b-project`) sert le jeu (`dist/`, en assets statiques) et réserve les adresses **`/api/`** au serveur du jeu.
+Le déploiement passe par **Workers Builds** (l'intégration Git de Cloudflare) : merge sur `main` = mise en ligne, autre branche = adresse de preview commentée sur la PR.
+Les parties à plusieurs passeront par `/api/salons/<code>` : **un Durable Object par salon**, où arrivent toutes les connexions du même code (2 à 4 joueurs, et la reconnexion).
+
+**Raison** : aucun secret à gérer dans GitHub, des previews sans rien écrire, et une seule adresse pour le jeu et son serveur (pas de souci de CORS ni de domaines multiples le jour du multijoueur).
+
+**Alternatives écartées** : GitHub Actions avec un jeton Cloudflare (un secret de plus, des previews à coder soi-même) ; Cloudflare Pages (les Workers le remplacent, et les Durable Objects y sont moins simples) ;
+un Worker séparé pour l'API (deux adresses, deux déploiements à garder synchrones).
+
+---
+
 ## 2026-11-16 : Les piétons : types en données pures, personnages voxel assemblés par le code
 
 **Choix** : un type de PNJ est une **fiche en JSON pur** (`NpcTypeDef` : vitesses, plages de courage, de patience et de pause, et une recette d'apparence `look`), sans aucune fonction.

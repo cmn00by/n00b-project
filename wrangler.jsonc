@@ -1,0 +1,19 @@
+// La configuration du Worker Cloudflare qui met le jeu en ligne. Comment ça marche : docs/deploiement.md.
+// Jamais de secret ici : les secrets se règlent dans le tableau de bord Cloudflare (ou `wrangler secret put`).
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "n00b-project",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-11-01",
+  // Le jeu construit par `npm run build`. Seules les adresses /api/ passent par le Worker, le reste est servi directement.
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"],
+  },
+  // Une adresse de test par version envoyée depuis une branche (les PR).
+  "preview_urls": true,
+  "workers_dev": true,
+  "observability": { "enabled": true },
+}
