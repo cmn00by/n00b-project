@@ -180,13 +180,14 @@ Le noyau trie la liste par `order` et appelle chaque système. **Retirer une lig
 
 ### L'ordre d'exécution
 
-| `SYSTEM_ORDER` | Valeur | Rôle                                | Exemples                          |
-| -------------- | ------ | ----------------------------------- | --------------------------------- |
-| `input`        | 100    | appliquer les commandes des joueurs | input                             |
-| `ai`           | 200    | décisions des PNJ                   | pedestrians, traffic, police-ai   |
-| `physics`      | 300    | déplacements et collisions          | movement, driving, collision      |
-| `rules`        | 400    | règles du jeu                       | wanted, damage, missions, economy |
-| `cleanup`      | 900    | nettoyage                           | despawn, events flush             |
+| `SYSTEM_ORDER` | Valeur | Rôle                                    | Exemples                          |
+| -------------- | ------ | --------------------------------------- | --------------------------------- |
+| `input`        | 100    | appliquer les commandes des joueurs     | input                             |
+| `ai`           | 200    | décisions des PNJ                       | pedestrians, traffic, police-ai   |
+| `physics`      | 300    | déplacements                            | walking, driving                  |
+| `collision`    | 350    | collisions, après tous les déplacements | collision                         |
+| `rules`        | 400    | règles du jeu                           | wanted, damage, missions, economy |
+| `cleanup`      | 900    | nettoyage                               | despawn, events flush             |
 
 Deux systèmes dans la même tranche ne doivent pas dépendre l'un de l'autre.
 
@@ -207,18 +208,19 @@ Un **composant** est un **petit paquet de données sans logique**. Un système a
 }
 ```
 
-| Composant      | Données                                  | Utilisé par       |
-| -------------- | ---------------------------------------- | ----------------- |
-| `position`     | x, y, angle                              | presque tout      |
-| `velocity`     | vx, vy                                   | movement, driving |
-| `body`         | taille, masse, solide ou non             | collision         |
-| `health`       | points de vie                            | damage            |
-| `driver`       | véhicule occupé                          | driving, input    |
-| `vehicle`      | modèle, vitesse, dégâts                  | driving, traffic  |
-| `pedestrian`   | type, état d'IA, humeur                  | pedestrians       |
-| `wanted`       | niveau, minuteur                         | wanted            |
-| `interactable` | action proposée (« monter », « parler ») | input, hud        |
-| `sprite`       | clé d'affichage                          | game uniquement   |
+| Composant          | Données                                  | Utilisé par       |
+| ------------------ | ---------------------------------------- | ----------------- |
+| `position`         | x, y, angle                              | presque tout      |
+| `velocity`         | vx, vy                                   | movement, driving |
+| `body`             | taille, masse, solide ou non             | collision         |
+| `health`           | points de vie                            | damage            |
+| `driver`           | véhicule occupé                          | driving, input    |
+| `vehicle`          | modèle, vitesse, dégâts                  | driving, traffic  |
+| `pedestrian`       | type, état d'IA, humeur                  | pedestrians       |
+| `wanted`           | niveau, minuteur                         | wanted            |
+| `interactable`     | action proposée (« monter », « parler ») | input, hud        |
+| `sprite`           | clé d'affichage                          | game uniquement   |
+| `lastFreePosition` | dernière position hors des murs          | collision         |
 
 **Pourquoi c'est LEGO** : pour rendre une poubelle destructible, on lui **ajoute** le composant `health`. Le système de dégâts s'en occupe tout seul, sans une ligne de code en plus.
 

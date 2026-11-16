@@ -2,19 +2,20 @@
 
 Le « plateau LEGO » sur lequel toutes les briques s'emboîtent. Petit, stable, très testé. Plan complet : [docs/architecture.md](../../../docs/architecture.md), sections 4 à 8.
 
-| Fichier         | Rôle                                                                                           |
-| --------------- | ---------------------------------------------------------------------------------------------- |
-| `rng.ts`        | `createRng(seed)` : le hasard déterministe (jamais `Math.random()`)                            |
-| `config.ts`     | `TUNING` (réglages groupés par module), `STEPS_PER_SECOND`, `STEP_SECONDS`                     |
-| `components.ts` | les types de composants (`position`, `velocity`, `body`, `sprite`) et `Entity`                 |
-| `world.ts`      | `World` (l'état complet), `createWorld(seed)`, `createTestWorld()`                             |
-| `entities.ts`   | `spawnEntity`, `despawnEntity`, `findEntity`, `getEntity`, `findEntitiesWith`                  |
-| `events.ts`     | le bus d'événements typé et le catalogue `GameEvents`                                          |
-| `commands.ts`   | le catalogue `GameCommands` (`player:move`…) et `findCommands`                                 |
-| `registry.ts`   | `createRegistry` et `validateDefs` pour les contenus en données                                |
-| `system.ts`     | le contrat `System`, `SYSTEM_ORDER`, `sortSystems`, `validateSystems`                          |
-| `step.ts`       | `createSimulation(world, systems)` : prépare les systèmes, puis `simulation.step(commands)`    |
-| `index.ts`      | la seule porte d'entrée : les autres modules n'importent que `core`, jamais un fichier interne |
+| Fichier         | Rôle                                                                                                                             |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `rng.ts`        | `createRng(seed)` : le hasard déterministe (jamais `Math.random()`)                                                              |
+| `config.ts`     | `TUNING` (réglages groupés par module), `STEPS_PER_SECOND`, `STEP_SECONDS`                                                       |
+| `components.ts` | les types de composants (`position`, `velocity`, `body`, `sprite`, `lastFreePosition`) et `Entity`                               |
+| `world.ts`      | `World` (l'état complet, dont la carte `map`), `createWorld(seed)`, `createTestWorld()`, `loadMap()`                             |
+| `map.ts`        | `MapDef` (carte en données), `TileMap` (grille), `createTileMap`, `validateMapDef`, `isSolidTile`, `isAreaFree`, `getTileCenter` |
+| `entities.ts`   | `spawnEntity`, `despawnEntity`, `findEntity`, `getEntity`, `findEntitiesWith`                                                    |
+| `events.ts`     | le bus d'événements typé et le catalogue `GameEvents`                                                                            |
+| `commands.ts`   | le catalogue `GameCommands` (`player:move`…) et `findCommands`                                                                   |
+| `registry.ts`   | `createRegistry` et `validateDefs` pour les contenus en données                                                                  |
+| `system.ts`     | le contrat `System`, `SYSTEM_ORDER`, `sortSystems`, `validateSystems`                                                            |
+| `step.ts`       | `createSimulation(world, systems)` : prépare les systèmes, puis `simulation.step(commands)`                                      |
+| `index.ts`      | la seule porte d'entrée : les autres modules n'importent que `core`, jamais un fichier interne                                   |
 
 ## Ajouter sans modifier
 

@@ -9,7 +9,7 @@ Les grandes étapes du jeu, et où on en est. Le détail de chaque bloc est dans
 | Étape                           | Objectif                                                            | Avancement           |
 | ------------------------------- | ------------------------------------------------------------------- | -------------------- |
 | **Cadrage**                     | docs, règles, organisation                                          | ✅ terminé           |
-| **V0 : prototype codé**         | un quartier de test, à pied et en voiture, des piétons, une mission | 🚧 en cours (1 / 10) |
+| **V0 : prototype codé**         | un quartier de test, à pied et en voiture, des piétons, une mission | 🚧 en cours (3 / 10) |
 | **V0.5 : visuels du prototype** | identité visuelle, bible, premier quartier dans Tiled               | ⏳ à venir           |
 | **V1 : solo**                   | 4 quartiers, police, ~10 missions, progression, sauvegarde          | ⏳ à venir           |
 | **V2 : coop**                   | 2 à 4 joueurs dans la même ville                                    | ⏳ à venir           |
@@ -35,7 +35,7 @@ Le jeu tourne avec des formes de couleur, sans visuels.
 
 **Phase 2 : bouger dans la ville**
 
-- [ ] #6 Carte de test en données, avec les collisions (cmn00by)
+- [x] #6 Carte de test en données, avec les collisions (cmn00by)
 - [ ] #7 Déplacement à pied (Baghorror12)
 - [ ] #8 Conduite arcade (cmn00by)
 

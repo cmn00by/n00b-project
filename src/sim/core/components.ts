@@ -31,6 +31,12 @@ export interface Body {
   isSolid: boolean // un corps solide bloque les autres
 }
 
+/** La dernière position où l'entité ne touchait aucun obstacle : la brique collision y ramène l'entité qui entre dans un mur. */
+export interface LastFreePosition {
+  x: number
+  y: number
+}
+
 /** La clé d'affichage de l'entité : lue par l'affichage uniquement (voir src/game/assets.ts). */
 export interface Sprite {
   key: string
@@ -42,6 +48,7 @@ export interface Components {
   velocity?: Velocity
   body?: Body
   sprite?: Sprite
+  lastFreePosition?: LastFreePosition
 }
 
 /** Le nom d'un composant. */

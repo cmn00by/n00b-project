@@ -13,6 +13,19 @@ export const GAME_SEED = 2026
 export const COLORS = {
   player: 0xffd23f, // jaune : les couleurs vives sont réservées à ce qui doit attirer l'œil
   outline: 0x2b1e3a, // contour
-  gridLine: 0x3a2f5b, // ombre : lignes de repère du sol
   text: '#fff8ec', // blanc chaud
 } as const
+
+/** Couleur provisoire de chaque type de case (id de src/data/tileKinds), tirée de la palette, en attendant les tuiles (#4). */
+export const TILE_COLORS: Readonly<Record<string, number>> = {
+  road: 0x565a6e, // asphalte
+  sidewalk: 0xbdb4a6, // béton
+  grass: 0x5db65a, // herbe
+  building: 0xc9533f, // tuile de toit
+}
+
+/** Couleur d'une case dont le type n'a pas (encore) de couleur : un rose voyant, pour qu'on la remarque. */
+export const MISSING_TILE_COLOR = 0xff6fa8
+
+/** Bordure des toits : un ton plus sombre, pour distinguer les bâtiments voisins. */
+export const BUILDING_EDGE_COLOR = 0x9e3b33

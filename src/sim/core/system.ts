@@ -9,7 +9,8 @@ import type { World } from './world'
 export const SYSTEM_ORDER = {
   input: 100, // appliquer les commandes des joueurs
   ai: 200, // décisions des PNJ
-  physics: 300, // déplacements et collisions
+  physics: 300, // déplacements
+  collision: 350, // collisions : après tous les déplacements, avant les règles
   rules: 400, // règles du jeu (recherche, dégâts, missions, économie)
   cleanup: 900, // nettoyage
 } as const
