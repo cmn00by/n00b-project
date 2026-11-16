@@ -11,7 +11,7 @@ Une nouvelle décision s'ajoute **en haut**. Une décision remise en cause n'est
 
 - **Entités et composants maison**, rangés dans un dictionnaire par id (`world.entities`), sans bibliothèque ECS : l'état se sauvegarde et s'envoie tel quel (JSON), et l'ordre de parcours (ids croissants) est stable.
 - **`createSimulation(world, systems)`** plutôt que `step(world, commands)` seul : le noyau n'a pas le droit d'importer la liste `SYSTEMS` (elle vit dans `src/sim/systems`), on la lui passe donc une fois ; ensuite `simulation.step(commands)` avance d'un pas. Les commandes du pas sont lues par les systèmes dans `world.commands`.
-- **Le contrat `System` est dans `core/system.ts`** (singulier) : la règle de lint du noyau interdit tout import se terminant par `/systems`, qui attrapait aussi `core/systems.ts`.
+- **Le contrat `System` est dans `core/system.ts`** (singulier) : la règle de lint du noyau interdit tout import se terminant par `/systems`, qui attrapait aussi `core/systems.ts`. _Mise à jour : la règle a été corrigée (le noyau interdit désormais tout import qui sort de son dossier, `../…`, quel que soit le nom) ; le fichier garde son nom `system.ts`._
 - **`Math.sqrt` plutôt que `Math.hypot` ou `Math.atan2`** dans la simulation : leur résultat peut différer à la dernière décimale selon le navigateur, alors que `sqrt` est exact partout. Condition de la coop (même simulation chez tous les joueurs).
 - **Une seule commande par entité et par pas** dans `walking` (la dernière) : envoyer deux fois la même demande ne doit pas doubler la vitesse.
 

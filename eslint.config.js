@@ -42,7 +42,9 @@ export default tseslint.config(
         'error',
         {
           paths: [noPhaser],
-          patterns: [{ group: ['**/systems', '**/systems/**', '**/data', '**/data/**', '**/game', '**/game/**', '**/net', '**/net/**'], message: "Le noyau n'importe rien d'autre du projet." }],
+          // Tout ce qui sort du dossier du noyau ('../…') est interdit ; ses propres fichiers ('./…') sont permis,
+          // quel que soit leur nom (l'ancienne règle, fondée sur les noms, bloquait à tort un fichier './systems').
+          patterns: [{ regex: '^\\.\\./', message: "Le noyau n'importe rien d'autre du projet." }],
         },
       ],
     },
