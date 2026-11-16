@@ -20,7 +20,7 @@ navigateur ──► Worker n00b-project
 | Événement                      | Ce qui se passe                                                                          |
 | ------------------------------ | ---------------------------------------------------------------------------------------- |
 | **Merge sur `main`**           | Cloudflare construit le jeu (`npm run build`) et le met en ligne (`npx wrangler deploy`) |
-| **Push sur une autre branche** | Cloudflare construit une **version de test**, avec sa propre adresse (preview)           |
+| **Push sur une autre branche** | Cloudflare construit une **Preview** (`npx wrangler preview`), avec sa propre adresse    |
 | **PR ouverte**                 | Cloudflare commente la PR avec l'adresse de la preview : on teste avant de merger        |
 
 C'est **Workers Builds**, l'intégration Git de Cloudflare : rien à configurer dans GitHub Actions, et aucun secret dans le repo.
@@ -31,14 +31,14 @@ _Fait le 2026-11-16 : le repo est connecté._
 
 **Workers & Pages → n00b-project → Settings → Builds → Connect** :
 
-| Réglage                      | Valeur                         |
-| ---------------------------- | ------------------------------ |
-| Dépôt                        | `cmn00by/n00b-project`         |
-| Branche de production        | `main`                         |
-| Commande de build            | `npm run build`                |
-| Commande de déploiement      | `npx wrangler deploy`          |
-| Builds des autres branches   | activés                        |
-| Commande des autres branches | `npx wrangler versions upload` |
+| Réglage                      | Valeur                                                                                        |
+| ---------------------------- | --------------------------------------------------------------------------------------------- |
+| Dépôt                        | `cmn00by/n00b-project`                                                                        |
+| Branche de production        | `main`                                                                                        |
+| Commande de build            | `npm run build`                                                                               |
+| Commande de déploiement      | `npx wrangler deploy`                                                                         |
+| Builds des autres branches   | activés                                                                                       |
+| Commande des autres branches | `npx wrangler preview` (réglage par défaut ; il exige le bloc `previews` de `wrangler.jsonc`) |
 
 ## 3. À la main (secours)
 

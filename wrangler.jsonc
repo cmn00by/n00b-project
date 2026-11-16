@@ -14,6 +14,8 @@
   },
   // Une adresse de test par version envoyée depuis une branche (les PR).
   "preview_urls": true,
+  // Les Previews : Workers Builds lance `npx wrangler preview` sur chaque branche autre que main, qui exige ce bloc (vide : mêmes réglages que la production).
+  "previews": {},
   "workers_dev": true,
   "observability": { "enabled": true },
 }
