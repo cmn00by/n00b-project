@@ -5,6 +5,8 @@
 // Règles : un événement décrit un fait passé ('domaine:fait-au-passe'), avec des données simples et suffisantes.
 // Un écouteur ne suppose jamais qu'un autre écouteur existe.
 
+import type { EntityId } from './components'
+
 /**
  * Le catalogue de tous les événements du jeu : leur nom et les données qu'ils transportent.
  * Une brique qui émet un nouvel événement l'ajoute ici (c'est un ajout permis) et dans la fiche de son README.md.
@@ -12,6 +14,12 @@
 export interface GameEvents {
   /** Un pas de simulation vient de se terminer (émis par step()). */
   'world:stepped': { stepCount: number }
+  /** Une entité a été arrêtée par un obstacle (mur ou autre entité), émis par la brique collision. impactSpeed : la vitesse perdue, en px/s (0 si l'entité n'a pas de vitesse). */
+  'entity:blocked': { entityId: EntityId; impactSpeed: number }
+  /** Une entité est montée dans un véhicule (brique driving). */
+  'vehicle:entered': { vehicleId: EntityId; driverId: EntityId }
+  /** Une entité est descendue d'un véhicule (brique driving). */
+  'vehicle:exited': { vehicleId: EntityId; driverId: EntityId }
 }
 
 /** Une fonction appelée quand l'événement a lieu. */

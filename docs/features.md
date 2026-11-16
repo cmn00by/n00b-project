@@ -90,9 +90,9 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 
 **V0**
 
-- [ ] Marcher dans 8 directions, courir (touche maintenue) (#7)
+- [x] Marcher dans 8 directions, courir (touche maintenue) (brique `walking`, #19)
 - [x] Collisions avec les murs et bâtiments de la carte (brique `collision`, #6)
-- [ ] Animation de marche et de course (4 directions minimum) (#7)
+- [ ] Animation de marche et de course (3 directions + miroir) (#7, attend les visuels)
 
 **V1**
 
@@ -115,7 +115,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 
 **V0**
 
-- [ ] Tuiles du Centre générées selon `style.md` (voir bloc 14, #4)
+- [x] Tuiles du Centre générées selon `style.md` (sols de la bible, toits et déco générés)
 - [ ] Un quartier dans **Tiled** : routes, trottoirs, bâtiments, calques de collision (#5)
 - [x] Carte de test en données (grille de cases : route, trottoir, mur), collisions branchées sur la simulation (#6)
 - [ ] Chargement des cartes Tiled (quand #5 sera faite)
@@ -132,7 +132,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 **Plus tard**
 
 - [ ] Intérieurs simples (planque, garage, boutiques)
-- [ ] Cycle jour / nuit (éclairage, PNJ différents la nuit)
+- [x] Cycle jour / nuit : éclairage, fenêtres, lampadaires, phares (les PNJ de nuit viendront avec les piétons)
 - [ ] Météo (pluie qui rend la route glissante)
 
 **Dépend de** : 0. **Fichiers** : `public/maps/`, `src/game/scenes/City.ts`, `src/sim/map.ts`, `src/data/places.ts`.
@@ -145,10 +145,10 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 
 **V0**
 
-- [ ] Monter et descendre d'une voiture (bouton d'interaction) (#8)
-- [ ] Physique arcade : accélération, freinage, marche arrière, direction, frein à main, dérapage (#8)
-- [ ] Collisions voiture / bâtiments / objets / autres voitures (#8)
-- [ ] Caméra qui recule avec la vitesse (#8)
+- [x] Monter et descendre d'une voiture (bouton d'interaction) (#8)
+- [x] Physique arcade : accélération, freinage, marche arrière, direction, frein à main, dérapage (#8)
+- [x] Collisions voiture / bâtiments / objets / autres voitures (#8)
+- [x] Caméra qui regarde devant la voiture avec la vitesse (au lieu de reculer : le zoom reste entier pour garder des pixels nets) (#8)
 
 **V1**
 
@@ -477,10 +477,10 @@ et remplaceront les formes **sans toucher à la simulation**, grâce à l'archit
 | Phase         | cmn00by                                                            | Baghorror12                                                                                                    |
 | ------------- | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
 | **1**         | **#2 Initialiser le projet** (outils, dossiers, garde-fous)        | **#3 Le noyau** (à commencer dès que #2 est mergée ; en attendant, lire `architecture.md` et `conventions.md`) |
-| **2**         | **#6 Carte de test** (sans Tiled pour l'instant) + **#8 Conduite** | **#7 Déplacement à pied**                                                                                      |
-| **3**         | **#9 Moteur de missions**                                          | **#10 Piétons** + **#11 HUD**                                                                                  |
+| **2**         | **#6 Carte de test** (sans Tiled pour l'instant) + **#8 Conduite** | **#10 Piétons** (la #7 n'attend plus que les visuels)                                                          |
+| **3**         | **#9 Moteur de missions**                                          | **#11 HUD** + **#21 Clavier ZQSD = WASD**                                                                      |
 | **4**         | **#12 Mise en ligne**                                              | **#13 Première mission** en données                                                                            |
-| **Plus tard** | **#4 Identité visuelle** (bible, scripts prêts dans `scripts/art`) | **#5 Premier quartier dans Tiled**                                                                             |
+| **Plus tard** | **#4 Identité visuelle** (bible, scripts prêts dans `scripts/art`) | **#5 Premier quartier dans Tiled** + **#7 Animations à pied**                                                  |
 
 Chaque phase donne à chacun des dossiers différents, donc peu de conflits. La seule dépendance forte : **#3 attend #2**.
 

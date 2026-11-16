@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createTileMap, getTileCenter, isAreaFree, isSolidTile, validateMapDef } from './map'
+import { createTileMap, facingToHeading, getTileCenter, isAreaFree, isSolidTile, validateMapDef } from './map'
 import type { MapDef, TileKindDef } from './map'
 import { createRegistry } from './registry'
 import { createTestWorld, loadMap } from './world'
@@ -47,6 +47,37 @@ describe('validateMapDef', () => {
   it('signale un point d’apparition hors de la carte ou dans un mur', () => {
     expect(validateMapDef(createMapDef({ spawns: { player: { tileX: 9, tileY: 0 } } }), TILE_KINDS)).toContain('apparition du joueur (9, 0) hors de la carte')
     expect(validateMapDef(createMapDef({ spawns: { player: { tileX: 2, tileY: 0 } } }), TILE_KINDS)).toContain('apparition du joueur (2, 0) sur une case qui bloque le passage')
+  })
+})
+
+describe('validateMapDef : véhicules garés', () => {
+  it('accepte des véhicules sur des cases libres', () => {
+    expect(validateMapDef(createMapDef({ spawns: { player: { tileX: 0, tileY: 0 }, vehicles: [{ tileX: 1, tileY: 1, modelId: 'x', facing: 'up' }] } }), TILE_KINDS)).toEqual([])
+  })
+
+  it('signale un véhicule hors de la carte ou dans un mur', () => {
+    const errors = validateMapDef(
+      createMapDef({
+        spawns: {
+          player: { tileX: 0, tileY: 0 },
+          vehicles: [
+            { tileX: 9, tileY: 1, modelId: 'loin', facing: 'up' },
+            { tileX: 3, tileY: 0, modelId: 'mur', facing: 'up' },
+          ],
+        },
+      }),
+      TILE_KINDS,
+    )
+    expect(errors).toEqual(["véhicule 'loin' (9, 1) hors de la carte", "véhicule 'mur' (3, 0) sur une case qui bloque le passage"])
+  })
+})
+
+describe('facingToHeading', () => {
+  it('donne un cap de longueur 1 dans le bon sens', () => {
+    expect(facingToHeading('up')).toEqual({ x: 0, y: -1 })
+    expect(facingToHeading('down')).toEqual({ x: 0, y: 1 })
+    expect(facingToHeading('left')).toEqual({ x: -1, y: 0 })
+    expect(facingToHeading('right')).toEqual({ x: 1, y: 0 })
   })
 })
 

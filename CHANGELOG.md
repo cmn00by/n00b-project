@@ -19,12 +19,17 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 
 ### Ajouté
 
+- Essai d'affichage en 3D pixel art (three.js) sur la page `three.html`, à comparer avec le jeu : même ville, même simulation ; vraies ombres, lampadaires et phares qui éclairent les façades
+- Une vraie petite ville, variée et texturée : pavillons et jardins, place pavée avec fontaine et bancs, parc et étang, centre-ville, parking, plage, mer et pontons ; passages piétons, marquages, plaques d'égout, lampadaires, arbres qui ondulent au vent, eau animée, toits variés (piscine, panneaux solaires, linge qui sèche…), façades pastel avec leurs fenêtres ; N pour passer à la nuit (immeubles assombris, fenêtres allumées, halos des lampadaires, phares des voitures)
+- Essai de rendu 2.5D : les immeubles prennent du relief (façades en perspective, toits décalés) et projettent leur ombre au sol ; R pour comparer avec et sans (#26)
+- On peut conduire ! E pour monter dans une voiture garée et en descendre ; trois modèles (la Mamie, la Livreuse, la Frimeuse) ; accélérer, freiner, reculer, déraper, frein à main sur Espace ; la caméra regarde devant la voiture (#8)
 - Une ville de test : routes, trottoirs, ruelles, un parc et des immeubles qu'on ne traverse plus ; on glisse le long des murs (#6)
 - Un carré jaune se déplace dans la ville : flèches, ZQSD ou WASD pour marcher, Maj pour courir, la caméra le suit (#3)
 - Bible visuelle en Gemini 3 Pro : 7 planches de référence (personnages, animation, portraits, véhicules, sol, bâtiments, scène) et leurs prompts (#4)
 
 ### Technique
 
+- Brique `driving` (physique arcade déterministe, cap en vecteur), modèles de véhicules en données, `isSpaceClear` dans le noyau ; la brique `collision` bloque aussi contre les autres entités, coupe la vitesse au choc et annonce `entity:blocked` (#8)
 - Format de carte en données (`MapDef`), carte chargée dans le monde (`world.map`), brique `collision` et tranche `SYSTEM_ORDER.collision` (#6)
 - Règle ESLint du noyau corrigée : elle interdit tout import qui sort du dossier `core` au lieu de se fier aux noms de fichiers
 

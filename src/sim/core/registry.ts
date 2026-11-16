@@ -64,3 +64,24 @@ export function validateDefs<T extends ContentDef>(label: string, defs: readonly
 
   return errors
 }
+
+/** Un modèle de véhicule (src/data/vehicles). Les vitesses sont en px par seconde, les accélérations en px par seconde². */
+export interface VehicleDef extends ContentDef {
+  /** Le nom affiché (en français). */
+  name: string
+  /** Largeur (d'un flanc à l'autre) et longueur (du nez à l'arrière), en px. */
+  width: number
+  length: number
+  /** Vitesse maximale en marche avant et en marche arrière. */
+  maxSpeed: number
+  maxReverseSpeed: number
+  /** Accélération moteur, et décélération au freinage. */
+  acceleration: number
+  braking: number
+  /** Vitesse de rotation du volant à fond, en radians par seconde (atteinte au-dessus de TUNING.driving.fullTurnSpeed). */
+  turnRate: number
+  /** Adhérence : la part du glissement latéral effacée par seconde. Haute = rails ; basse = dérapages. */
+  grip: number
+  /** Adhérence quand le frein à main est tiré (plus basse : on dérape). */
+  handbrakeGrip: number
+}

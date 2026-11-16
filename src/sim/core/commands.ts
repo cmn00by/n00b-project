@@ -18,6 +18,17 @@ export interface GameCommands {
     directionY: number // de -1 (haut) à 1 (bas) ; 0 = immobile
     isRunning: boolean
   }
+  /** Le joueur appuie sur la touche d'interaction (une seule commande par appui) : monter dans un véhicule, en descendre… */
+  'player:interact': {
+    entityId: EntityId
+  }
+  /** Le joueur au volant conduit (touches tenues). Une commande par pas tant qu'il agit. */
+  'vehicle:drive': {
+    entityId: EntityId // l'entité au volant (pas le véhicule)
+    throttle: number // de -1 (frein, puis marche arrière) à 1 (accélérer)
+    steer: number // de -1 (à gauche) à 1 (à droite)
+    isHandbraking: boolean
+  }
 }
 
 /** Le nom d'une commande. */

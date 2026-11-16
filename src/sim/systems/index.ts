@@ -2,6 +2,7 @@
 // Le noyau les trie par tranche d'exécution (SYSTEM_ORDER) : l'ordre de cette liste n'a pas d'importance.
 import type { System } from '../core'
 import { collisionSystem } from './collision'
+import { drivingSystem } from './driving'
 import { walkingSystem } from './walking'
 
-export const SYSTEMS: System[] = [walkingSystem, collisionSystem]
+export const SYSTEMS: System[] = [walkingSystem, drivingSystem, collisionSystem]

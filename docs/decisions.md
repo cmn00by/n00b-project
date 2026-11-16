@@ -5,6 +5,58 @@ Une nouvelle décision s'ajoute **en haut**. Une décision remise en cause n'est
 
 ---
 
+## 2026-11-16 : Essai d'affichage en 3D pixel art (three.js) — en cours
+
+**Constat** : l'essai de relief en Phaser (#26, #29) se bat contre le pixel art : les toits sont ré-agrandis en continu, la déco est affichée à des tailles non entières, le feuillage tourne : des pixels inégaux qui scintillent.
+
+**Essai** : la même ville et la même simulation, affichées en vraie 3D avec three.js, **dessinées en basse résolution puis agrandies sans lissage** : tout partage la même grille de pixels. Immeubles en boîtes (toits générés, façades par le code), vraies ombres (dures), lumière de nuit réelle (lampadaires proches, phares). Page `three.html`, à côté du jeu.
+
+**À décider après comparaison, à deux** : garder Phaser ou passer l'affichage à three.js. La simulation ne change pas dans les deux cas.
+
+**Ajout d'une dépendance** : `three` (et ses types), sur la branche d'essai seulement.
+
+## 2026-11-16 : Une ville variée, texturée, de jour et de nuit
+
+**Choix** :
+
+- **Textures générées** (Gemini 3 Pro, 2 planches : toits vus de dessus et déco) **et sols de la bible** ; tout le reste par le code : marquages, passages piétons, bordures, rivages, fenêtres, eau animée.
+- **Le sol est peint une fois** dans une grande image ; **l'eau vit dessous** (deux couches qui glissent) et se voit à travers les trous.
+- **Toits texturés** sur le relief : la projection d'un rectangle reste un rectangle, l'image est simplement placée et étirée. Maisons basses : toits pentus ; immeubles : toits plats variés.
+- **La déco est placée par des règles** (`placeDecor`) et à l'échelle du jeu (`PROP_STYLES` : case 32 px, joueur 24 px, voiture 26 × 46 px). **Affichage seulement** pour l'instant : elle ne bloque pas le passage ; elle deviendra des objets de la simulation avec le bloc « environnement interactif ».
+- **La nuit** : un voile sombre percé là où il y a de la lumière (lampadaires, phares), des halos en mode addition ; le voile passe sous les immeubles, qui s'assombrissent eux-mêmes et allument leurs fenêtres (pour que l'ordre d'affichage reste juste).
+- **Un hasard d'affichage stable** (`hashToUnit`) : la même ville pour tous, sans toucher au hasard de la simulation.
+
+**Alternatives écartées** : éclairage par normal maps (il faudrait une carte de relief par image) ; un shader d'eau maison (deux couches qui glissent suffisent pour l'effet, et marchent partout).
+
+## 2026-11-16 : Essai de rendu 2.5D des immeubles (#26) — en cours
+
+**Essai** : sans changer la simulation (qui reste en 2D), l'affichage donne du volume aux immeubles. Les cases de bâtiment sont regroupées en blocs ; chaque bloc a une hauteur ;
+son toit est dessiné décalé vers l'extérieur de l'écran (`projectRaised`), et ses façades tournées vers la caméra relient le sol au toit. Les ombres portées sont dessinées au sol.
+Touche **R** pour comparer.
+
+**À décider après l'essai** : garder ou non. Si oui : la hauteur des immeubles passe dans les données de la carte (aujourd'hui provisoire, déduite de la position), et la planche bible des bâtiments
+est refaite en « toits vus de dessus + textures de façade » (`docs/style.md`, section 5.5), puisque les façades ne sont plus peintes sur l'image.
+
+**Alternatives** : vraie 3D (Three.js, caméra fixe) : bien plus lourd, changement de moteur ; ombres et éclairage seuls (normal maps) : moins de volume, mais compatibles avec la bible actuelle.
+
+## 2026-11-16 : La conduite (#8)
+
+**Choix** :
+
+- **Physique arcade maison**, dans une brique `driving` : la vitesse est séparée en une part dans l'axe (moteur, freins) et une part de côté (le dérapage), que l'adhérence du modèle efface peu à peu ; le frein à main baisse l'adhérence. Simple à régler, et fun.
+- **Le cap est un vecteur** (`vehicle.headingX/Y`), pas un angle : la rotation n'utilise que `+ − × ÷` et `Math.sqrt`, identiques sur toutes les machines (coop). L'angle n'est calculé que par l'affichage.
+- **Corps du véhicule = rectangle aligné sur la grille qui englobe la voiture tournée** : les collisions restent celles de la brique `collision` (rectangles). Une voiture en diagonale est donc un peu « plus large » qu'en vrai : acceptable en arcade.
+- **Le joueur au volant n'a plus de corps** (mis de côté dans `driver.storedBody`) : il ne gêne pas sa propre voiture et ne peut pas être percuté. Il est posé sur une place libre en descendant.
+- **La brique `collision` s'étend aux entités** (voiture contre voiture, joueur contre voiture), coupe la vitesse sur l'axe bloqué et annonce `entity:blocked` avec la vitesse perdue (pour les dégâts, la police, les sons).
+- **La caméra regarde devant la voiture** au lieu de reculer : un zoom non entier rendrait les pixels flous.
+- **Vitesse maximale plafonnée à 16 px par pas** par les tests des données : au-delà, une voiture pourrait traverser un mur d'une case.
+
+**Changement du noyau** (ajouts seulement) : composants `vehicle` et `driver`, type `VehicleDef`, `space.ts` (`isSpaceClear`, `findSolidOverlaps`), événements `entity:blocked`, `vehicle:entered`, `vehicle:exited`, commandes `player:interact`, `vehicle:drive`, véhicules garés dans `MapDef`, `TUNING.driving`.
+
+**Alternatives écartées** : la physique Matter.js de Phaser (dans l'affichage, non déterministe d'une machine à l'autre) ; un angle avec `sin`/`cos` (résultat pouvant différer à la dernière décimale selon le navigateur).
+
+**Limites connues** : les collisions entre entités sont testées une à une (O(n²)) : à revoir quand le trafic (#5 du GDD) mettra beaucoup de voitures. Si deux briques réagissent un jour à `player:interact` (parler à un PNJ), il faudra décider laquelle a la priorité.
+
 ## 2026-11-16 : La carte et les collisions (#6)
 
 **Choix** :
