@@ -270,8 +270,9 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 
 **V0**
 
-- [ ] Moteur de missions : étapes, objectifs (chaque type d'objectif est une brique enregistrée), conditions de réussite et d'échec (#9)
-- [ ] Format de mission en données (`src/data/missions/`), documenté dans `docs/missions.md` (#9)
+- [x] Moteur de missions : étapes, objectifs (chaque type d'objectif est une brique enregistrée), conditions de réussite et d'échec (#9)
+- [x] Format de mission en données (`src/data/missions/`), documenté dans `docs/missions.md` (#9)
+- [x] Repères à l'écran (départ, objectif en cours) et panneau de mission avec chrono (#9)
 - [ ] Une mission de livraison complète : prendre un colis, aller à un point, chrono (#13)
 
 **V1**
@@ -424,8 +425,9 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 
 **V0**
 
-- [ ] Worker Cloudflare qui sert le jeu, connecté au repo (déploiement au merge, preview par PR) (#12)
-- [ ] `docs/deploiement.md` (#12)
+- [x] Worker Cloudflare qui sert le jeu, connecté au repo (déploiement au merge, preview par PR) (#12)
+- [x] `docs/deploiement.md` (#12)
+- [x] `/api/` réservé au serveur du jeu, prêt pour les salons de la coop (#12)
 
 **V1**
 
@@ -444,13 +446,14 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 **Objectif** : jouer à 2 à 4 dans la même ville, en se rejoignant avec un code de partie.
 
 - [ ] Salon de jeu dans un Durable Object (un salon = une partie)
-- [ ] Connexion WebSocket, rejoindre avec un code
+- [ ] Connexion WebSocket, rejoindre avec un code : toutes les connexions du même code arrivent dans la même partie
+- [ ] Plusieurs connexions par salon (2 à 4 joueurs), et reconnexion d'un joueur (coupure, autre appareil) sans perdre sa place
 - [ ] Le serveur fait tourner la simulation (`src/sim`), les clients envoient leurs commandes
 - [ ] Prédiction locale et correction, pour que ça reste fluide
 - [ ] Missions en coop (un conduit, l'autre…)
 
 **Dépend de** : V1 terminée, et la séparation simulation / affichage respectée partout.
-**Fichiers** : `src/net/`, `worker/room.ts`. **Profil** : 🔧 ⭐⭐⭐.
+**Fichiers** : `src/net/`, `worker/salon.ts`. Schéma : [deploiement.md](deploiement.md), section 5. **Profil** : 🔧 ⭐⭐⭐.
 
 ## 17. Mini online (V3)
 

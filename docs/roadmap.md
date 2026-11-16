@@ -41,14 +41,14 @@ Le jeu tourne avec des formes de couleur, sans visuels.
 
 **Phase 3 : une ville vivante**
 
-- [ ] #9 Moteur de missions (cmn00by)
+- [x] #9 Moteur de missions (cmn00by)
 - [x] #11 HUD (Baghorror12)
-- [ ] #21 Clavier ZQSD = WASD (Baghorror12)
+- [x] #21 Clavier ZQSD = WASD (Baghorror12)
 - [x] #20 Commandes tactiles (Baghorror12)
 
 **Phase 4 : en ligne**
 
-- [ ] #12 Mise en ligne sur Cloudflare (cmn00by)
+- [ ] #12 Mise en ligne sur Cloudflare (cmn00by) : le Worker est en ligne, reste à connecter le repo dans Cloudflare (`docs/deploiement.md`)
 - [ ] #13 Première mission (Baghorror12)
 
 **Fini quand** : on lance le jeu en ligne, on marche, on vole une voiture, on dérape, les piétons fuient, et on réussit une livraison.

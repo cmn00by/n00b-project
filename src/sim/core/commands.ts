@@ -22,6 +22,15 @@ export interface GameCommands {
   'player:interact': {
     entityId: EntityId
   }
+  /** Lancer une mission sans passer par son point de départ (menu, test, débogage). Ignorée si le joueur a déjà une mission en cours. */
+  'mission:start': {
+    entityId: EntityId // le joueur
+    missionId: string
+  }
+  /** Abandonner la mission en cours (elle échoue). */
+  'mission:abandon': {
+    entityId: EntityId
+  }
   /** Le joueur au volant conduit (touches tenues). Une commande par pas tant qu'il agit. */
   'vehicle:drive': {
     entityId: EntityId // l'entité au volant (pas le véhicule)
