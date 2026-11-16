@@ -1,10 +1,8 @@
 // Le mode de commandes : clavier ou tactile, choisi tout seul selon l'appareil et la dernière entrée utilisée.
-// Expose : ControlMode, parseControlsOverride(), chooseStartMode(), switchMode(), mergePressedKeys().
+// Expose : ControlMode, parseControlsOverride(), chooseStartMode(), switchMode().
 // Pourquoi : on ne devine jamais le modèle de l'appareil (un iPad se présente parfois comme un Mac). On regarde le type d'entrée disponible,
 // puis on suit la dernière entrée utilisée (un toucher → tactile, une touche → clavier), ce qui gère aussi les appareils qui ont les deux.
 // Un réglage dans l'adresse (?controls=touch ou ?controls=keyboard) force le mode, pour tester sur PC. Sans Phaser, donc testé dans Node.
-
-import type { PressedKeys } from './moveCommand'
 
 export type ControlMode = 'keyboard' | 'touch'
 
@@ -23,15 +21,4 @@ export function chooseStartMode(override: ControlMode | undefined, hasCoarsePoin
 /** Le mode après une entrée du joueur : il suit la dernière entrée utilisée, sauf si le mode est forcé. */
 export function switchMode(lastInput: ControlMode, override: ControlMode | undefined): ControlMode {
   return override ?? lastInput
-}
-
-/** Les touches demandées par le clavier ou par le tactile : une direction compte dès que l'une des deux sources la demande. */
-export function mergePressedKeys(first: PressedKeys, second: PressedKeys): PressedKeys {
-  return {
-    up: first.up || second.up,
-    down: first.down || second.down,
-    left: first.left || second.left,
-    right: first.right || second.right,
-    run: first.run || second.run,
-  }
 }

@@ -17,7 +17,9 @@ export const TOUCH_CONTROLS = {
   deadZone: 14,
   /** Rayon du bouton « courir ». */
   runButtonRadius: 40,
-  /** Distance entre le bouton « courir » et les bords de l'écran. */
+  /** Le bouton « courir » réagit un peu au-delà de son dessin (multiple du rayon), car un pouce n'est pas précis. */
+  runButtonGrab: 1.4,
+  /** Distance entre les commandes et les bords de l'écran. */
   margin: 28,
 } as const
 
