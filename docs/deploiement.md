@@ -27,6 +27,8 @@ C'est **Workers Builds**, l'intégration Git de Cloudflare : rien à configurer 
 
 ### Réglages dans le tableau de bord Cloudflare (une seule fois, par cmn00by)
 
+_Fait le 2026-11-16 : le repo est connecté._
+
 **Workers & Pages → n00b-project → Settings → Builds → Connect** :
 
 | Réglage                      | Valeur                         |
