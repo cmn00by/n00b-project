@@ -2,11 +2,12 @@ import { describe, expect, it } from 'vitest'
 import { STEPS_PER_SECOND, createRng } from '../../core'
 import type { NpcTypeDef } from '../../core'
 import { computePauseSteps, createPedestrian } from './personality'
+import { TEST_LOOK } from './testLook'
 
 const TYPE: NpcTypeDef = {
   id: 'passant',
   name: 'Passant',
-  spriteKey: 'pedestrian-passant',
+  look: TEST_LOOK,
   walkSpeed: 40,
   fleeSpeed: 90,
   courage: { min: 0.2, max: 0.8 },

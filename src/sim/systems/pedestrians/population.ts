@@ -55,7 +55,6 @@ function spawnPedestrian(world: World, type: NpcTypeDef, tile: { tileX: number; 
   spawnEntity(world, 'pedestrian', {
     position: { x: center.x, y: center.y, angle: computeAngleOf(pedestrian.heading) },
     body: { width: tuning.bodySize, height: tuning.bodySize, isSolid: false },
-    sprite: { key: type.spriteKey },
     pedestrian,
   })
   return center

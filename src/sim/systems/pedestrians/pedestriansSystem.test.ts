@@ -5,11 +5,12 @@ import { createPedestriansSystem } from './pedestriansSystem'
 import { makeTestMap } from './testMap'
 import { createPedestrian } from './personality'
 import { getTileAt } from './tiles'
+import { TEST_LOOK } from './testLook'
 
 const PASSANT: NpcTypeDef = {
   id: 'passant',
   name: 'Passant',
-  spriteKey: 'pedestrian-passant',
+  look: TEST_LOOK,
   walkSpeed: 40,
   fleeSpeed: 90,
   courage: { min: 0.5, max: 0.5 },
@@ -64,7 +65,6 @@ describe('population', () => {
       // Un piéton a déjà fait un tout petit pas depuis sa naissance.
       expect(distance).toBeGreaterThanOrEqual(T.spawnMinDistance - 5)
       expect(distance).toBeLessThanOrEqual(T.spawnMaxDistance + 5)
-      expect(pedestrian.sprite?.key).toBe('pedestrian-passant')
       expect(pedestrian.body?.isSolid).toBe(false)
     }
   })

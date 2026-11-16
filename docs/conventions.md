@@ -217,6 +217,8 @@ Pour qu'un même concept porte **toujours le même nom** dans le code. Ajouter u
 | Réputation                            | `reputation`                  | `rep`, `respect`                           |
 | Réplique d'un PNJ                     | `bark`                        | `line`, `shout`                            |
 | Dialogue (avec portrait)              | `dialogue`                    | `conversation`, `talk`                     |
+| Apparence d'un type de PNJ (recette)  | `look` (`NpcLook`)            | `skin`, `outfit`, `sprite`                 |
+| Apparence tirée pour un piéton        | `appearance`                  | `outfit`, `variant`                        |
 | Dégâts                                | `damage`                      | `dmg`, `hurt`                              |
 | Santé                                 | `health`                      | `hp`, `life`                               |
 | Pas de simulation                     | `step`                        | `tick`, `frame`                            |
