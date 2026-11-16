@@ -5,6 +5,9 @@
   "name": "n00b-project",
   "main": "worker/index.ts",
   "compatibility_date": "2026-11-01",
+  // Wrangler construit le jeu lui-même avant chaque envoi (deploy, preview, dev) : rien ne part sans un dist/ à jour, même si la commande de build
+  // n'est pas réglée dans Cloudflare.
+  "build": { "command": "npm run build" },
   // Le jeu construit par `npm run build`. Seules les adresses /api/ passent par le Worker, le reste est servi directement.
   "assets": {
     "directory": "./dist",

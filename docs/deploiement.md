@@ -11,7 +11,8 @@ navigateur ──► Worker n00b-project
                  └─ tout le reste → les fichiers de dist/ (le jeu construit par `npm run build`)
 ```
 
-- **`wrangler.jsonc`** : la configuration du Worker (nom, point d'entrée, dossier `dist/`, adresses de preview).
+- **`wrangler.jsonc`** : la configuration du Worker (nom, point d'entrée, dossier `dist/`, adresses de preview). Son bloc `build` fait construire le jeu
+  (`npm run build`) par wrangler **avant chaque envoi** : `dist/` est toujours à jour, que la commande de build soit réglée dans Cloudflare ou non.
 - **`worker/index.ts`** : le code du Worker. Aujourd'hui, il ne répond qu'à **`/api/sante`** (`{ ok, apiVersion }`), pour vérifier qu'un déploiement répond.
 - Les fichiers du jeu sont servis **directement par Cloudflare**, sans passer par le code : c'est rapide et gratuit dans les limites du plan.
 
@@ -35,7 +36,7 @@ _Fait le 2026-11-16 : le repo est connecté._
 | ---------------------------- | --------------------------------------------------------------------------------------------- |
 | Dépôt                        | `cmn00by/n00b-project`                                                                        |
 | Branche de production        | `main`                                                                                        |
-| Commande de build            | `npm run build`                                                                               |
+| Commande de build            | vide : wrangler construit le jeu lui-même (bloc `build` de `wrangler.jsonc`)                  |
 | Commande de déploiement      | `npx wrangler deploy`                                                                         |
 | Builds des autres branches   | activés                                                                                       |
 | Commande des autres branches | `npx wrangler preview` (réglage par défaut ; il exige le bloc `previews` de `wrangler.jsonc`) |
@@ -45,8 +46,8 @@ _Fait le 2026-11-16 : le repo est connecté._
 Depuis la racine, avec `npx wrangler login` fait une fois :
 
 ```bash
-npm run deploy           # construit puis met en ligne
-npm run preview:worker   # construit puis lance le Worker en local (http://localhost:8787)
+npm run deploy           # construit puis met en ligne (wrangler deploy)
+npm run preview:worker   # construit puis lance le Worker en local (wrangler dev, http://localhost:8787)
 ```
 
 Seul cmn00by a accès au compte Cloudflare. Baghorror12 n'en a pas besoin : il teste ses PR sur l'adresse de preview.
