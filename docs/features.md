@@ -115,7 +115,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 
 **V0**
 
-- [ ] Tuiles du Centre générées selon `style.md` (voir bloc 14, #4)
+- [x] Tuiles du Centre générées selon `style.md` (sols de la bible, toits et déco générés)
 - [ ] Un quartier dans **Tiled** : routes, trottoirs, bâtiments, calques de collision (#5)
 - [x] Carte de test en données (grille de cases : route, trottoir, mur), collisions branchées sur la simulation (#6)
 - [ ] Chargement des cartes Tiled (quand #5 sera faite)
@@ -132,7 +132,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 **Plus tard**
 
 - [ ] Intérieurs simples (planque, garage, boutiques)
-- [ ] Cycle jour / nuit (éclairage, PNJ différents la nuit)
+- [x] Cycle jour / nuit : éclairage, fenêtres, lampadaires, phares (les PNJ de nuit viendront avec les piétons)
 - [ ] Météo (pluie qui rend la route glissante)
 
 **Dépend de** : 0. **Fichiers** : `public/maps/`, `src/game/scenes/City.ts`, `src/sim/map.ts`, `src/data/places.ts`.

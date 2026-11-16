@@ -5,6 +5,19 @@ Une nouvelle décision s'ajoute **en haut**. Une décision remise en cause n'est
 
 ---
 
+## 2026-11-16 : Une ville variée, texturée, de jour et de nuit
+
+**Choix** :
+
+- **Textures générées** (Gemini 3 Pro, 2 planches : toits vus de dessus et déco) **et sols de la bible** ; tout le reste par le code : marquages, passages piétons, bordures, rivages, fenêtres, eau animée.
+- **Le sol est peint une fois** dans une grande image ; **l'eau vit dessous** (deux couches qui glissent) et se voit à travers les trous.
+- **Toits texturés** sur le relief : la projection d'un rectangle reste un rectangle, l'image est simplement placée et étirée. Maisons basses : toits pentus ; immeubles : toits plats variés.
+- **La déco est placée par des règles** (`placeDecor`) et à l'échelle du jeu (`PROP_STYLES` : case 32 px, joueur 24 px, voiture 26 × 46 px). **Affichage seulement** pour l'instant : elle ne bloque pas le passage ; elle deviendra des objets de la simulation avec le bloc « environnement interactif ».
+- **La nuit** : un voile sombre percé là où il y a de la lumière (lampadaires, phares), des halos en mode addition ; le voile passe sous les immeubles, qui s'assombrissent eux-mêmes et allument leurs fenêtres (pour que l'ordre d'affichage reste juste).
+- **Un hasard d'affichage stable** (`hashToUnit`) : la même ville pour tous, sans toucher au hasard de la simulation.
+
+**Alternatives écartées** : éclairage par normal maps (il faudrait une carte de relief par image) ; un shader d'eau maison (deux couches qui glissent suffisent pour l'effet, et marchent partout).
+
 ## 2026-11-16 : Essai de rendu 2.5D des immeubles (#26) — en cours
 
 **Essai** : sans changer la simulation (qui reste en 2D), l'affichage donne du volume aux immeubles. Les cases de bâtiment sont regroupées en blocs ; chaque bloc a une hauteur ;
