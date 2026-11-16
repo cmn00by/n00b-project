@@ -317,7 +317,7 @@ sans rien demander à la simulation.
 
 L'affichage utilise **three.js** et suit **les mêmes principes LEGO** (décision : [decisions.md](decisions.md)).
 
-**Le rendu pixel art** : la ville est construite en vraie 3D, **dessinée en basse résolution** (1 pixel de scène = 3 pixels d'écran)
+**Le rendu pixel art** : la ville est construite en vraie 3D, **dessinée en basse résolution** (automatique : la scène fait environ 540 pixels de haut, soit ×2 sur un écran 1080p, ×3 en 1440p ; touche P pour les tailles fixes)
 puis agrandie sans lissage. Toutes les textures sont réglées « pixel net » (`pixelTexture()`), et la caméra est **calée sur la grille de pixels**
 pour que la ville ne « nage » pas quand elle bouge.
 
