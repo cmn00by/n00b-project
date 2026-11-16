@@ -344,7 +344,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 
 **V1**
 
-- [ ] L'argent du joueur dans la simulation : gagné (récompense des missions, `mission:succeeded`), dépensé, affiché par le HUD à la place de la valeur factice
+- [ ] L'argent du joueur dans la simulation : gagné (récompense des missions, `mission:succeeded`), dépensé, affiché par le HUD à la place de la valeur factice (#52)
 - [ ] Argent gagné (missions, distributeurs, petits jobs) et perdu (amendes, hôpital, réparations)
 - [ ] Réputation par quartier, qui débloque contacts et missions
 - [ ] Planque : point de sauvegarde et garage pour stocker un véhicule
@@ -483,14 +483,14 @@ numéros de course) sont des images **générées par IA** puis pixelisées (cha
 
 **V1**
 
-- [ ] Posséder des véhicules : la liste des véhicules du joueur (modèle + personnalisation), sauvegardable telle quelle
-- [ ] **Concession** sur la carte (un repère comme les missions) : choisir un modèle, voir son prix et ses réglages, l'acheter
-- [ ] **Garage** (lié à la planque du bloc 11) : y ranger un véhicule, en ressortir un ; un véhicule volé peut y être gardé
-- [ ] **Atelier** : peinture (palette, deux tons, bandes), jantes, aileron, galerie de toit, pare-buffle, pot d'échappement, néons sous la caisse (beaux de nuit), klaxons ridicules
-- [ ] **Performances** : moteur, freins, adhérence, qui modifient les réglages du modèle (bornés, en données)
-- [ ] Écran d'atelier : aperçu de la voiture qui tourne, essai des pièces avant d'acheter
-- [ ] Pièces et prix en données (`src/data/vehicleParts/`), validés par les tests
-- [ ] Autocollants générés par IA, à poser sur la voiture
+- [ ] Posséder des véhicules : la liste des véhicules du joueur (modèle + personnalisation), sauvegardable telle quelle (#53)
+- [ ] **Concession** sur la carte (un repère comme les missions) : choisir un modèle, voir son prix et ses réglages, l'acheter (#53)
+- [ ] **Garage** (lié à la planque du bloc 11) : y ranger un véhicule, en ressortir un ; un véhicule volé peut y être gardé (#53)
+- [ ] **Atelier** : peinture (palette, deux tons, bandes), jantes, aileron, galerie de toit, pare-buffle, pot d'échappement, néons sous la caisse (beaux de nuit), klaxons ridicules (#54)
+- [ ] **Performances** : moteur, freins, adhérence, qui modifient les réglages du modèle (bornés, en données) (#54)
+- [ ] Écran d'atelier : aperçu de la voiture qui tourne, essai des pièces avant d'acheter (#54)
+- [ ] Pièces et prix en données (`src/data/vehicleParts/`), validés par les tests (#54)
+- [ ] Autocollants générés par IA, à poser sur la voiture (#55)
 
 **Plus tard**
 
@@ -511,11 +511,11 @@ Créer son personnage = choisir ces valeurs au lieu de les tirer au hasard ; une
 
 **V1**
 
-- [ ] Le joueur utilise le même modèle que les piétons (`pedestrianModel.ts`), avec son apparence à lui, sauvegardée
-- [ ] Création au premier lancement : teint, coiffure et couleur, haut, bas, accessoire ; aperçu qui tourne ; bouton « au hasard »
-- [ ] **Boutique de vêtements** sur la carte : tenues ridicules (costume de hot-dog, survêtement doré, casque de chantier…), en données (`src/data/outfits/`)
-- [ ] Garde-robe à la planque : changer de tenue
-- [ ] Nouvelles pièces de modèle : coiffures, chapeaux, lunettes, sacs (le modèle en blocs les assemble)
+- [ ] Le joueur utilise le même modèle que les piétons (`pedestrianModel.ts`), avec son apparence à lui, sauvegardée (#56)
+- [ ] Création au premier lancement : teint, coiffure et couleur, haut, bas, accessoire ; aperçu qui tourne ; bouton « au hasard » (#56)
+- [ ] **Boutique de vêtements** sur la carte : tenues ridicules (costume de hot-dog, survêtement doré, casque de chantier…), en données (`src/data/outfits/`) (#57)
+- [ ] Garde-robe à la planque : changer de tenue (#57)
+- [ ] Nouvelles pièces de modèle : coiffures, chapeaux, lunettes, sacs (le modèle en blocs les assemble) (#56)
 
 **Plus tard**
 
