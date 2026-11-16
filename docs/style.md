@@ -39,24 +39,27 @@ Ce qu'il n'est **pas** : sombre, réaliste, gore, sale, néon cyberpunk, sérieu
 
 Ces règles valent pour **toutes** les catégories. Elles sont déjà traduites dans le bloc STYLE.
 
-| Règle                           | Valeur                                                                                                                                     | Pourquoi                                                                                  |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------- |
-| **Style**                       | pixel art 16 bits, façon jeux de console de 1993-1996                                                                                      | lisible, nostalgique, réalisable par l'IA                                                 |
-| **Unité de grille**             | **32 × 32 px** (1 tuile)                                                                                                                   | assez grand pour que l'IA garde des détails après réduction ; à confirmer dans l'issue #4 |
-| **Échelle à l'écran**           | ×2 ou ×3, toujours entier, `image-rendering: pixelated`                                                                                    | pixels nets, jamais flous                                                                 |
-| **Perspective du monde**        | **vue de dessus « trois-quarts »** : le sol vu du dessus, les bâtiments, personnages et objets montrent leur **face sud** et leur **toit** | standard des jeux en vue de dessus, plus lisible qu'une vue à la verticale stricte        |
-| **Perspective des véhicules**   | **vue strictement du dessus**, nez vers le **haut** (nord)                                                                                 | le jeu les fait pivoter : la vue de dessus tourne sans paraître fausse                    |
-| **Lumière**                     | soleil **en haut à gauche** ; ombres portées vers le bas à droite                                                                          | cohérence de toutes les ombres                                                            |
-| **Ombres portées**              | ovale ou forme **unie, sombre, sans dégradé** (couleur `ombre` de la palette)                                                              | lisibles et simples à superposer                                                          |
-| **Contour**                     | contour **sombre de 1 px** autour des personnages, véhicules et objets ; **pas de contour noir pur** (couleur `contour`)                   | détache les éléments du décor                                                             |
-| **Tuiles de sol**               | **sans contour**, texture discrète                                                                                                         | le sol ne doit pas voler la vedette                                                       |
-| **Ombrage**                     | 2 ou 3 tons par matière, **sans dégradé lisse, sans tramage** (dithering)                                                                  | rendu net, palette tenue                                                                  |
-| **Proportions des personnages** | **« chibi »** : tête grande (≈ 1/3 de la hauteur), corps trapu, membres courts                                                             | humour et lisibilité à petite taille                                                      |
-| **Transparence**                | binaire : un pixel est opaque ou transparent, rien entre les deux                                                                          | requis par le pixel art                                                                   |
-| **Couleurs**                    | palette du jeu uniquement (section 3), 48 couleurs max par image                                                                           | cohérence entre toutes les images                                                         |
-| **Texte dans les images**       | **jamais** : les enseignes et panneaux sont laissés vides, le texte est ajouté par le jeu                                                  | l'IA écrit mal, et on traduit plus facilement                                             |
+| Règle                           | Valeur                                                                                                                                                                                | Pourquoi                                                                           |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| **Style**                       | pixel art 16 bits, façon jeux de console de 1993-1996                                                                                                                                 | lisible, nostalgique, réalisable par l'IA                                          |
+| **Unité de grille**             | **32 × 32 px** (1 tuile)                                                                                                                                                              | assez grand pour que l'IA garde des détails après réduction ; adoptée (#4)         |
+| **Échelle à l'écran**           | automatique : la scène fait environ 540 px de haut (×2 en 1080p, ×3 en 1440p), toujours entier, `image-rendering: pixelated`                                                          | pixels nets, jamais flous, même finesse sur tous les écrans                        |
+| **Perspective du monde**        | **vue de dessus « trois-quarts »** : le sol vu du dessus, les bâtiments, personnages et objets montrent leur **face sud** et leur **toit**                                            | standard des jeux en vue de dessus, plus lisible qu'une vue à la verticale stricte |
+| **Perspective des véhicules**   | **vue strictement du dessus**, nez vers le **haut** (nord)                                                                                                                            | le jeu les fait pivoter : la vue de dessus tourne sans paraître fausse             |
+| **Lumière**                     | soleil **en haut à gauche** ; ombres portées vers le bas à droite                                                                                                                     | cohérence de toutes les ombres                                                     |
+| **Ombres portées**              | ovale ou forme **unie, sombre, sans dégradé** (couleur `ombre` de la palette)                                                                                                         | lisibles et simples à superposer                                                   |
+| **Contour**                     | contour **sombre de 1 px** autour des personnages, véhicules et objets ; **pas de contour noir pur** (couleur `contour`). En 3D : une coque `contour` autour des personnages en blocs | détache les éléments du décor                                                      |
+| **Tuiles de sol**               | **sans contour**, texture discrète                                                                                                                                                    | le sol ne doit pas voler la vedette                                                |
+| **Ombrage**                     | 2 ou 3 tons par matière, **sans dégradé lisse, sans tramage** (dithering)                                                                                                             | rendu net, palette tenue                                                           |
+| **Proportions des personnages** | **« chibi »** : tête grande (≈ 1/3 de la hauteur), corps trapu, membres courts                                                                                                        | humour et lisibilité à petite taille                                               |
+| **Transparence**                | binaire : un pixel est opaque ou transparent, rien entre les deux                                                                                                                     | requis par le pixel art                                                            |
+| **Couleurs**                    | palette du jeu uniquement (section 3), 48 couleurs max par image                                                                                                                      | cohérence entre toutes les images                                                  |
+| **Texte dans les images**       | **jamais** : les enseignes et panneaux sont laissés vides, le texte est ajouté par le jeu                                                                                             | l'IA écrit mal, et on traduit plus facilement                                      |
 
 ## 3. La palette
+
+> **Statut : proposée, à valider à deux (#4).** Cette palette est celle qu'utilisent déjà la bible et le jeu en 3D. Elle est adoptée quand cmn00by **et** Baghorror12
+> ont approuvé la PR qui la fixe ; la décision est alors notée dans `docs/decisions.md`.
 
 Une palette **commune à tout le jeu**, vive et chaude. Elle sert de référence dans les prompts et pour le contrôle qualité.
 L'outil de réduction (section 7) peut forcer les images sur cette palette.
@@ -84,11 +87,18 @@ L'outil de réduction (section 7) peut forcer les images sur cette palette.
 | Peaux           | `peau-1` à `peau-5`                              | `#F6D3B8` / `#E8B08A` / `#C98A5E` / `#9C6440` / `#6A4128` |
 | Blanc chaud     | `blanc`                                          | `#FFF8EC`                                                 |
 | Gris neutre     | `gris`                                           | `#8A8797`                                                 |
+| Gris violet     | `gris-violet` (icônes vides du HUD)              | `#6F6488`                                                 |
+| Façades pastel  | `facade-sable` / `facade-rose` / `facade-bleue`  | `#E9C8A0` / `#D9A6A0` / `#A8C6D9`                         |
+|                 | `facade-verte` / `facade-lilas`                  | `#C8D9A8` / `#D4B8E0`                                     |
+| Fenêtres        | `fenetre` / `fenetre-allumee`                    | `#5A7A99` / `#FFD27A`                                     |
 
 **Règles d'usage**
 
 - Les couleurs vives (`rouge`, `jaune`, `bleu`, `rose`…) sont réservées à ce qui doit **attirer l'œil** : personnages, véhicules, objets interactifs, interface.
 - Le décor (sol, murs, toits) reste dans les tons **moyens et doux**, pour que le joueur repère d'un coup d'œil ce qui compte.
+- Les **façades** piochent dans les pastels (et `marquage-blanc`, `sable`) : des tons doux et variés, qui laissent ressortir les personnages et les voitures.
+- Les **lumières** du rendu 3D (soleil, ciel de nuit, lampadaires, phares, dans `src/game/render/lighting.ts`) ne sont pas des couleurs de peinture : elles teintent la scène
+  et ne font pas partie de la palette.
 - Le **magenta `#FF00FF`** est **interdit** dans les visuels : il est réservé au fond de génération (section 4.2).
 
 ## 4. Les blocs de prompt

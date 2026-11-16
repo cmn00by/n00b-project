@@ -5,6 +5,17 @@ Une nouvelle décision s'ajoute **en haut**. Une décision remise en cause n'est
 
 ---
 
+## 2026-11-16 : Identité visuelle fixée : grille de 32 px, palette, bible (#4)
+
+**Choix** : la grille de **32 × 32 px** (tuiles, carte, voitures), la **palette** de `docs/style.md` (section 3), complétée des **façades pastel**, des **fenêtres** et du **gris violet** du HUD,
+et la **bible** de `docs/bible/` (7 planches Gemini 3 Pro). Les lumières du rendu 3D ne font pas partie de la palette : elles teintent la scène. Validée à deux par l'approbation de la PR de #4.
+
+**Raison** : c'est ce que le jeu utilise déjà : la palette décrit l'existant au lieu d'un idéal. Les façades pastel étaient hors palette alors qu'elles font l'identité de la ville.
+
+**Alternatives écartées** : une palette réduite (16 couleurs) forcée sur tout le jeu (le rendu 3D éclaire et assombrit les couleurs : la palette sert de base, pas de liste fermée de pixels à l'écran).
+
+---
+
 ## 2026-11-16 : Personnalisation des véhicules et du personnage : voxel en données, autocollants générés
 
 **Choix** : un véhicule personnalisé et le personnage du joueur sont des **recettes en données** (couleurs, pièces, tenue) que l'affichage assemble en blocs, comme les piétons.
