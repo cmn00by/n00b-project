@@ -6,8 +6,9 @@ Le « plateau LEGO » sur lequel toutes les briques s'emboîtent. Petit, stable,
 | --------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | `rng.ts`        | `createRng(seed)` : le hasard déterministe (jamais `Math.random()`)                                                              |
 | `config.ts`     | `TUNING` (réglages groupés par module), `STEPS_PER_SECOND`, `STEP_SECONDS`                                                       |
-| `components.ts` | les types de composants (`position`, `velocity`, `body`, `sprite`, `lastFreePosition`) et `Entity`                               |
+| `components.ts` | les types de composants (`position`, `velocity`, `body`, `sprite`, `lastFreePosition`, `vehicle`, `driver`) et `Entity`          |
 | `world.ts`      | `World` (l'état complet, dont la carte `map`), `createWorld(seed)`, `createTestWorld()`, `loadMap()`                             |
+| `space.ts`      | `isSpaceClear`, `findSolidOverlaps` : un endroit est-il libre de murs et d'entités solides ?                                     |
 | `map.ts`        | `MapDef` (carte en données), `TileMap` (grille), `createTileMap`, `validateMapDef`, `isSolidTile`, `isAreaFree`, `getTileCenter` |
 | `entities.ts`   | `spawnEntity`, `despawnEntity`, `findEntity`, `getEntity`, `findEntitiesWith`                                                    |
 | `events.ts`     | le bus d'événements typé et le catalogue `GameEvents`                                                                            |

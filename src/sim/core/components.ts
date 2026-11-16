@@ -37,6 +37,22 @@ export interface LastFreePosition {
   y: number
 }
 
+/** Un véhicule : son modèle (id de src/data/vehicles), vers où pointe son nez, et qui le conduit.
+ * Le cap est un vecteur de longueur 1 (et non un angle) : on le fait tourner avec de simples multiplications et une racine carrée,
+ * dont le résultat est identique sur toutes les machines (condition de la coop), alors que sin/cos peuvent différer à la dernière décimale. */
+export interface Vehicle {
+  modelId: string
+  headingX: number // le nez pointe vers (headingX, headingY) ; (0, -1) = vers le haut
+  headingY: number
+  driverId?: EntityId // l'entité au volant, s'il y en a une
+}
+
+/** Une entité qui conduit un véhicule. Son corps est mis de côté pendant la conduite (elle est dans la voiture) et lui est rendu à la sortie. */
+export interface Driver {
+  vehicleId: EntityId
+  storedBody: Body
+}
+
 /** La clé d'affichage de l'entité : lue par l'affichage uniquement (voir src/game/assets.ts). */
 export interface Sprite {
   key: string
@@ -49,6 +65,8 @@ export interface Components {
   body?: Body
   sprite?: Sprite
   lastFreePosition?: LastFreePosition
+  vehicle?: Vehicle
+  driver?: Driver
 }
 
 /** Le nom d'un composant. */
