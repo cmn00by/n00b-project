@@ -1,6 +1,6 @@
 # game : l'affichage (three.js) et les entrées
 
-La ville est construite en **vraie 3D**, puis **dessinée en basse résolution** (1 pixel de scène = 3 pixels d'écran, touche P) et agrandie sans lissage :
+La ville est construite en **vraie 3D**, puis **dessinée en basse résolution** (automatique : environ 540 pixels de haut, soit ×2 en 1080p ; touche P pour les tailles fixes) et agrandie sans lissage :
 tous les éléments partagent la même grille de pixels. Aucune règle de jeu ici : elles vivent dans `src/sim`. Voir [docs/architecture.md](../../docs/architecture.md), section 9.
 
 Le point d'entrée est `src/main.ts` : il crée la simulation, l'affichage et la boucle de jeu (pas fixe + interpolation).

@@ -83,6 +83,13 @@ export const TOUCH_STYLE = {
   heldOpacity: 0.95,
 } as const
 
+/** Les personnages (joueur et piétons) sont dessinés plus grands que leur place dans la simulation : on les lit mieux de loin (convention du genre). */
+export const CHARACTER_VIEW = {
+  scale: 1.4, // agrandissement à l'écran, sans effet sur les collisions
+  outlineColor: '#2b1e3a', // contour sombre (le contour de la palette, docs/style.md)
+  outlineThickness: 0.7, // épaisseur du contour, en unités du modèle (avant agrandissement)
+} as const
+
 /** Réglages de l'affichage des piétons (leur apparence vient de la recette de leur type, src/data/npcTypes). */
 export const PEDESTRIAN_VIEW = {
   walkPhaseSpeed: 12, // vitesse du balancement des bras et des jambes en marchant, en radians par seconde
