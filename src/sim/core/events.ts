@@ -14,6 +14,8 @@ import type { EntityId } from './components'
 export interface GameEvents {
   /** Un pas de simulation vient de se terminer (émis par step()). */
   'world:stepped': { stepCount: number }
+  /** Un piéton vient d'avoir peur et prend la fuite (émis par la brique pedestrians). Les effets (cri, bulle) pourront s'y brancher. */
+  'pedestrian:scared': { entityId: EntityId }
   /** Une entité a été arrêtée par un obstacle (mur ou autre entité), émis par la brique collision. impactSpeed : la vitesse perdue, en px/s (0 si l'entité n'a pas de vitesse). */
   'entity:blocked': { entityId: EntityId; impactSpeed: number }
   /** Une entité est montée dans un véhicule (brique driving). */
