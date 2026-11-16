@@ -9,6 +9,18 @@ export const CAMERA_ZOOM = 2
 /** Graine de la partie. Fixe pendant le prototype pour que deux lancements donnent la même partie ; une graine variable viendra avec les nouvelles parties. */
 export const GAME_SEED = 2026
 
+/** Réglages des commandes tactiles (joystick virtuel et bouton courir), en pixels d'écran : ils ne dépendent pas du zoom de la caméra. */
+export const TOUCH_CONTROLS = {
+  /** Rayon du joystick : jusqu'où le pouce peut s'éloigner de son point de départ. */
+  joystickRadius: 56,
+  /** En dessous de cette distance, le pouce ne fait rien : évite d'avancer sans le vouloir quand le doigt tremble. */
+  deadZone: 14,
+  /** Rayon du bouton « courir ». */
+  runButtonRadius: 40,
+  /** Distance entre le bouton « courir » et les bords de l'écran. */
+  margin: 28,
+} as const
+
 /** Couleurs provisoires (formes de couleur du prototype), tirées de la palette de docs/style.md. */
 export const COLORS = {
   player: 0xffd23f, // jaune : les couleurs vives sont réservées à ce qui doit attirer l'œil
