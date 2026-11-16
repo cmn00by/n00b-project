@@ -313,8 +313,8 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 
 **V0**
 
-- [ ] HUD : santé, argent, jauge de recherche (#11)
-- [ ] Indication d'interaction (« E : monter ») (#11)
+- [x] HUD : santé, argent, jauge de recherche (#11), avec des valeurs factices tant que les systèmes n'existent pas
+- [ ] Indication d'interaction (« E : monter ») (#38)
 
 **V1**
 
@@ -329,7 +329,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 - [ ] Remappage des touches, prise en charge de la manette
 - [ ] Interface tactile (bloc 18)
 
-**Dépend de** : 0. **Fichiers** : `src/game/scenes/Hud.ts`, `src/game/ui/`.
+**Dépend de** : 0. **Fichiers** : `src/game/hud/`.
 **Profil** : 🔧🎨 ⭐⭐.
 **Fini quand** : quelqu'un qui découvre le jeu comprend quoi faire sans explication.
 

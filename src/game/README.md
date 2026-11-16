@@ -18,6 +18,7 @@ Le point d'entrée est `src/main.ts` : il crée la simulation, l'affichage et la
 | `input/`                                      | clavier par position physique (`keyboard.ts`) ; touches → commandes (`moveCommand.ts`, `driveCommand.ts`)                                         |
 | `assets.ts`                                   | la liste de toutes les textures                                                                                                                   |
 | `constants.ts`, `hash.ts`, `fixedStepLoop.ts` | constantes d'affichage, hasard d'affichage stable, boucle à pas fixe                                                                              |
-| `fx/`, `hud/`                                 | à venir : effets (qui écoutent les événements) et interface en HTML/CSS par-dessus la scène                                                       |
+| `hud/`                                        | le HUD en HTML/CSS : santé, recherche, argent (`hudModel.ts` testé, `hudView.ts`)                                                                 |
+| `fx/`                                         | à venir : effets, qui écoutent les événements                                                                                                     |
 
 Les règles pures (`groundLayout`, `buildingBlocks`, `facadeLayout`, `placeDecor`, `moveCommand`, `driveCommand`, `fixedStepLoop`) sont **testées dans Node**.
