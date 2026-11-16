@@ -42,6 +42,27 @@ export interface Sprite {
   key: string
 }
 
+/**
+ * L'état d'un piéton (PNJ qui se promène). Des données simples, sauvegardables telles quelles.
+ * Le comportement (marcher, s'arrêter, fuir…) est dans la brique pedestrians ; ce composant ne fait que retenir où il en est.
+ */
+export interface Pedestrian {
+  /** L'id de sa fiche dans src/data/npcTypes (vitesses, plages de personnalité, apparence). */
+  typeId: string
+  /** L'état courant, par son id : 'walking', 'pausing', 'noticing', 'fleeing'… (défini par la brique pedestrians, d'autres s'ajouteront). */
+  state: string
+  /** Pas de simulation restants avant de changer d'état. */
+  stateStepsLeft: number
+  /** Son courage, de 0 à 1, tiré à sa naissance dans la plage de son type. */
+  courage: number
+  /** Sa patience, de 0 à 1, tirée à sa naissance dans la plage de son type. */
+  patience: number
+  /** La case de trottoir qu'il vise, en cases de la carte (undefined quand il n'en vise aucune). */
+  targetTile?: { tileX: number; tileY: number }
+  /** Sa direction de marche, en cases (-1, 0 ou 1 par axe) : il continue tout droit tant qu'il ne décide pas de tourner. */
+  heading: { x: number; y: number }
+}
+
 /** Tous les composants possibles : chacun est facultatif sur une entité. */
 export interface Components {
   position?: Position
@@ -49,6 +70,7 @@ export interface Components {
   body?: Body
   sprite?: Sprite
   lastFreePosition?: LastFreePosition
+  pedestrian?: Pedestrian
 }
 
 /** Le nom d'un composant. */

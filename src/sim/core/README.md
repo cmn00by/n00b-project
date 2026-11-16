@@ -6,9 +6,10 @@ Le « plateau LEGO » sur lequel toutes les briques s'emboîtent. Petit, stable,
 | --------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | `rng.ts`        | `createRng(seed)` : le hasard déterministe (jamais `Math.random()`)                                                              |
 | `config.ts`     | `TUNING` (réglages groupés par module), `STEPS_PER_SECOND`, `STEP_SECONDS`                                                       |
-| `components.ts` | les types de composants (`position`, `velocity`, `body`, `sprite`, `lastFreePosition`) et `Entity`                               |
+| `components.ts` | les types de composants (`position`, `velocity`, `body`, `sprite`, `lastFreePosition`, `pedestrian`) et `Entity`                 |
 | `world.ts`      | `World` (l'état complet, dont la carte `map`), `createWorld(seed)`, `createTestWorld()`, `loadMap()`                             |
 | `map.ts`        | `MapDef` (carte en données), `TileMap` (grille), `createTileMap`, `validateMapDef`, `isSolidTile`, `isAreaFree`, `getTileCenter` |
+| `npcType.ts`    | `NpcTypeDef` (fiche d'un type de PNJ, données pures pour le futur panneau admin), `validateNpcTypeDef`                           |
 | `entities.ts`   | `spawnEntity`, `despawnEntity`, `findEntity`, `getEntity`, `findEntitiesWith`                                                    |
 | `events.ts`     | le bus d'événements typé et le catalogue `GameEvents`                                                                            |
 | `commands.ts`   | le catalogue `GameCommands` (`player:move`…) et `findCommands`                                                                   |

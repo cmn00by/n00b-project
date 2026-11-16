@@ -15,4 +15,19 @@ export const TUNING = {
     walkSpeed: 60, // vitesse de marche du joueur, en px par seconde
     runSpeed: 110, // vitesse de course du joueur, en px par seconde
   },
+  // Les règles de la foule. Ce qui est propre à un genre de piéton (vitesses, courage, patience, pauses) est dans sa fiche : src/data/npcTypes.
+  pedestrians: {
+    maxCount: 14, // nombre maximum de piétons en vie en même temps : la ville a l'air vivante sans tout simuler
+    spawnMinDistance: 260, // un piéton naît au moins à cette distance du joueur, en px (hors de l'écran)
+    spawnMaxDistance: 420, // ...et au plus à cette distance, en px
+    despawnDistance: 560, // au-delà de cette distance du joueur, un piéton disparaît, en px
+    spawnIntervalSeconds: 0.8, // on tente de faire naître au plus un piéton à cet intervalle, en secondes
+    noticeDistance: 150, // à cette distance, un piéton remarque un joueur qui court, en px
+    fleeDistanceMin: 55, // distance de fuite d'un piéton très courageux (courage = 1), en px
+    fleeDistanceMax: 130, // distance de fuite d'un piéton peureux (courage = 0), en px
+    fleeSeconds: 3, // un piéton fuit au moins cette durée après avoir eu peur, en secondes
+    turnChance: 0.25, // probabilité de tourner à chaque case de trottoir (sinon il continue tout droit)
+    pauseChance: 0.12, // probabilité de s'arrêter à chaque case de trottoir
+    minSeparation: 18, // distance minimale que deux piétons gardent entre eux, en px
+  },
 }
