@@ -17,6 +17,11 @@ export interface PedestrianModel {
   arms: THREE.Group[]
   /** La pastille « ! » au-dessus de la tête, visible quand il prend la fuite. Elle ne tourne pas avec le corps. */
   alertMark: THREE.Group
+  /** La pastille « ? » d'un curieux et la croix d'un piéton qui râle, au même endroit que le « ! » (une seule visible à la fois). */
+  curiousMark: THREE.Group
+  angryMark: THREE.Group
+  /** Le téléphone au bout du bras droit, visible seulement quand il filme. */
+  phone: THREE.Group
 }
 
 // Les blocs de même taille et de même couleur partagent leur géométrie et leur matière : avec toute une foule, on ne recrée pas des centaines de ressources.
@@ -75,6 +80,34 @@ function createAccessory(accessory: NonNullable<PedestrianAppearance['accessory'
   }
 }
 
+/** Un petit pictogramme fait de cases (X = case colorée), qui ne reçoit pas la lumière. Il est centré sur son point d'ancrage et regarde vers la caméra. */
+function createGlyph(rows: readonly string[], color: string): THREE.Group {
+  const glyph = new THREE.Group()
+  const cell = 2.4
+  rows.forEach((row, rowIndex) => {
+    for (let column = 0; column < row.length; column++) {
+      if (row[column] !== 'X') continue
+      glyph.add(placed(block(cell, cell, cell, color, { isUnlit: true }), (column - (row.length - 1) / 2) * cell, ((rows.length - 1) / 2 - rowIndex) * cell, 0))
+    }
+  })
+  // Penché en arrière : la caméra regarde d'en haut, un pictogramme debout serait écrasé.
+  glyph.rotation.x = -PEDESTRIAN_VIEW.glyphTilt
+  glyph.position.y = PEDESTRIAN_VIEW.alertHeight
+  glyph.visible = false
+  return glyph
+}
+
+/**
+ * Le téléphone : une plaque sombre avec son écran clair, au bout du bras droit. Dans le repère du bras, le bras pointe vers le bas (-y) :
+ * quand il se tend vers l'avant, la plaque se retrouve debout face à celui qui filme, et son écran (côté +y) fait face à la caméra.
+ */
+function createPhone(): THREE.Group {
+  const phone = new THREE.Group()
+  phone.add(placed(block(4.5, 1.2, 6, PEDESTRIAN_VIEW.phoneColor), 0, -10, 0), placed(block(3.5, 0.4, 4.6, PEDESTRIAN_VIEW.phoneScreenColor, { isUnlit: true }), 0, -9.3, 0))
+  phone.visible = false
+  return phone
+}
+
 /** La pastille « ! » : un trait et un point, rouges, qui ne reçoivent pas la lumière (toujours lisibles, de jour comme de nuit). */
 function createAlertMark(): THREE.Group {
   const mark = new THREE.Group()
@@ -96,9 +129,15 @@ export function createPedestrianModel(appearance: PedestrianAppearance): Pedestr
   for (const side of [-1, 1]) body.add(placed(block(2, 2.5, 1, PEDESTRIAN_VIEW.glassesColor), side * 3, 27, -5.6))
   if (accessory !== undefined) body.add(...createAccessory(accessory, accessoryColor))
 
+  // Le téléphone est sur le bras droit (index 1) : il suit le bras quand celui-ci se lève pour filmer. L'écran fait face à celui qui filme.
+  const phone = createPhone()
+  arms[1]?.add(phone)
+
   const alertMark = createAlertMark()
+  const curiousMark = createGlyph(['XXX', '..X', '.XX', '...', '.X.'], PEDESTRIAN_VIEW.curiousColor)
+  const angryMark = createGlyph(['X.X', '.X.', 'X.X'], PEDESTRIAN_VIEW.angryColor)
   const root = new THREE.Group()
-  root.add(body, alertMark)
+  root.add(body, alertMark, curiousMark, angryMark)
   root.scale.setScalar(appearance.heightScale)
-  return { root, body, legs, arms, alertMark }
+  return { root, body, legs, arms, alertMark, curiousMark, angryMark, phone }
 }

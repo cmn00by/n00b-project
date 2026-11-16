@@ -97,4 +97,13 @@ export const PEDESTRIAN_VIEW = {
   alertColor: '#e5383b', // couleur de la pastille « ! » (rouge vif de la palette)
   caneColor: '#6b4228', // couleur de la canne (bois foncé de la palette)
   glassesColor: '#2b1e3a', // couleur des lunettes (le contour de la palette)
+  glyphTilt: 0.7, // de combien les pictogrammes « ? » et croix sont penchés vers l'arrière pour faire face à la caméra, en radians
+  curiousColor: '#ffd23f', // couleur de la pastille « ? » d'un curieux (jaune de la palette)
+  angryColor: '#e5383b', // couleur de la croix d'un piéton qui râle (rouge vif de la palette)
+  phoneColor: '#2b1e3a', // couleur du téléphone de celui qui filme (le contour de la palette)
+  phoneScreenColor: '#7cc7f2', // couleur de l'écran du téléphone (bleu clair de la palette)
+  filmArmAngle: 1.45, // angle du bras qui tient le téléphone : presque à l'horizontale, vers l'avant, en radians
+  angryArmAngle: 2.5, // angle des bras d'un piéton qui râle : levés vers l'avant, en radians
+  angryShakeSpeed: 16, // vitesse à laquelle il secoue les bras, en radians par seconde
+  angryShake: 0.45, // amplitude de ce secouement, en radians
 } as const

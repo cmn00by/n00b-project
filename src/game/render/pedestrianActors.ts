@@ -1,4 +1,4 @@
-// Les piétons à l'écran : un petit personnage en blocs par piéton de la simulation, qui marche, s'arrête, se retourne et s'enfuit.
+// Les piétons à l'écran : un petit personnage en blocs par piéton de la simulation, qui marche, s'arrête, se retourne, s'enfuit, filme ou râle.
 // Expose : PedestrianActors, createPedestrianActors().
 // Pourquoi : la simulation décide (où il va, ce qu'il fait), ce module ne fait que dessiner. Les piétons sont dessinés entre deux pas de simulation (interpolation),
 // comme le joueur et les voitures. Leur apparence vient de la recette de leur type (src/data/npcTypes), tirée d'après leur id : voir pedestrianAppearance.ts.
@@ -12,7 +12,7 @@ import { PEDESTRIAN_VIEW } from '../constants'
 import { chooseAppearance } from './pedestrianAppearance'
 import { createPedestrianModel } from './pedestrianModel'
 import type { PedestrianModel } from './pedestrianModel'
-import { computeYaw, turnToward } from './pedestrianPose'
+import { computeArmAngles, computeYaw, turnToward } from './pedestrianPose'
 
 export interface PedestrianActors {
   /** À appeler juste avant chaque pas de simulation : retient l'état d'avant le pas. */
@@ -66,13 +66,21 @@ export function createPedestrianActors(scene: THREE.Scene): PedestrianActors {
         const swing = Math.sin(entry.walkPhase) * (isFleeing ? PEDESTRIAN_VIEW.fleeSwing : PEDESTRIAN_VIEW.walkSwing)
         const { model } = entry
         model.legs.forEach((leg, index) => (leg.rotation.x = index === 0 ? swing : -swing))
-        model.arms.forEach((arm, index) => (arm.rotation.x = index === 0 ? -swing : swing))
+        const armAngles = computeArmAngles(pedestrian.pedestrian.state, swing, elapsedSeconds, PEDESTRIAN_VIEW)
+        model.arms.forEach((arm, index) => (arm.rotation.x = armAngles[index] ?? 0))
         model.root.position.set(x, isMoving ? Math.abs(Math.cos(entry.walkPhase)) * PEDESTRIAN_VIEW.bobHeight : 0, y)
         model.body.rotation.y = entry.yaw
 
-        // La pastille « ! » n'apparaît que pendant la fuite, et tressaute.
+        // Une seule pastille au-dessus de la tête, selon ce qu'il fait : « ! » en fuyant, « ? » s'il est curieux, une croix s'il râle. Elle tressaute. Celui qui filme montre son téléphone.
+        const state = pedestrian.pedestrian.state
         model.alertMark.visible = isFleeing
-        model.alertMark.position.y = PEDESTRIAN_VIEW.alertHeight + Math.sin(elapsedSeconds * PEDESTRIAN_VIEW.alertBobSpeed) * PEDESTRIAN_VIEW.alertBob
+        model.curiousMark.visible = state === PEDESTRIAN_STATES.curious
+        model.angryMark.visible = state === PEDESTRIAN_STATES.angry
+        model.phone.visible = state === PEDESTRIAN_STATES.filming
+        const markHeight = PEDESTRIAN_VIEW.alertHeight + Math.sin(elapsedSeconds * PEDESTRIAN_VIEW.alertBobSpeed) * PEDESTRIAN_VIEW.alertBob
+        model.alertMark.position.y = markHeight
+        model.curiousMark.position.y = markHeight
+        model.angryMark.position.y = markHeight
       }
 
       // Un piéton disparu de la simulation (trop loin du joueur) disparaît aussi de l'écran. Les blocs sont partagés : rien d'autre à libérer.
