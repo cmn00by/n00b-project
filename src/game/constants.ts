@@ -30,3 +30,19 @@ export const LIT_WINDOW_COLOR = 0xffd27a
 export const DAY_NIGHT_TRANSITION_SECONDS = 1.6
 /** Couleur du halo des lampadaires. */
 export const LAMP_GLOW_COLOR = 0xffc870
+
+/** Réglages de l'affichage des piétons (leur apparence vient de la recette de leur type, src/data/npcTypes). */
+export const PEDESTRIAN_VIEW = {
+  walkPhaseSpeed: 12, // vitesse du balancement des bras et des jambes en marchant, en radians par seconde
+  fleePhaseSpeed: 20, // ...et en fuyant : il court
+  walkSwing: 0.7, // amplitude du balancement en marchant, en radians
+  fleeSwing: 0.95, // ...et en fuyant
+  turnSpeed: 12, // vitesse à laquelle un piéton se tourne vers sa nouvelle direction, en radians par seconde
+  bobHeight: 1.2, // de combien le corps rebondit à chaque pas, en px
+  alertHeight: 46, // hauteur de la pastille « ! » au-dessus du sol, en px
+  alertBob: 1.5, // de combien la pastille « ! » tressaute, en px
+  alertBobSpeed: 10, // vitesse de ce tressautement, en radians par seconde
+  alertColor: '#e5383b', // couleur de la pastille « ! » (rouge vif de la palette)
+  caneColor: '#6b4228', // couleur de la canne (bois foncé de la palette)
+  glassesColor: '#2b1e3a', // couleur des lunettes (le contour de la palette)
+} as const

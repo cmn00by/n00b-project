@@ -9,6 +9,8 @@ import { findEntitiesWith } from '../../sim/core'
 import type { EntityId, World } from '../../sim/core'
 import { VEHICLE_REGISTRY } from '../../data/vehicles'
 import { MISSING_VEHICLE_COLOR, VEHICLE_COLORS } from '../constants'
+import { createPedestrianActors } from './pedestrianActors'
+import { computeYaw } from './pedestrianPose'
 
 export interface Actors {
   /** À appeler juste avant chaque pas de simulation : retient l'état d'avant le pas. */
@@ -102,25 +104,25 @@ function createCarModel(modelId: string): THREE.Group {
   return group
 }
 
-/** L'angle (autour de la verticale) qui tourne l'avant d'un modèle (-z) vers le cap (headingX, headingY) de la simulation. */
-const yawOf = (headingX: number, headingY: number) => Math.atan2(-headingX, -headingY)
-
 export function createActors(scene: THREE.Scene): Actors {
   const previous = new Map<EntityId, Snapshot>()
   const displayed = new Map<EntityId, { x: number; y: number }>()
   const cars = new Map<EntityId, THREE.Group>()
   const players = new Map<EntityId, ReturnType<typeof createPlayerModel> & { walkPhase: number; yaw: number }>()
+  const pedestrians = createPedestrianActors(scene)
 
   const snapshotOf = (x: number, y: number, headingX = 0, headingY = -1): Snapshot => ({ x, y, headingX, headingY })
 
   return {
     rememberStates(world) {
+      pedestrians.rememberStates(world)
       for (const entity of findEntitiesWith(world, ['position'])) {
         previous.set(entity.id, snapshotOf(entity.position.x, entity.position.y, entity.vehicle?.headingX, entity.vehicle?.headingY))
       }
     },
 
     update(world, alpha, deltaSeconds) {
+      pedestrians.update(world, alpha, deltaSeconds)
       for (const vehicle of findEntitiesWith(world, ['position', 'vehicle'])) {
         let model = cars.get(vehicle.id)
         if (model === undefined) {
@@ -132,7 +134,7 @@ export function createActors(scene: THREE.Scene): Actors {
         const x = before.x + (vehicle.position.x - before.x) * alpha
         const y = before.y + (vehicle.position.y - before.y) * alpha
         model.position.set(x, 0, y)
-        model.rotation.y = yawOf(before.headingX + (vehicle.vehicle.headingX - before.headingX) * alpha, before.headingY + (vehicle.vehicle.headingY - before.headingY) * alpha)
+        model.rotation.y = computeYaw(before.headingX + (vehicle.vehicle.headingX - before.headingX) * alpha, before.headingY + (vehicle.vehicle.headingY - before.headingY) * alpha)
         displayed.set(vehicle.id, { x, y })
       }
 
@@ -154,7 +156,7 @@ export function createActors(scene: THREE.Scene): Actors {
         const dx = player.position.x - before.x
         const dy = player.position.y - before.y
         const isMoving = Math.abs(dx) + Math.abs(dy) > 0.01
-        if (isMoving) model.yaw = yawOf(dx, dy)
+        if (isMoving) model.yaw = computeYaw(dx, dy)
         model.walkPhase = isMoving ? model.walkPhase + deltaSeconds * 12 : 0
         const swing = Math.sin(model.walkPhase) * 0.7
         model.legs.forEach((leg, index) => (leg.rotation.x = index === 0 ? swing : -swing))
