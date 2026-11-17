@@ -13,4 +13,5 @@ export const sportsCar: VehicleDef = {
   turnRate: 3.2,
   grip: 5,
   handbrakeGrip: 1.2,
+  look: { color: '#ffd23f', bodyHeight: 7, cabin: { length: 0.36, offset: 0.08, height: 6 } },
 }

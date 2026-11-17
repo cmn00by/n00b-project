@@ -4,13 +4,6 @@
 /** Graine de la partie. Fixe pendant le prototype pour que deux lancements donnent la même partie ; une graine variable viendra avec les nouvelles parties. */
 export const GAME_SEED = 2026
 
-/** Couleur provisoire de chaque modèle de véhicule (id de src/data/vehicles), d'après la bible visuelle. */
-export const VEHICLE_COLORS: Readonly<Record<string, number>> = {
-  'mamie-car': 0x8ed4b4, // vert menthe pastel
-  'delivery-van': 0xf2efe6, // blanc
-  'sports-car': 0xffd23f, // jaune vif
-}
-
 /** Couleur d'un véhicule dont le modèle n'a pas (encore) de couleur : un rose voyant, pour qu'on la remarque. */
 export const MISSING_VEHICLE_COLOR = 0xff6fa8
 
