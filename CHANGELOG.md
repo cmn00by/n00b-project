@@ -19,6 +19,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 
 ### Ajouté
 
+- La ville est quatre fois plus grande (112 × 76 cases) : à l'est un quartier d'affaires et une banlieue autour d'un parc et de son étang, au sud la plage prolongée, la mer, et une île industrielle (entrepôts, parcs à conteneurs, quais) reliée par deux ponts ; des véhicules garés dans les nouveaux quartiers (#64)
 - Sept nouveaux véhicules, chacun avec sa silhouette et sa conduite : la Voiturette de golf, la Citadine électrique, le Pick-up et sa benne, le Taxi et son enseigne, la Limousine interminable, le Bus et la Patrouille avec ses gyrophares (pas encore de police). Ils sont garés en ville, et tous sauf la Patrouille sont en vente à la concession (#66)
 - L'atelier de Tonton, au coin de la place : on y entre au volant, la voiture tourne en vitrine, et on choisit parmi 9 emplacements (peinture, bandes de course, jantes, aileron, toit, pare-chocs, néons, moteur, pneus) ; un appui pour essayer, un second pour acheter, 0 pour revenir. Les pièces se voient sur la voiture (néons superbes la nuit), le moteur et les pneus changent la conduite, et tout est gardé au garage (#54)
 - La concession et le garage : deux nouveaux bâtiments (Bon Plan Auto au parking du centre-ville, avec sa vitrine et son enseigne ; un garage à porte basculante chez les pavillons), qui s'allument la nuit. À la concession, on achète la Mamie, la Livreuse ou la Frimeuse (touches 1 à 9 ou un clic) : la voiture attend au parking. Au garage, on range la voiture garée devant (même volée : elle devient à soi) et on la ressort plus tard (#53)
@@ -47,6 +48,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 
 ### Technique
 
+- Le sol est peint par morceaux de 32 × 32 cases au lieu d'une seule grande image : les grandes cartes passent aussi sur téléphone (#64)
 - Mise en ligne : un Worker Cloudflare sert le jeu ; `/api/sante` répond, `/api/` est réservé au serveur du jeu (les futurs salons multijoueurs) ; `npm run deploy` et `npm run preview:worker` ; voir `docs/deploiement.md` (#12)
 - Brique `pedestrians` (naissance, promenade, états, peur) et types de PNJ en données pures (`src/data/npcTypes` : personnalité, vitesses, apparence), prêts pour le futur panneau admin ; le noyau gagne le composant `pedestrian` et l'événement `pedestrian:scared` ; la brique reçoit ses types par un registre : `createPedestriansSystem(NPC_TYPE_REGISTRY)` ; l'apparence est tirée par l'affichage d'après l'id du piéton (#10)
 - Bascule du moteur d'affichage : le code 3D rejoint `src/game` (`render/`, `input/`), ESLint interdit three.js dans la simulation ; le clavier lit la position physique des touches (#21)

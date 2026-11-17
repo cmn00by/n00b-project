@@ -127,6 +127,8 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 
 **V1**
 
+- [x] Une ville agrandie (112 × 76 cases), sol peint par morceaux : centre, quartier d'affaires, banlieue, plage et port, île industrielle reliée par deux ponts (#64)
+- [ ] Un bâtiment « entrepôt » à part pour l'île industrielle (aujourd'hui des immeubles ordinaires)
 - [ ] Les 4 quartiers : Centre, Docks, Zone Pavillonnaire, Colline
 - [ ] Le réseau routier décrit pour le trafic : voies, sens, carrefours, feux (calque Tiled dédié)
 - [ ] Zones de quartier (pour la réputation, les PNJ, la musique)
