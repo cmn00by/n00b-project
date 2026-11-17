@@ -13,11 +13,13 @@ export type {
   EntityKind,
   LastFreePosition,
   MissionProgress,
+  OwnedVehicle,
   Pedestrian,
   Position,
   Sprite,
   Vehicle,
   Velocity,
+  VehicleCollection,
   Wallet,
 } from './components'
 export { TEST_SEED, createTestWorld, createWorld, loadMap } from './world'
@@ -39,5 +41,9 @@ export type { Facing, MapDef, TileCoords, TileKindDef, TileMap, VehicleSpawn } f
 export { NPC_ACCESSORIES, validateNpcTypeDef } from './npcType'
 export type { NpcAccessory, NpcLook, NpcTypeDef, NumberRange } from './npcType'
 export { findSolidOverlaps, isSpaceClear } from './space'
+export { computeVehicleBodySize, spawnVehicleEntity } from './vehicle'
+export { earnMoney, spendMoney, walletOf } from './wallet'
+export { validateDealershipDef, validateDealershipPlaces, validateGaragePlaces } from './garage'
+export type { DealershipDef, DealershipOffer, GarageDef, ParkingSpot } from './garage'
 export { DEFAULT_PLACE_RADIUS_TILES, MISSION_OBJECTIVE_TYPES, MISSION_TRAVEL_MODES, validateMissionDef, validateMissionPlaces } from './mission'
 export type { MissionDef, MissionObjectiveDef, MissionObjectiveType, MissionPlace, MissionTravelMode } from './mission'

@@ -15,6 +15,10 @@ describe('SYSTEMS', () => {
     expect(SYSTEMS.map((system) => system.id)).toContain('economy')
   })
 
+  it('enregistre la concession et le garage', () => {
+    expect(SYSTEMS.map((system) => system.id)).toContain('garage')
+  })
+
   it('enregistre le moteur de missions', () => {
     expect(SYSTEMS.map((system) => system.id)).toContain('missions')
   })

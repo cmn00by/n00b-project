@@ -1,19 +1,12 @@
 // Ce que le joueur doit voir de ses missions : les repères sur la carte et le panneau (titre, consigne, chrono).
-// Expose : MissionMarker, MissionPanel, MissionGuide, describeMissions(), formatSeconds().
+// Expose : MissionPanel, MissionGuide, describeMissions(), formatSeconds().
 // Pourquoi : une règle pure, testée sans navigateur, partagée par l'affichage des repères (render) et le panneau (hud). Elle lit l'état de la simulation
 // (missionProgress) et les fiches des missions, elle ne modifie rien.
 
-import { DEFAULT_PLACE_RADIUS_TILES, STEPS_PER_SECOND } from '../sim/core'
-import type { MissionDef, MissionPlace, MissionProgress, TileMap } from '../sim/core'
-
-/** Un repère sur la carte, en coordonnées de la simulation (px). `start` : un départ de mission ; `objective` : où aller maintenant. */
-export interface MissionMarker {
-  key: string
-  kind: 'start' | 'objective'
-  x: number
-  y: number
-  radius: number
-}
+import { STEPS_PER_SECOND } from '../sim/core'
+import type { MissionDef, MissionProgress, TileMap } from '../sim/core'
+import { toPlaceMarker } from './placeMarker'
+import type { PlaceMarker } from './placeMarker'
 
 /** Le panneau de la mission en cours. */
 export interface MissionPanel {
@@ -27,17 +20,9 @@ export interface MissionPanel {
 }
 
 export interface MissionGuide {
-  markers: MissionMarker[]
+  markers: PlaceMarker[]
   panel?: MissionPanel
 }
-
-const toMarker = (key: string, kind: MissionMarker['kind'], place: MissionPlace, map: TileMap): MissionMarker => ({
-  key,
-  kind,
-  x: (place.tileX + 0.5) * map.tileSize,
-  y: (place.tileY + 0.5) * map.tileSize,
-  radius: (place.radiusTiles ?? DEFAULT_PLACE_RADIUS_TILES) * map.tileSize,
-})
 
 /** Les repères et le panneau, d'après l'avancement du joueur. Sans mission en cours : les départs des missions encore à faire sur cette carte. */
 export function describeMissions(progress: MissionProgress | undefined, missions: readonly MissionDef[], map: TileMap): MissionGuide {
@@ -46,7 +31,7 @@ export function describeMissions(progress: MissionProgress | undefined, missions
   if (active === undefined || def === undefined) {
     const markers = missions
       .filter((mission) => mission.mapId === map.mapId && progress?.completedIds.includes(mission.id) !== true)
-      .map((mission) => toMarker(`start:${mission.id}`, 'start', mission.start, map))
+      .map((mission) => toPlaceMarker(`start:${mission.id}`, 'start', mission.start, map))
     return { markers }
   }
 
@@ -60,7 +45,7 @@ export function describeMissions(progress: MissionProgress | undefined, missions
     objectiveCount: def.objectives.length,
   }
   if (stepsLeft.length > 0) panel.secondsLeft = Math.ceil(Math.min(...stepsLeft) / STEPS_PER_SECOND)
-  return { markers: [toMarker(`objective:${def.id}:${active.objectiveIndex}`, 'objective', objective.place, map)], panel }
+  return { markers: [toPlaceMarker(`objective:${def.id}:${active.objectiveIndex}`, 'objective', objective.place, map)], panel }
 }
 
 /** Un chrono lisible : « 1:05 ». */

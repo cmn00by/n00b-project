@@ -9,14 +9,18 @@ import { SYSTEMS } from './sim/systems'
 import { spawnVehicle } from './sim/systems/driving'
 import { MAP_REGISTRY } from './data/maps'
 import { TILE_KIND_REGISTRY } from './data/tileKinds'
+import { DEALERSHIP_REGISTRY } from './data/dealerships'
+import { GARAGE_REGISTRY } from './data/garages'
 import { MISSION_REGISTRY } from './data/missions'
 import { VEHICLE_REGISTRY } from './data/vehicles'
 import { CAMERA_LOOKAHEAD_MAX_PX, CAMERA_LOOKAHEAD_SECONDS, CAMERA_LOOKAHEAD_SMOOTHING, DAY_NIGHT_TRANSITION_SECONDS, GAME_SEED, HUD_PLACEHOLDER } from './game/constants'
 import { createFixedStepLoop } from './game/fixedStepLoop'
-import { createHudView, createMissionPanelView, createTouchControlsView } from './game/hud'
+import { createHudView, createMissionPanelView, createShopPanelView, createTouchControlsView, formatMoney } from './game/hud'
 import { chooseStartMode, createKeyboard, createTouchInput, parseControlsOverride, switchMode, toDriveCommand, toMoveCommand } from './game/input'
 import type { ControlMode } from './game/input'
 import { describeMissions } from './game/missionGuide'
+import { describeShops } from './game/shopGuide'
+import type { ShopPanel } from './game/shopGuide'
 import {
   PIXEL_SCALE_CHOICES,
   choosePixelScale,
@@ -25,8 +29,9 @@ import {
   createCamera,
   createDecor,
   createGround,
+  createLandmarks,
   createLighting,
-  createMissionMarkers,
+  createPlaceMarkers,
   describePixelScale,
   loadTextures,
 } from './game/render'
@@ -77,16 +82,36 @@ async function start() {
   const ground = createGround(scene, map, textures)
   const buildings = createBuildings(scene, map, textures)
   const decor = createDecor(scene, map, textures)
+  const landmarks = createLandmarks(scene, map, textures)
   const actors = createActors(scene)
   const lighting = createLighting(scene, renderer)
   const keyboard = createKeyboard(window)
   const hud = createHudView(document.body)
-  const missionMarkers = createMissionMarkers(scene)
+  const placeMarkers = createPlaceMarkers(scene)
   const missionPanel = createMissionPanelView(document.body)
   // Les messages de mission : le panneau écoute la simulation, il ne décide de rien.
   world.events.on('mission:started', ({ missionId }) => missionPanel.showMessage(MISSION_REGISTRY.get(missionId).briefing, true))
   world.events.on('mission:succeeded', ({ money }) => missionPanel.showMessage(`Mission réussie ! +${money} €`, true))
   world.events.on('mission:failed', ({ reason }) => missionPanel.showMessage(reason === 'time-out' ? 'Trop tard… Mission échouée' : 'Mission abandonnée', false))
+  // La concession et le garage : un panneau de choix quand le joueur s'y trouve. Un choix devient une commande, envoyée au prochain pas de simulation.
+  const shopContent = { vehicles: VEHICLE_REGISTRY, dealerships: DEALERSHIP_REGISTRY, garages: GARAGE_REGISTRY }
+  const shopPanelView = createShopPanelView(document.body)
+  const pendingCommands: Command[] = []
+  let shopPanel: ShopPanel | undefined
+  const chooseInShop = (index: number) => {
+    const command = shopPanel?.choices[index]?.command
+    if (command !== undefined) pendingCommands.push(command)
+  }
+  shopPanelView.onChoose(chooseInShop)
+  for (let digit = 1; digit <= 9; digit++) {
+    keyboard.onPress(`Digit${digit}`, () => chooseInShop(digit - 1))
+    keyboard.onPress(`Numpad${digit}`, () => chooseInShop(digit - 1))
+  }
+  const vehicleName = (modelId: string) => VEHICLE_REGISTRY.find(modelId)?.name ?? modelId
+  world.events.on('garage:bought', ({ modelId, price }) => missionPanel.showMessage(`${vehicleName(modelId)} achetée ${formatMoney(price)} : elle t'attend au parking !`, true))
+  world.events.on('garage:stored', ({ modelId, wasStolen }) => missionPanel.showMessage(`${vehicleName(modelId)} rangée au garage${wasStolen ? ' : elle est à toi maintenant' : ''}`, true))
+  world.events.on('garage:taken-out', ({ modelId }) => missionPanel.showMessage(`${vehicleName(modelId)} sortie du garage`, true))
+  world.events.on('garage:refused', ({ why }) => missionPanel.showMessage(`Impossible : ${why}`, false))
   const touch = createTouchInput(window)
   const touchView = createTouchControlsView(document.body)
   const fixedStepLoop = createFixedStepLoop(STEP_SECONDS)
@@ -130,7 +155,7 @@ async function start() {
 
   const runSimulationStep = () => {
     actors.rememberStates(world)
-    const commands: Command[] = []
+    const commands: Command[] = pendingCommands.splice(0)
     const input = mode === 'touch' ? touch : keyboard
     if (input.consumeInteract()) commands.push({ type: 'player:interact', entityId: player.id })
     const command = player.driver !== undefined ? toDriveCommand(player.id, input.readDriveKeys()) : toMoveCommand(player.id, input.readPressedKeys())
@@ -176,13 +201,17 @@ async function start() {
     }
 
     const missionGuide = describeMissions(player.missionProgress, MISSION_REGISTRY.all, map)
-    missionMarkers.update(missionGuide.markers, displaySeconds)
+    const shopGuide = describeShops(world, { ...player, position: player.position ?? { x: spawn.x, y: spawn.y, angle: 0 } }, shopContent)
+    shopPanel = shopGuide.panel
+    placeMarkers.update([...missionGuide.markers, ...shopGuide.markers], displaySeconds)
     missionPanel.update(missionGuide.panel)
+    shopPanelView.update(shopPanel)
     // L'argent vient de la simulation (brique economy) ; la santé et la recherche n'existent pas encore : valeurs factices (HUD_PLACEHOLDER).
     hud.update({ ...HUD_PLACEHOLDER, money: player.wallet?.money ?? 0 })
     ground.update(displaySeconds)
     decor.update(displaySeconds, night)
     buildings.setNight(night)
+    landmarks.setNight(night)
     lighting.update(cameraFocus, night, decor.lamps, headlight)
     if (mode === 'touch') touchView.update(touch.readState(), { isDriving: player.driver !== undefined, screenWidth: window.innerWidth, screenHeight: window.innerHeight })
     renderer.render(scene, camera3d.camera)

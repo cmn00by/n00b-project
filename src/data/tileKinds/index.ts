@@ -13,6 +13,8 @@ export const TILE_KINDS: TileKindDef[] = [
   { id: 'sand', isSolid: false }, // plage
   { id: 'dock', isSolid: false }, // pontons du port
   { id: 'parking', isSolid: false }, // places de parking
+  { id: 'showroom', isSolid: true }, // la concession : un bâtiment à vitrine (bloc 19)
+  { id: 'garage', isSolid: true }, // un garage : un bâtiment à porte basculante (bloc 19)
 ]
 
 export const TILE_KIND_REGISTRY = createRegistry('Type de case', TILE_KINDS)

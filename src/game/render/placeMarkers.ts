@@ -1,15 +1,15 @@
-// Les repères des missions dans la ville : un anneau au sol, une colonne de lumière et un losange qui tourne au-dessus.
-// Expose : MissionMarkers, createMissionMarkers().
-// Pourquoi : le joueur doit voir de loin où commence une mission et où aller ensuite. Les repères ne reçoivent pas la lumière : ils restent visibles
-// de jour comme de nuit. Ce module dessine la liste que lui donne describeMissions (src/game/missionGuide.ts), il ne décide de rien.
+// Les repères dans la ville (missions, concession, garage) : un anneau au sol, une colonne de lumière et un losange qui tourne au-dessus.
+// Expose : PlaceMarkers, createPlaceMarkers().
+// Pourquoi : le joueur doit voir de loin où commence une mission, où aller ensuite, où acheter et ranger ses véhicules. Les repères ne reçoivent pas la lumière : ils restent visibles
+// de jour comme de nuit. Ce module dessine la liste que lui donne les guides (src/game/missionGuide.ts, shopGuide.ts), il ne décide de rien.
 
 import * as THREE from 'three'
-import { MISSION_MARKER_VIEW } from '../constants'
-import type { MissionMarker } from '../missionGuide'
+import { PLACE_MARKER_VIEW } from '../constants'
+import type { PlaceMarker } from '../placeMarker'
 
-export interface MissionMarkers {
+export interface PlaceMarkers {
   /** À appeler à chaque image avec les repères à montrer ; ceux qui ne sont plus dans la liste disparaissent. */
-  update(markers: readonly MissionMarker[], displaySeconds: number): void
+  update(markers: readonly PlaceMarker[], displaySeconds: number): void
 }
 
 interface Shown {
@@ -17,10 +17,10 @@ interface Shown {
   diamond: THREE.Mesh
 }
 
-const view = MISSION_MARKER_VIEW
+const view = PLACE_MARKER_VIEW
 
-function createMarker(marker: MissionMarker): Shown {
-  const color = marker.kind === 'start' ? view.startColor : view.objectiveColor
+function createMarker(marker: PlaceMarker): Shown {
+  const color = view.colors[marker.kind]
   const group = new THREE.Group()
   const ring = new THREE.Mesh(new THREE.RingGeometry(marker.radius * 0.62, marker.radius, 32), new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide }))
   ring.rotation.x = -Math.PI / 2
@@ -34,13 +34,14 @@ function createMarker(marker: MissionMarker): Shown {
   // Le sol est lui aussi dans la passe « transparente » (ses bords d'eau) : sans cet ordre forcé, il recouvrirait la colonne de lumière.
   beam.renderOrder = 1
   const diamond = new THREE.Mesh(new THREE.OctahedronGeometry(view.diamondSize), new THREE.MeshBasicMaterial({ color }))
-  group.add(ring, beam, diamond)
+  group.add(ring, diamond)
+  if ((view.beamKinds as readonly string[]).includes(marker.kind)) group.add(beam)
   // Coordonnées : x de la simulation = x de three.js, y de la simulation = z de three.js.
   group.position.set(marker.x, 0, marker.y)
   return { group, diamond }
 }
 
-export function createMissionMarkers(scene: THREE.Scene): MissionMarkers {
+export function createPlaceMarkers(scene: THREE.Scene): PlaceMarkers {
   const shown = new Map<string, Shown>()
 
   return {

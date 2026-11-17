@@ -37,6 +37,23 @@ export interface GameCommands {
     amount: number // en euros entiers, positif
     reason: string // ce qui est payé, pour les messages et les statistiques : 'vehicle:sports-car', 'fine'…
   }
+  /** Acheter un modèle à une concession (le joueur doit s'y trouver). */
+  'dealership:buy': {
+    entityId: EntityId
+    dealershipId: string
+    modelId: string
+  }
+  /** Ranger au garage le véhicule garé devant (le joueur doit s'y trouver, à pied). */
+  'garage:store': {
+    entityId: EntityId
+    garageId: string
+  }
+  /** Sortir du garage un véhicule qui y est rangé : il apparaît sur la place devant. */
+  'garage:take-out': {
+    entityId: EntityId
+    garageId: string
+    vehicleKey: number
+  }
   /** Le joueur au volant conduit (touches tenues). Une commande par pas tant qu'il agit. */
   'vehicle:drive': {
     entityId: EntityId // l'entité au volant (pas le véhicule)
