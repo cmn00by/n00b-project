@@ -45,6 +45,8 @@ export interface Vehicle {
   headingX: number // le nez pointe vers (headingX, headingY) ; (0, -1) = vers le haut
   headingY: number
   driverId?: EntityId // l'entité au volant, s'il y en a une
+  ownerId?: EntityId // le joueur à qui il appartient (acheté, ou volé puis rangé au garage)
+  ownedKey?: number // son numéro dans la collection de ce joueur (OwnedVehicle.key)
 }
 
 /** Une entité qui conduit un véhicule. Son corps est mis de côté pendant la conduite (elle est dans la voiture) et lui est rendu à la sortie. */
@@ -108,6 +110,23 @@ export interface Wallet {
   money: number
 }
 
+/** Un véhicule qui appartient au joueur : dans la ville (entityId) ou rangé dans un garage (storedIn). */
+export interface OwnedVehicle {
+  /** Son numéro dans la collection, unique pour ce joueur. */
+  key: number
+  modelId: string
+  /** L'id du garage où il est rangé (absent : il est dans la ville). */
+  storedIn?: string
+  /** L'entité du véhicule quand il est dans la ville. */
+  entityId?: EntityId
+}
+
+/** Les véhicules d'un joueur (brique garage). Des données simples, sauvegardables telles quelles. */
+export interface VehicleCollection {
+  nextKey: number
+  vehicles: OwnedVehicle[]
+}
+
 /** Tous les composants possibles : chacun est facultatif sur une entité. */
 export interface Components {
   position?: Position
@@ -120,6 +139,7 @@ export interface Components {
   driver?: Driver
   missionProgress?: MissionProgress
   wallet?: Wallet
+  vehicleCollection?: VehicleCollection
 }
 
 /** Le nom d'un composant. */

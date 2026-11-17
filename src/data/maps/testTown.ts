@@ -1,6 +1,6 @@
 // La ville de test du prototype : une petite ville variée sur 56 × 40 cases.
 // En haut à gauche, des pavillons et leurs jardins ; au centre, la place pavée et le parc avec son étang ; à droite, le centre-ville
-// et un parking ; en bas, la plage, la mer et les pontons du port. Trois avenues et trois boulevards la quadrillent.
+// et un parking avec sa concession (A) ; un garage (G) à la place d'un pavillon ; en bas, la plage, la mer et les pontons du port. Trois avenues et trois boulevards la quadrillent.
 // Elle sert à développer la marche, la conduite et les piétons sans attendre la vraie carte Tiled (#5).
 // Pour la modifier : changer les caractères des lignes (voir la légende), puis `npm test` vérifie qu'elle reste valide.
 import type { MapDef } from '../../sim/core'
@@ -19,6 +19,8 @@ export const testTown: MapDef = {
     s: 'sand',
     _: 'dock',
     p: 'parking',
+    A: 'showroom',
+    G: 'garage',
   },
   // 56 × 40 cases
   rows: [
@@ -27,8 +29,8 @@ export const testTown: MapDef = {
     ',###,###,.==.#####.######.==.#####.######.==.####.######',
     ',,,,,,,,,.==..............==..............==............',
     ',,,,,,,,,.==.#####.######.==.#####.######.==.####.######',
-    ',###,###,.==.#####.######.==.#####.######.==.####.######',
-    ',###,###,.==.#####.######.==.#####.######.==.####.######',
+    ',###,GGG,.==.#####.######.==.#####.######.==.####.######',
+    ',###,GGG,.==.#####.######.==.#####.######.==.####.######',
     '..........==..............==..............==............',
     '========================================================',
     '========================================================',
@@ -45,9 +47,9 @@ export const testTown: MapDef = {
     '========================================================',
     '========================================================',
     '..........==..............==..............==............',
-    ',###,###,.==.#####.######.==.#####.######.==.ppppp#.####',
-    ',###,###,.==.#####.######.==.#####.######.==.ppppp#.####',
-    ',,,,,,,,,.==.#####.######.==.#####.######.==.ppppp#.####',
+    ',###,###,.==.#####.######.==.#####.######.==.ppppp#.AAAA',
+    ',###,###,.==.#####.######.==.#####.######.==.ppppp#.AAAA',
+    ',,,,,,,,,.==.#####.######.==.#####.######.==.ppppp#.AAAA',
     ',,,,,,,,,.==..............==..............==.ppppp......',
     ',###,###,.==.#####.######.==.#####.######.==............',
     ',###,###,.==.#####.######.==.#####.######.==.####.######',

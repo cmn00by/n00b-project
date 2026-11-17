@@ -1,35 +1,21 @@
-// L'argent du joueur : il le gagne (récompense des missions) et le dépense (boutiques, amendes…).
-// Expose : economySystem, earn().
-// Pourquoi : un seul endroit tient les comptes. Les autres briques ne touchent jamais au portefeuille : elles annoncent un fait (mission:succeeded)
-// ou envoient une commande (economy:spend), et cette brique tranche. Les montants sont des euros entiers : le compte est identique sur toutes les machines.
+// L'argent du joueur : il le gagne (récompense des missions) et le dépense (commande economy:spend).
+// Expose : economySystem.
+// Pourquoi : cette brique tient les comptes : l'argent de départ, ce qui rapporte (elle écoute les faits, comme mission:succeeded) et les dépenses demandées
+// par commande. Les gestes eux-mêmes (walletOf, earnMoney, spendMoney) sont dans le noyau, pour qu'une boutique puisse encaisser un achat dans le même pas.
+// Les montants sont des euros entiers : le compte est identique sur toutes les machines.
 
-import { SYSTEM_ORDER, TUNING, findCommands, findEntitiesWith, findEntity } from '../../core'
-import type { Entity, EntityId, System, Wallet, World } from '../../core'
-
-/** Un montant valable : un nombre entier positif d'euros. */
-const isValidAmount = (amount: number): boolean => Number.isInteger(amount) && amount > 0
-
-/** Le portefeuille d'une entité, créé avec l'argent de départ s'il n'existe pas encore. */
-function walletOf(entity: Entity): Wallet {
-  entity.wallet ??= { money: TUNING.economy.startingMoney }
-  return entity.wallet
-}
-
-/** Ajoute de l'argent à une entité et l'annonce. Un montant invalide ou une entité disparue ne change rien. */
-export function earn(world: World, entityId: EntityId, amount: number, reason: string): void {
-  const entity = findEntity(world, entityId)
-  if (entity === undefined || !isValidAmount(amount)) return
-  const wallet = walletOf(entity)
-  wallet.money += amount
-  world.events.emit('economy:earned', { entityId, amount, reason, balance: wallet.money })
-}
+import { SYSTEM_ORDER, earnMoney, findCommands, findEntitiesWith, findEntity, spendMoney, walletOf } from '../../core'
+import type { System } from '../../core'
 
 export const economySystem: System = {
   id: 'economy',
   order: SYSTEM_ORDER.rules,
   init(world) {
     // La récompense d'une mission réussie : la brique missions l'annonce, celle-ci la verse.
-    world.events.on('mission:succeeded', ({ entityId, missionId, money }) => earn(world, entityId, money, `mission:${missionId}`))
+    world.events.on('mission:succeeded', ({ entityId, missionId, money }) => {
+      const entity = findEntity(world, entityId)
+      if (entity !== undefined) earnMoney(world, entity, money, `mission:${missionId}`)
+    })
   },
   step(world) {
     // Chaque joueur a un portefeuille dès le début, pour que le HUD l'affiche avant le premier gain.
@@ -37,14 +23,7 @@ export const economySystem: System = {
 
     for (const { entityId, amount, reason } of findCommands(world.commands, 'economy:spend')) {
       const entity = findEntity(world, entityId)
-      if (entity === undefined) continue
-      const wallet = walletOf(entity)
-      if (!isValidAmount(amount) || amount > wallet.money) {
-        world.events.emit('economy:refused', { entityId, amount, reason, balance: wallet.money })
-        continue
-      }
-      wallet.money -= amount
-      world.events.emit('economy:spent', { entityId, amount, reason, balance: wallet.money })
+      if (entity !== undefined) spendMoney(world, entity, amount, reason)
     }
   },
 }

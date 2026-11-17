@@ -54,10 +54,17 @@ export const HUD_STYLE = {
   margin: 12, // distance au bord de l'écran
 } as const
 
-/** Les repères des missions sur la carte : un anneau au sol, une colonne de lumière et un losange qui flotte. */
-export const MISSION_MARKER_VIEW = {
-  startColor: 0xffd23f, // un départ de mission (jaune de la palette)
-  objectiveColor: 0x2ec4b6, // l'objectif en cours (turquoise de la palette, distinct du jaune)
+/** Les repères sur la carte (missions, concession, garage) : un anneau au sol, une colonne de lumière et un losange qui flotte. */
+export const PLACE_MARKER_VIEW = {
+  // Une couleur de la palette par sorte de lieu.
+  colors: {
+    start: 0xffd23f, // un départ de mission (jaune)
+    objective: 0x2ec4b6, // l'objectif en cours (turquoise)
+    dealership: 0x3a86ff, // une concession (bleu)
+    garage: 0x8e5ce0, // un garage (violet)
+  },
+  // Les sortes de lieu qui ont une colonne de lumière, visible de loin. La concession et le garage n'en ont pas : leur bâtiment et son enseigne suffisent.
+  beamKinds: ['start', 'objective'],
   beamHeight: 140, // hauteur de la colonne de lumière, en px
   beamOpacity: 0.4,
   diamondSize: 12, // taille du losange, en px
@@ -75,6 +82,34 @@ export const MISSION_PANEL_STYLE = {
   urgentSeconds: 15, // en dessous, le chrono passe en rouge
   panelFill: 'rgba(43, 30, 58, 0.7)',
   messageSeconds: 6, // durée d'un message (mission réussie, échouée), en secondes
+} as const
+
+/** Les bâtiments remarquables (src/game/render/landmarks.ts) : la concession et les garages, en couleurs de la palette. */
+export const LANDMARK_VIEW = {
+  showroomName: 'BON PLAN AUTO', // l'enseigne (lettres de render/pixelFont.ts)
+  garageName: 'GARAGE',
+  showroomHeight: 64, // hauteur, en px du monde : un grand rez-de-chaussée vitré
+  garageHeight: 48,
+  showroomWall: '#fff8ec', // blanc chaud
+  showroomSign: '#3a86ff', // bleu (comme le repère de la concession)
+  garageWall: '#bdb4a6', // béton
+  garageSign: '#8e5ce0', // violet (comme le repère du garage)
+  garageDoor: '#8a8797', // gris neutre
+  glass: '#7cc7f2', // eau-claire : la vitrine
+  glassGlow: '#ffd27a', // la vitrine allumée la nuit
+  frame: '#3e4152', // montants et lames
+  signTextColor: '#fff8ec',
+} as const
+
+/** Le panneau de la concession et du garage, à droite, sous le HUD. */
+export const SHOP_PANEL_STYLE = {
+  titleColor: '#3a86ff',
+  textColor: '#fff8ec',
+  disabledColor: '#8a8797', // un choix impossible (trop cher, garage plein)
+  panelFill: 'rgba(43, 30, 58, 0.8)',
+  choiceFill: 'rgba(58, 134, 255, 0.25)',
+  margin: 12, // distance au bord droit de l'écran
+  top: 120, // distance au haut de l'écran : sous le HUD
 } as const
 
 /** Réglages des commandes tactiles (joystick virtuel et boutons), en pixels d'écran : ils ne dépendent pas du zoom de la caméra. */

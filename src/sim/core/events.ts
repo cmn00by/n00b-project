@@ -34,6 +34,14 @@ export interface GameEvents {
   'economy:earned': { entityId: EntityId; amount: number; reason: string; balance: number }
   /** De l'argent a été dépensé (brique economy). */
   'economy:spent': { entityId: EntityId; amount: number; reason: string; balance: number }
+  /** Un véhicule a été acheté et attend sur la place de livraison (brique garage). */
+  'garage:bought': { entityId: EntityId; dealershipId: string; modelId: string; price: number; vehicleId: EntityId }
+  /** Un véhicule a été rangé au garage (brique garage). wasStolen : il n'appartenait pas encore au joueur, il est désormais à lui. */
+  'garage:stored': { entityId: EntityId; garageId: string; modelId: string; vehicleKey: number; wasStolen: boolean }
+  /** Un véhicule est sorti du garage (brique garage). */
+  'garage:taken-out': { entityId: EntityId; garageId: string; modelId: string; vehicleKey: number; vehicleId: EntityId }
+  /** Une action de concession ou de garage a été refusée (brique garage) : `why` le dit au joueur. */
+  'garage:refused': { entityId: EntityId; action: 'buy' | 'store' | 'take-out'; why: string }
   /** Une dépense a été refusée : pas assez d'argent (brique economy). Le solde n'a pas changé. */
   'economy:refused': { entityId: EntityId; amount: number; reason: string; balance: number }
 }

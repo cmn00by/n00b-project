@@ -13,8 +13,8 @@ C'est la seule brique qui touche au portefeuille. Passe dans la tranche `rules`.
 ## Comment s'en servir depuis une autre brique
 
 - **Donner de l'argent** : annoncer un fait que cette brique écoute (comme `mission:succeeded`), puis ajouter l'écoute ici. Une autre brique n'importe jamais `earn`.
-- **Prendre de l'argent** (boutique, concession, amende) : envoyer la commande `economy:spend` avec une **raison** (`vehicle:sports-car`, `outfit:hot-dog`, `fine`),
-  puis écouter `economy:spent` (l'achat est fait) ou `economy:refused` (pas assez d'argent) avec cette raison.
+- **Prendre de l'argent** : une brique qui vend quelque chose (garage, boutique) encaisse elle-même avec `spendMoney` du noyau, dans le même pas que l'achat ;
+  le joueur, lui, peut envoyer la commande `economy:spend` avec une **raison**. Dans les deux cas : `economy:spent` (fait) ou `economy:refused` (pas assez d'argent).
 - **Montants** : toujours des euros **entiers** et positifs ; un montant invalide est refusé.
 
 ## Fichiers

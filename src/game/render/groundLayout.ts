@@ -43,6 +43,8 @@ const TEXTURE_BY_KIND: Readonly<Record<string, TileTexture>> = {
   dock: 'ponton',
   parking: 'parking',
   building: 'paves',
+  showroom: 'paves',
+  garage: 'paves',
 }
 
 /** Part des cases d'herbe fleuries, et des cases de route avec une plaque d'égout. */

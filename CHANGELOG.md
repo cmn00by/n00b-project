@@ -19,6 +19,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 
 ### Ajouté
 
+- La concession et le garage : deux nouveaux bâtiments (Bon Plan Auto au parking du centre-ville, avec sa vitrine et son enseigne ; un garage à porte basculante chez les pavillons), qui s'allument la nuit. À la concession, on achète la Mamie, la Livreuse ou la Frimeuse (touches 1 à 9 ou un clic) : la voiture attend au parking. Au garage, on range la voiture garée devant (même volée : elle devient à soi) et on la ressort plus tard (#53)
 - L'argent est réel : on commence avec 120 €, une mission réussie verse sa récompense, et le HUD affiche le vrai solde ; les futures boutiques paieront par la commande `economy:spend`, refusée s'il manque de l'argent (#52)
 - Les missions : un repère jaune marque leur départ, on y entre pour les lancer ; un repère turquoise montre où aller, un panneau affiche la consigne et le chrono ; réussite, échec (chrono écoulé) ou abandon. Une mission d'essai : récupérer un colis au parking et le livrer au port en deux minutes. Les missions s'écrivent en données, sans coder (`docs/missions.md`) (#9)
 - Des piétons peuplent la ville : ils naissent hors de l'écran sur les trottoirs, se promènent case par case, s'arrêtent parfois, regardent puis fuient quand on court vers eux (une pastille « ! » rouge s'allume), et disparaissent quand on s'éloigne ; chacun est assemblé en blocs avec ses propres couleurs et son accessoire (#10)
