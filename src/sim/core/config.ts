@@ -40,7 +40,7 @@ export const TUNING = {
     parkingRadiusTiles: 1.6, // un véhicule à moins de cette distance de la place devant le garage (en cases) peut être rangé
   },
   economy: {
-    startingMoney: 120, // l'argent du joueur au début de la partie, en euros
+    startingMoney: 600, // l'argent du joueur au début de la partie, en euros : de quoi s'offrir un premier véhicule (la Mamie, 250 €) et quelques pièces à l'atelier
   },
   driving: {
     enterDistance: 48, // distance maximale entre le joueur et le centre d'un véhicule pour y monter, en px
