@@ -104,6 +104,20 @@ export const LANDMARK_VIEW = {
 /** À l'atelier, la voiture tourne sur elle-même pour qu'on la voie sous toutes ses coutures, en radians par seconde. */
 export const CAR_SHOWCASE_SPIN = 0.9
 
+/** La mini-carte, en haut à gauche (src/game/hud/minimapView.ts). */
+export const MINIMAP_STYLE = {
+  sizePx: 150, // côté de la mini-carte à l'écran, en pixels
+  viewTiles: 36, // côté du morceau de ville montré, en cases
+  pixelsPerTile: 2, // finesse de l'image de toute la ville, peinte une fois
+  margin: 12, // distance aux bords de l'écran
+  markerPx: 6, // taille d'un repère
+  edgeMarkerPx: 5, // taille d'un repère hors du cadre, ramené au bord
+  playerPx: 7, // longueur de la flèche du joueur
+  playerColor: '#fff8ec',
+  outlineColor: '#2b1e3a',
+  borderColor: '#fff8ec',
+} as const
+
 /** Le panneau de la concession et du garage, à droite, sous le HUD. */
 export const SHOP_PANEL_STYLE = {
   titleColor: '#3a86ff',
