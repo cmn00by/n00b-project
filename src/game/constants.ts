@@ -62,6 +62,7 @@ export const PLACE_MARKER_VIEW = {
     objective: 0x2ec4b6, // l'objectif en cours (turquoise)
     dealership: 0x3a86ff, // une concession (bleu)
     garage: 0x8e5ce0, // un garage (violet)
+    workshop: 0xf28c28, // un atelier (orange)
   },
   // Les sortes de lieu qui ont une colonne de lumière, visible de loin. La concession et le garage n'en ont pas : leur bâtiment et son enseigne suffisent.
   beamKinds: ['start', 'objective'],
@@ -88,18 +89,27 @@ export const MISSION_PANEL_STYLE = {
 export const LANDMARK_VIEW = {
   showroomName: 'BON PLAN AUTO', // l'enseigne (lettres de render/pixelFont.ts)
   garageName: 'GARAGE',
+  workshopName: 'ATELIER',
   showroomHeight: 64, // hauteur, en px du monde : un grand rez-de-chaussée vitré
   garageHeight: 48,
+  workshopHeight: 52,
   showroomWall: '#fff8ec', // blanc chaud
   showroomSign: '#3a86ff', // bleu (comme le repère de la concession)
   garageWall: '#bdb4a6', // béton
   garageSign: '#8e5ce0', // violet (comme le repère du garage)
   garageDoor: '#8a8797', // gris neutre
+  workshopWall: '#e3b676', // sable
+  workshopSign: '#f28c28', // orange (comme le repère de l'atelier)
+  workshopInside: '#3e4152', // l'intérieur sombre de la baie
+  workshopTools: '#9c9389', // l'établi et les outils
   glass: '#7cc7f2', // eau-claire : la vitrine
   glassGlow: '#ffd27a', // la vitrine allumée la nuit
   frame: '#3e4152', // montants et lames
   signTextColor: '#fff8ec',
 } as const
+
+/** À l'atelier, la voiture tourne sur elle-même pour qu'on la voie sous toutes ses coutures, en radians par seconde. */
+export const CAR_SHOWCASE_SPIN = 0.9
 
 /** Le panneau de la concession et du garage, à droite, sous le HUD. */
 export const SHOP_PANEL_STYLE = {

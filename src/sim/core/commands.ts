@@ -5,6 +5,7 @@
 // Règles : une commande est une demande ('domaine:verbe'), à la différence d'un événement qui est un fait passé.
 
 import type { EntityId } from './components'
+import type { VehiclePartSlot } from './vehiclePart'
 
 /**
  * Le catalogue de toutes les commandes : leur nom et les données qu'elles transportent.
@@ -53,6 +54,18 @@ export interface GameCommands {
     entityId: EntityId
     garageId: string
     vehicleKey: number
+  }
+  /** Installer une pièce sur la voiture qu'on conduit, dans un atelier. */
+  'workshop:install': {
+    entityId: EntityId // le joueur, au volant
+    workshopId: string
+    partId: string
+  }
+  /** Remettre d'origine un emplacement de la voiture qu'on conduit, dans un atelier (gratuit). */
+  'workshop:remove': {
+    entityId: EntityId
+    workshopId: string
+    slot: VehiclePartSlot
   }
   /** Le joueur au volant conduit (touches tenues). Une commande par pas tant qu'il agit. */
   'vehicle:drive': {

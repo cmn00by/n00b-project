@@ -9,6 +9,7 @@ const GLYPHS: Readonly<Record<string, readonly string[]>> = {
   B: ['XX.', 'X.X', 'XX.', 'X.X', 'XX.'],
   E: ['XXX', 'X..', 'XX.', 'X..', 'XXX'],
   G: ['.XX', 'X..', 'X.X', 'X.X', '.XX'],
+  I: ['XXX', '.X.', '.X.', '.X.', 'XXX'],
   L: ['X..', 'X..', 'X..', 'X..', 'XXX'],
   N: ['X.X', 'XXX', 'XXX', 'X.X', 'X.X'],
   O: ['.X.', 'X.X', 'X.X', 'X.X', '.X.'],

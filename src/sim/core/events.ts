@@ -6,6 +6,7 @@
 // Un écouteur ne suppose jamais qu'un autre écouteur existe.
 
 import type { EntityId } from './components'
+import type { VehiclePartSlot } from './vehiclePart'
 
 /**
  * Le catalogue de tous les événements du jeu : leur nom et les données qu'ils transportent.
@@ -40,8 +41,12 @@ export interface GameEvents {
   'garage:stored': { entityId: EntityId; garageId: string; modelId: string; vehicleKey: number; wasStolen: boolean }
   /** Un véhicule est sorti du garage (brique garage). */
   'garage:taken-out': { entityId: EntityId; garageId: string; modelId: string; vehicleKey: number; vehicleId: EntityId }
-  /** Une action de concession ou de garage a été refusée (brique garage) : `why` le dit au joueur. */
-  'garage:refused': { entityId: EntityId; action: 'buy' | 'store' | 'take-out'; why: string }
+  /** Une action de concession, de garage ou d'atelier a été refusée (brique garage) : `why` le dit au joueur. */
+  'garage:refused': { entityId: EntityId; action: 'buy' | 'store' | 'take-out' | 'install' | 'remove'; why: string }
+  /** Une pièce a été installée à l'atelier (brique garage). */
+  'workshop:installed': { entityId: EntityId; vehicleId: EntityId; partId: string; price: number }
+  /** Un emplacement a été remis d'origine à l'atelier (brique garage). */
+  'workshop:removed': { entityId: EntityId; vehicleId: EntityId; slot: VehiclePartSlot }
   /** Une dépense a été refusée : pas assez d'argent (brique economy). Le solde n'a pas changé. */
   'economy:refused': { entityId: EntityId; amount: number; reason: string; balance: number }
 }

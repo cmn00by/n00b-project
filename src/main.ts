@@ -12,6 +12,8 @@ import { TILE_KIND_REGISTRY } from './data/tileKinds'
 import { DEALERSHIP_REGISTRY } from './data/dealerships'
 import { GARAGE_REGISTRY } from './data/garages'
 import { MISSION_REGISTRY } from './data/missions'
+import { VEHICLE_PART_REGISTRY } from './data/vehicleParts'
+import { WORKSHOP_REGISTRY } from './data/workshops'
 import { VEHICLE_REGISTRY } from './data/vehicles'
 import { CAMERA_LOOKAHEAD_MAX_PX, CAMERA_LOOKAHEAD_SECONDS, CAMERA_LOOKAHEAD_SMOOTHING, DAY_NIGHT_TRANSITION_SECONDS, GAME_SEED, HUD_PLACEHOLDER } from './game/constants'
 import { createFixedStepLoop } from './game/fixedStepLoop'
@@ -20,7 +22,7 @@ import { chooseStartMode, createKeyboard, createTouchInput, parseControlsOverrid
 import type { ControlMode } from './game/input'
 import { describeMissions } from './game/missionGuide'
 import { describeShops } from './game/shopGuide'
-import type { ShopPanel } from './game/shopGuide'
+import type { ShopPanel, WorkshopMenu } from './game/shopGuide'
 import {
   PIXEL_SCALE_CHOICES,
   choosePixelScale,
@@ -94,14 +96,22 @@ async function start() {
   world.events.on('mission:succeeded', ({ money }) => missionPanel.showMessage(`Mission réussie ! +${money} €`, true))
   world.events.on('mission:failed', ({ reason }) => missionPanel.showMessage(reason === 'time-out' ? 'Trop tard… Mission échouée' : 'Mission abandonnée', false))
   // La concession et le garage : un panneau de choix quand le joueur s'y trouve. Un choix devient une commande, envoyée au prochain pas de simulation.
-  const shopContent = { vehicles: VEHICLE_REGISTRY, dealerships: DEALERSHIP_REGISTRY, garages: GARAGE_REGISTRY }
+  const shopContent = { vehicles: VEHICLE_REGISTRY, dealerships: DEALERSHIP_REGISTRY, garages: GARAGE_REGISTRY, workshops: WORKSHOP_REGISTRY, parts: VEHICLE_PART_REGISTRY }
+  // Le menu de l'atelier : quel emplacement est ouvert, quelle pièce on essaie. C'est un état d'interface, la simulation n'en sait rien.
+  let workshopMenu: WorkshopMenu = {}
   const shopPanelView = createShopPanelView(document.body)
   const pendingCommands: Command[] = []
   let shopPanel: ShopPanel | undefined
   const chooseInShop = (index: number) => {
-    const command = shopPanel?.choices[index]?.command
-    if (command !== undefined) pendingCommands.push(command)
+    const choice = shopPanel?.choices[index]
+    if (choice?.command !== undefined) pendingCommands.push(choice.command)
+    const action = choice?.uiAction
+    if (action?.kind === 'open-slot') workshopMenu = { slot: action.slot }
+    if (action?.kind === 'back') workshopMenu = {}
+    if (action?.kind === 'preview') workshopMenu = { ...workshopMenu, previewPartId: action.partId }
   }
+  // 0, Échap ou Retour arrière : revenir à la liste des emplacements de l'atelier.
+  for (const code of ['Digit0', 'Numpad0', 'Escape', 'Backspace']) keyboard.onPress(code, () => (workshopMenu = {}))
   shopPanelView.onChoose(chooseInShop)
   for (let digit = 1; digit <= 9; digit++) {
     keyboard.onPress(`Digit${digit}`, () => chooseInShop(digit - 1))
@@ -112,6 +122,11 @@ async function start() {
   world.events.on('garage:stored', ({ modelId, wasStolen }) => missionPanel.showMessage(`${vehicleName(modelId)} rangée au garage${wasStolen ? ' : elle est à toi maintenant' : ''}`, true))
   world.events.on('garage:taken-out', ({ modelId }) => missionPanel.showMessage(`${vehicleName(modelId)} sortie du garage`, true))
   world.events.on('garage:refused', ({ why }) => missionPanel.showMessage(`Impossible : ${why}`, false))
+  world.events.on('workshop:installed', ({ partId, price }) => {
+    missionPanel.showMessage(`${VEHICLE_PART_REGISTRY.find(partId)?.name ?? partId} installée (${formatMoney(price)})`, true)
+    workshopMenu = { slot: workshopMenu.slot }
+  })
+  world.events.on('workshop:removed', () => missionPanel.showMessage('Remis d’origine', true))
   const touch = createTouchInput(window)
   const touchView = createTouchControlsView(document.body)
   const fixedStepLoop = createFixedStepLoop(STEP_SECONDS)
@@ -201,8 +216,11 @@ async function start() {
     }
 
     const missionGuide = describeMissions(player.missionProgress, MISSION_REGISTRY.all, map)
-    const shopGuide = describeShops(world, { ...player, position: player.position ?? { x: spawn.x, y: spawn.y, angle: 0 } }, shopContent)
+    const shopGuide = describeShops(world, { ...player, position: player.position ?? { x: spawn.x, y: spawn.y, angle: 0 } }, shopContent, workshopMenu)
     shopPanel = shopGuide.panel
+    // En quittant l'atelier, le menu se referme ; tant qu'on y est, la voiture tourne en vitrine.
+    if (shopGuide.showcase === undefined) workshopMenu = {}
+    actors.setShowcase(shopGuide.showcase === undefined ? undefined : { vehicleId: shopGuide.showcase.vehicleId, preview: shopGuide.showcase.preview })
     placeMarkers.update([...missionGuide.markers, ...shopGuide.markers], displaySeconds)
     missionPanel.update(missionGuide.panel)
     shopPanelView.update(shopPanel)

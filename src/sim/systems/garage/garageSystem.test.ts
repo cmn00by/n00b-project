@@ -1,7 +1,7 @@
 // Les tests de la brique garage : elle tourne seule, avec le noyau et aucun autre système (test LEGO). Le joueur est déplacé à la main.
 import { describe, expect, it } from 'vitest'
 import { TUNING, createRegistry, createSimulation, createTestWorld, loadMap, spawnEntity, spawnVehicleEntity } from '../../core'
-import type { Command, DealershipDef, GarageDef, TileMap, VehicleDef } from '../../core'
+import type { Command, DealershipDef, GarageDef, TileMap, VehicleDef, VehiclePartDef, WorkshopDef } from '../../core'
 import { createGarageSystem } from './garageSystem'
 
 const TILE = 32
@@ -23,19 +23,33 @@ const DEALERSHIP: DealershipDef = {
 }
 const GARAGE: GarageDef = { id: 'garage', name: 'Garage', mapId: 'test', place: { tileX: 15, tileY: 1 }, parking: { tileX: 15, tileY: 4, facing: 'right' } }
 
+const WORKSHOP: WorkshopDef = { id: 'atelier', name: 'Atelier', mapId: 'test', place: { tileX: 8, tileY: 4 } }
+const PARTS: VehiclePartDef[] = [
+  { id: 'rose', name: 'Rose', slot: 'paint', price: 60, color: '#ff6fa8' },
+  { id: 'fusee', name: 'Fusée', slot: 'engine', price: 500, stats: { maxSpeed: 1.2 } },
+]
+
 const center = (tile: number) => (tile + 0.5) * TILE
 
 function createScene() {
   const world = createTestWorld()
   loadMap(world, MAP)
   const player = spawnEntity(world, 'player', { position: { x: center(2), y: center(1), angle: 0 }, wallet: { money: 300 } })
-  const system = createGarageSystem({ vehicles: createRegistry('Véhicule', [CAR]), dealerships: createRegistry('Concession', [DEALERSHIP]), garages: createRegistry('Garage', [GARAGE]) })
+  const system = createGarageSystem({
+    vehicles: createRegistry('Véhicule', [CAR]),
+    dealerships: createRegistry('Concession', [DEALERSHIP]),
+    garages: createRegistry('Garage', [GARAGE]),
+    workshops: createRegistry('Atelier', [WORKSHOP]),
+    parts: createRegistry('Pièce', PARTS),
+  })
   const simulation = createSimulation(world, [system])
   const events: string[] = []
   world.events.on('garage:bought', (data) => events.push(`bought ${data.modelId} ${data.price}`))
   world.events.on('garage:stored', (data) => events.push(`stored ${data.modelId} stolen=${data.wasStolen}`))
   world.events.on('garage:taken-out', (data) => events.push(`taken-out ${data.modelId}`))
   world.events.on('garage:refused', (data) => events.push(`refused ${data.action}: ${data.why}`))
+  world.events.on('workshop:installed', (data) => events.push(`installed ${data.partId} ${data.price}`))
+  world.events.on('workshop:removed', (data) => events.push(`removed ${data.slot}`))
   const moveTo = (tileX: number, tileY: number) => {
     player.position!.x = center(tileX)
     player.position!.y = center(tileY)
@@ -156,5 +170,65 @@ describe('garageSystem : le garage', () => {
     delete world.entities[vehicles()[0]!.id]
     simulation.step()
     expect(player.vehicleCollection?.vehicles).toEqual([{ key: 1, modelId: 'auto' }])
+  })
+})
+
+describe('garageSystem : l’atelier', () => {
+  /** Le joueur au volant d'une voiture, dans l'atelier. */
+  function driveIntoWorkshop() {
+    const context = createScene()
+    const car = spawnVehicleEntity(context.world, CAR, center(8), center(4), 'right')
+    context.moveTo(8, 4)
+    context.player.driver = { vehicleId: car.id, storedBody: { width: 24, height: 24, isSolid: true } }
+    car.vehicle!.driverId = context.player.id
+    const install = (partId: string): Command => ({ type: 'workshop:install', entityId: context.player.id, workshopId: 'atelier', partId })
+    return { ...context, car, install }
+  }
+
+  it('installe une pièce payée sur la voiture qu’on conduit', () => {
+    const { player, car, simulation, events, install } = driveIntoWorkshop()
+    simulation.step([install('rose')])
+    expect(car.vehicle?.customization).toEqual({ paint: 'rose' })
+    expect(player.wallet?.money).toBe(240)
+    expect(events).toEqual(['installed rose 60'])
+  })
+
+  it('refuse une pièce trop chère, déjà installée, ou hors de l’atelier', () => {
+    const { player, car, simulation, events, moveTo, install } = driveIntoWorkshop()
+    simulation.step([install('fusee')])
+    simulation.step([install('rose'), install('rose')])
+    moveTo(15, 1)
+    simulation.step([install('rose')])
+    expect(events).toEqual(['refused install: pas assez d’argent', 'installed rose 60', 'refused install: cette pièce est déjà installée', 'refused install: il faut entrer au volant dans l’atelier'])
+    expect(car.vehicle?.customization).toEqual({ paint: 'rose' })
+    expect(player.wallet?.money).toBe(240)
+  })
+
+  it('refuse à pied : on personnalise la voiture qu’on conduit', () => {
+    const { player, simulation, events, install } = driveIntoWorkshop()
+    player.driver = undefined
+    simulation.step([install('rose')])
+    expect(events).toEqual(['refused install: il faut entrer au volant dans l’atelier'])
+  })
+
+  it('remet d’origine un emplacement, gratuitement', () => {
+    const { player, car, simulation, events, install } = driveIntoWorkshop()
+    simulation.step([install('rose')])
+    simulation.step([{ type: 'workshop:remove', entityId: player.id, workshopId: 'atelier', slot: 'paint' }])
+    simulation.step([{ type: 'workshop:remove', entityId: player.id, workshopId: 'atelier', slot: 'paint' }])
+    expect(car.vehicle?.customization).toEqual({})
+    expect(events).toEqual(['installed rose 60', 'removed paint', 'refused remove: c’est déjà d’origine'])
+  })
+
+  it('garde les pièces quand on range la voiture au garage, puis qu’on la ressort', () => {
+    const { world, player, simulation, moveTo, storeCommand, takeOut, vehicles } = createScene()
+    const car = spawnVehicleEntity(world, CAR, center(15), center(4), 'right')
+    car.vehicle!.customization = { paint: 'rose' }
+    moveTo(15, 1)
+    simulation.step([storeCommand()])
+    expect(player.vehicleCollection?.vehicles[0]?.customization).toEqual({ paint: 'rose' })
+    simulation.step([takeOut(1)])
+    expect(vehicles()[0]?.vehicle?.customization).toEqual({ paint: 'rose' })
+    expect(player.vehicleCollection?.vehicles[0]?.customization).toBeUndefined()
   })
 })

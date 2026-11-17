@@ -6,7 +6,7 @@ import { DEFAULT_PLACE_RADIUS_TILES } from '../sim/core'
 import type { MissionPlace, TileMap } from '../sim/core'
 
 /** La sorte de lieu : elle fixe la couleur du repère. */
-export type PlaceMarkerKind = 'start' | 'objective' | 'dealership' | 'garage'
+export type PlaceMarkerKind = 'start' | 'objective' | 'dealership' | 'garage' | 'workshop'
 
 /** Un repère, en coordonnées de la simulation (px). `key` est unique et stable d'une image à l'autre. */
 export interface PlaceMarker {
