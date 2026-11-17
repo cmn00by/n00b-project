@@ -19,6 +19,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 
 ### Ajouté
 
+- Sept nouveaux véhicules, chacun avec sa silhouette et sa conduite : la Voiturette de golf, la Citadine électrique, le Pick-up et sa benne, le Taxi et son enseigne, la Limousine interminable, le Bus et la Patrouille avec ses gyrophares (pas encore de police). Ils sont garés en ville, et tous sauf la Patrouille sont en vente à la concession (#66)
 - L'atelier de Tonton, au coin de la place : on y entre au volant, la voiture tourne en vitrine, et on choisit parmi 9 emplacements (peinture, bandes de course, jantes, aileron, toit, pare-chocs, néons, moteur, pneus) ; un appui pour essayer, un second pour acheter, 0 pour revenir. Les pièces se voient sur la voiture (néons superbes la nuit), le moteur et les pneus changent la conduite, et tout est gardé au garage (#54)
 - La concession et le garage : deux nouveaux bâtiments (Bon Plan Auto au parking du centre-ville, avec sa vitrine et son enseigne ; un garage à porte basculante chez les pavillons), qui s'allument la nuit. À la concession, on achète la Mamie, la Livreuse ou la Frimeuse (touches 1 à 9 ou un clic) : la voiture attend au parking. Au garage, on range la voiture garée devant (même volée : elle devient à soi) et on la ressort plus tard (#53)
 - L'argent est réel : on commence avec 120 €, une mission réussie verse sa récompense, et le HUD affiche le vrai solde ; les futures boutiques paieront par la commande `economy:spend`, refusée s'il manque de l'argent (#52)

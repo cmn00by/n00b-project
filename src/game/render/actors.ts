@@ -9,8 +9,8 @@ import { findEntitiesWith } from '../../sim/core'
 import type { EntityId, VehicleCustomization, World } from '../../sim/core'
 import { VEHICLE_REGISTRY } from '../../data/vehicles'
 import { VEHICLE_PART_REGISTRY } from '../../data/vehicleParts'
-import { CAR_SHOWCASE_SPIN, CHARACTER_VIEW, MISSING_VEHICLE_COLOR, VEHICLE_COLORS } from '../constants'
-import { addCarParts, describeCarLook } from './carParts'
+import { CAR_SHOWCASE_SPIN, CHARACTER_VIEW } from '../constants'
+import { createVehicleModel } from './vehicleModel'
 import { addOutline } from './outline'
 import { createPedestrianActors } from './pedestrianActors'
 import { computeYaw } from './pedestrianPose'
@@ -79,46 +79,6 @@ function createPlayerModel() {
   return { group, legs, arms }
 }
 
-/** Une voiture : caisse, habitacle, pare-brise et roues, à la taille du modèle, nez vers l'avant (-z), avec les pièces de l'atelier. */
-function createCarModel(modelId: string, customization: VehicleCustomization | undefined): THREE.Group {
-  const def = VEHICLE_REGISTRY.get(modelId)
-  const look = describeCarLook(customization, VEHICLE_PART_REGISTRY)
-  const color = look.paint ?? VEHICLE_COLORS[modelId] ?? MISSING_VEHICLE_COLOR
-  const group = new THREE.Group()
-  const chassis = box(def.width, 9, def.length, color)
-  chassis.position.y = 8
-  const cabin = box(def.width - 4, 8, def.length * 0.48, color)
-  cabin.position.set(0, 16.5, def.length * 0.06)
-  const windshield = box(def.width - 5, 6, 1.5, 0x3e4152)
-  windshield.position.set(0, 16, -def.length * 0.18)
-  const rearWindow = box(def.width - 5, 5, 1.5, 0x3e4152)
-  rearWindow.position.set(0, 16, def.length * 0.3)
-  group.add(chassis, cabin, windshield, rearWindow)
-  for (const [side, end] of [
-    [-1, -1],
-    [1, -1],
-    [-1, 1],
-    [1, 1],
-  ] as const) {
-    const wheel = box(3, 7, 9, 0x2b1e3a)
-    wheel.position.set(side * (def.width / 2), 4, end * def.length * 0.32)
-    group.add(wheel)
-    // Les jantes : un disque de couleur sur le flanc de la roue.
-    if (look.wheels !== undefined) {
-      const rim = box(1, 4, 5, look.wheels)
-      rim.position.set(side * (def.width / 2 + 1.6), 4, end * def.length * 0.32)
-      group.add(rim)
-    }
-  }
-  addCarParts(group, def.width, def.length, look)
-  for (const side of [-1, 1]) {
-    const headlight = box(4, 3, 1, 0xfff8ec)
-    headlight.position.set(side * (def.width / 2 - 4), 9, -def.length / 2 - 0.5)
-    group.add(headlight)
-  }
-  return group
-}
-
 /** Retire un modèle de la scène et libère ses blocs (une voiture repeinte est reconstruite). */
 function removeModel(scene: THREE.Scene, model: THREE.Group): void {
   scene.remove(model)
@@ -161,7 +121,7 @@ export function createActors(scene: THREE.Scene): Actors {
         let entry = cars.get(vehicle.id)
         if (entry === undefined || entry.lookKey !== lookKey) {
           if (entry !== undefined) removeModel(scene, entry.model)
-          entry = { model: createCarModel(vehicle.vehicle.modelId, customization), lookKey }
+          entry = { model: createVehicleModel(VEHICLE_REGISTRY.get(vehicle.vehicle.modelId), customization, VEHICLE_PART_REGISTRY), lookKey }
           scene.add(entry.model)
           cars.set(vehicle.id, entry)
         }

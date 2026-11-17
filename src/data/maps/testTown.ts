@@ -74,6 +74,13 @@ export const testTown: MapDef = {
       { tileX: 11, tileY: 12, modelId: 'mamie-car', facing: 'up' },
       { tileX: 16, tileY: 9, modelId: 'delivery-van', facing: 'left' },
       { tileX: 27, tileY: 16, modelId: 'sports-car', facing: 'down' },
+      { tileX: 10, tileY: 18, modelId: 'taxi', facing: 'up' },
+      { tileX: 43, tileY: 13, modelId: 'police-car', facing: 'down' },
+      { tileX: 34, tileY: 22, modelId: 'pickup', facing: 'left' },
+      { tileX: 20, tileY: 33, modelId: 'city-bus', facing: 'right' },
+      { tileX: 31, tileY: 15, modelId: 'golf-cart', facing: 'right' },
+      { tileX: 5, tileY: 32, modelId: 'city-car', facing: 'right' },
+      { tileX: 50, tileY: 27, modelId: 'limousine', facing: 'left' },
     ],
   },
 }
