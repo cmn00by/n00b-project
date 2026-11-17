@@ -42,6 +42,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 
 ### Modifié
 
+- On commence avec 600 € au lieu de 120 € : de quoi s'offrir tout de suite la Mamie ou la Livreuse, et quelques pièces à l'atelier (#63)
 - Rendu plus net : la taille des pixels s'adapte à l'écran (×2 en 1080p au lieu de ×3), P passe à automatique, ×1, ×2 ou ×3 ; les personnages sont plus grands et cernés d'un contour sombre, lisibles de jour comme de nuit (#43)
 - Le jeu s'affiche désormais en pixel art 3D (three.js) : vrais immeubles, vraies ombres, lumière de nuit réelle ; Phaser et l'essai de relief 2.5D sont retirés
 
