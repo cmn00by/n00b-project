@@ -55,8 +55,9 @@ describe('economySystem', () => {
 
   it('applique plusieurs dépenses d’un même pas dans l’ordre, jusqu’à ce que l’argent manque', () => {
     const { player, simulation, spend } = createScene()
+    player.wallet = { money: 120 }
     simulation.step([spend(70), spend(70), spend(50)])
-    expect(player.wallet?.money).toBe(TUNING.economy.startingMoney - 70 - 50)
+    expect(player.wallet.money).toBe(0)
   })
 
   it('ignore une récompense pour une entité disparue', () => {
