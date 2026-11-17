@@ -2,6 +2,8 @@
 export { createHudView } from './hudView'
 export type { HudView } from './hudView'
 export type { HudState } from './hudModel'
+export { createMinimapView } from './minimapView'
+export type { MinimapMap, MinimapState, MinimapView } from './minimapView'
 export { createMissionPanelView } from './missionPanelView'
 export type { MissionPanelView } from './missionPanelView'
 export { createShopPanelView } from './shopPanelView'

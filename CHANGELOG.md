@@ -19,6 +19,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 
 ### Ajouté
 
+- Une mini-carte en haut à gauche : la ville autour du joueur, une flèche dans le sens de la marche ou de la voiture, et les repères (missions, concession, garage, atelier) ; un repère lointain apparaît au bord, dans sa direction (#65)
 - La ville est quatre fois plus grande (112 × 76 cases) : à l'est un quartier d'affaires et une banlieue autour d'un parc et de son étang, au sud la plage prolongée, la mer, et une île industrielle (entrepôts, parcs à conteneurs, quais) reliée par deux ponts ; des véhicules garés dans les nouveaux quartiers (#64)
 - Sept nouveaux véhicules, chacun avec sa silhouette et sa conduite : la Voiturette de golf, la Citadine électrique, le Pick-up et sa benne, le Taxi et son enseigne, la Limousine interminable, le Bus et la Patrouille avec ses gyrophares (pas encore de police). Ils sont garés en ville, et tous sauf la Patrouille sont en vente à la concession (#66)
 - L'atelier de Tonton, au coin de la place : on y entre au volant, la voiture tourne en vitrine, et on choisit parmi 9 emplacements (peinture, bandes de course, jantes, aileron, toit, pare-chocs, néons, moteur, pneus) ; un appui pour essayer, un second pour acheter, 0 pour revenir. Les pièces se voient sur la voiture (néons superbes la nuit), le moteur et les pneus changent la conduite, et tout est gardé au garage (#54)

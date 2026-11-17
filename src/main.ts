@@ -15,9 +15,18 @@ import { MISSION_REGISTRY } from './data/missions'
 import { VEHICLE_PART_REGISTRY } from './data/vehicleParts'
 import { WORKSHOP_REGISTRY } from './data/workshops'
 import { VEHICLE_REGISTRY } from './data/vehicles'
-import { CAMERA_LOOKAHEAD_MAX_PX, CAMERA_LOOKAHEAD_SECONDS, CAMERA_LOOKAHEAD_SMOOTHING, DAY_NIGHT_TRANSITION_SECONDS, GAME_SEED, HUD_PLACEHOLDER } from './game/constants'
+import {
+  CAMERA_LOOKAHEAD_MAX_PX,
+  CAMERA_LOOKAHEAD_SECONDS,
+  CAMERA_LOOKAHEAD_SMOOTHING,
+  DAY_NIGHT_TRANSITION_SECONDS,
+  GAME_SEED,
+  HUD_PLACEHOLDER,
+  MINIMAP_STYLE,
+  PLACE_MARKER_VIEW,
+} from './game/constants'
 import { createFixedStepLoop } from './game/fixedStepLoop'
-import { createHudView, createMissionPanelView, createShopPanelView, createTouchControlsView, formatMoney } from './game/hud'
+import { createHudView, createMinimapView, createMissionPanelView, createShopPanelView, createTouchControlsView, formatMoney } from './game/hud'
 import { chooseStartMode, createKeyboard, createTouchInput, parseControlsOverride, switchMode, toDriveCommand, toMoveCommand } from './game/input'
 import type { ControlMode } from './game/input'
 import { describeMissions } from './game/missionGuide'
@@ -89,6 +98,10 @@ async function start() {
   const lighting = createLighting(scene, renderer)
   const keyboard = createKeyboard(window)
   const hud = createHudView(document.body)
+  const minimap = createMinimapView(document.body, map)
+  // Le cap du joueur à pied, pour la flèche de la mini-carte : le sens de son dernier déplacement.
+  let walkHeading = { x: 0, y: -1 }
+  let lastFocus = { x: spawn.x, y: spawn.y }
   const placeMarkers = createPlaceMarkers(scene)
   const missionPanel = createMissionPanelView(document.body)
   // Les messages de mission : le panneau écoute la simulation, il ne décide de rien.
@@ -160,7 +173,8 @@ async function start() {
     if (help === null) return
     // Au toucher, l'aide passe en haut de l'écran : le bas est pris par les commandes.
     help.innerHTML = mode === 'touch' ? 'Joystick à gauche : se déplacer, conduire<br />Bouton rond : courir (à pied), frein à main (en voiture) · E : monter, descendre' : keyboardHelp
-    help.style.top = mode === 'touch' ? '10px' : 'auto'
+    // Au toucher, l'aide passe en haut, sous la mini-carte.
+    help.style.top = mode === 'touch' ? `calc(${MINIMAP_STYLE.margin + 12}px + min(${MINIMAP_STYLE.sizePx}px, 28vh))` : 'auto'
     help.style.bottom = mode === 'touch' ? 'auto' : '10px'
   }
   applyMode(mode)
@@ -221,7 +235,18 @@ async function start() {
     // En quittant l'atelier, le menu se referme ; tant qu'on y est, la voiture tourne en vitrine.
     if (shopGuide.showcase === undefined) workshopMenu = {}
     actors.setShowcase(shopGuide.showcase === undefined ? undefined : { vehicleId: shopGuide.showcase.vehicleId, preview: shopGuide.showcase.preview })
-    placeMarkers.update([...missionGuide.markers, ...shopGuide.markers], displaySeconds)
+    const markers = [...missionGuide.markers, ...shopGuide.markers]
+    placeMarkers.update(markers, displaySeconds)
+    // La mini-carte : les mêmes repères, et le joueur dans le sens de sa voiture ou de sa marche.
+    const moved = { x: focus.x - lastFocus.x, y: focus.y - lastFocus.y }
+    if (Math.abs(moved.x) + Math.abs(moved.y) > 0.3) walkHeading = moved
+    lastFocus = focus
+    minimap.update({
+      playerX: focus.x,
+      playerY: focus.y,
+      heading: vehicle?.vehicle !== undefined ? { x: vehicle.vehicle.headingX, y: vehicle.vehicle.headingY } : walkHeading,
+      markers: markers.map((marker) => ({ x: marker.x, y: marker.y, color: `#${PLACE_MARKER_VIEW.colors[marker.kind].toString(16).padStart(6, '0')}` })),
+    })
     missionPanel.update(missionGuide.panel)
     shopPanelView.update(shopPanel)
     // L'argent vient de la simulation (brique economy) ; la santé et la recherche n'existent pas encore : valeurs factices (HUD_PLACEHOLDER).

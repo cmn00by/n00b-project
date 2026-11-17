@@ -329,6 +329,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 - [ ] Mini-carte et carte complète avec marqueurs
 - [ ] Menu titre, pause, options (volume, touches)
 - [ ] Téléphone du joueur : messages des contacts, missions disponibles, appli parodique
+- [x] Mini-carte en haut à gauche : la ville autour du joueur, sa flèche, et les repères (missions, concession, garage, atelier) ramenés au bord quand ils sont loin (#65)
 - [ ] Notifications (mission réussie, recherche perdue, argent gagné)
 - [ ] Écran d'aide des commandes
 
