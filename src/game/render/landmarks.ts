@@ -1,4 +1,4 @@
-// Les bâtiments remarquables : la concession (une vitrine) et les garages (une porte basculante), chacun avec son enseigne.
+// Les bâtiments remarquables : la concession (une vitrine), les garages (une porte basculante) et les ateliers (une baie ouverte), chacun avec son enseigne.
 // Expose : createLandmarks(), Landmarks.
 // Pourquoi : on doit reconnaître de loin où acheter et où ranger ses voitures (bloc 19). Ces bâtiments sont des types de case à part
 // (showroom, garage) : ils sont construits ici, d'un seul tenant comme les immeubles, avec une façade dessinée par le code. La nuit, vitrine et enseigne s'allument.
@@ -94,6 +94,25 @@ const garageFront = (name: string): Painter => ({
   },
 })
 
+/** L'atelier : l'enseigne, et une large baie ouverte sur un intérieur sombre où brille un établi (côté rue, au sud). */
+const workshopFront = (name: string): Painter => ({
+  draw(context, glow, width, height) {
+    context.fillStyle = LANDMARK_VIEW.workshopWall
+    context.fillRect(0, 0, width, height)
+    const signTop = 2
+    paintSign(context, glow, name, signTop, width, LANDMARK_VIEW.workshopSign)
+    const bayTop = signTop + PIXEL_FONT_HEIGHT + 6
+    context.fillStyle = LANDMARK_VIEW.workshopInside
+    context.fillRect(3, bayTop, width - 6, height - bayTop)
+    // L'établi et ses outils, éclairés : on devine qu'on y bricole.
+    context.fillStyle = LANDMARK_VIEW.workshopTools
+    context.fillRect(6, height - 6, width - 12, 2)
+    for (let x = 8; x < width - 8; x += 5) context.fillRect(x, bayTop + 3, 1, 4)
+    glow.fillStyle = LANDMARK_VIEW.glassGlow
+    glow.fillRect(3, bayTop, width - 6, 2)
+  },
+})
+
 /** Les autres côtés : un mur simple, de la couleur du bâtiment. */
 const plainWall = (color: string): Painter => ({
   draw(context, _glow, width, height) {
@@ -126,6 +145,8 @@ export function createLandmarks(scene: THREE.Scene, map: TileMap, textures: Text
   }
 
   for (const block of findBuildingBlocks(map, 'showroom')) build(block, showroomFront(LANDMARK_VIEW.showroomName), LANDMARK_VIEW.showroomWall, LANDMARK_VIEW.showroomHeight, textures.roofs.verrieres)
+  for (const block of findBuildingBlocks(map, 'workshop'))
+    build(block, workshopFront(LANDMARK_VIEW.workshopName), LANDMARK_VIEW.workshopWall, LANDMARK_VIEW.workshopHeight, textures.roofs['beton-clim'])
   for (const block of findBuildingBlocks(map, 'garage')) build(block, garageFront(LANDMARK_VIEW.garageName), LANDMARK_VIEW.garageWall, LANDMARK_VIEW.garageHeight, textures.roofs.zinc)
 
   let currentNight = -1

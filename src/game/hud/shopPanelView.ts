@@ -5,11 +5,11 @@
 
 import { SHOP_PANEL_STYLE } from '../constants'
 
-/** Ce que le panneau affiche (la forme que produit describeShops) : un choix est actif s'il porte une commande. */
+/** Ce que le panneau affiche (la forme que produit describeShops) : un choix est actif s'il porte une commande ou une action d'interface. */
 export interface ShopPanelState {
   title: string
   hint: string
-  choices: Array<{ label: string; detail: string; command?: unknown }>
+  choices: Array<{ label: string; detail: string; command?: unknown; uiAction?: unknown }>
 }
 
 export interface ShopPanelView {
@@ -60,7 +60,7 @@ export function createShopPanelView(parent: HTMLElement): ShopPanelView {
       hint.textContent = panel.hint
       root.append(title, hint)
       panel.choices.forEach((choice, index) => {
-        const isActive = choice.command !== undefined
+        const isActive = choice.command !== undefined || choice.uiAction !== undefined
         const button = document.createElement('button')
         button.type = 'button'
         button.disabled = !isActive

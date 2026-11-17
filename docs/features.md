@@ -489,11 +489,12 @@ numéros de course) sont des images **générées par IA** puis pixelisées (cha
 - [x] Posséder des véhicules : la liste des véhicules du joueur (modèle + personnalisation), sauvegardable telle quelle (#53)
 - [x] **Concession** sur la carte (un repère comme les missions) : choisir un modèle, voir son prix et ses réglages, l'acheter (#53)
 - [x] **Garage** (lié à la planque du bloc 11) : y ranger un véhicule, en ressortir un ; un véhicule volé peut y être gardé (#53)
-- [ ] **Atelier** : peinture (palette, deux tons, bandes), jantes, aileron, galerie de toit, pare-buffle, pot d'échappement, néons sous la caisse (beaux de nuit), klaxons ridicules (#54)
-- [ ] **Performances** : moteur, freins, adhérence, qui modifient les réglages du modèle (bornés, en données) (#54)
+- [x] **Atelier** : peinture (palette), bandes de course, jantes, aileron, toit (galerie, enseigne de pizzeria), pare-buffle, néons sous la caisse (beaux de nuit) (#54)
+- [ ] Peinture deux tons, pot d'échappement, klaxons ridicules (avec l'audio, bloc 13)
+- [x] **Performances** : moteur, freins, adhérence, qui modifient les réglages du modèle (bornés, en données) (#54)
 - [x] Bâtiments à part pour la concession (vitrine, enseigne) et le garage (porte basculante, enseigne), qui s'allument la nuit (#53)
-- [ ] Écran d'atelier : aperçu de la voiture qui tourne, essai des pièces avant d'acheter (#54)
-- [ ] Pièces et prix en données (`src/data/vehicleParts/`), validés par les tests (#54)
+- [x] Écran d'atelier : aperçu de la voiture qui tourne, essai des pièces avant d'acheter (#54)
+- [x] Pièces et prix en données (`src/data/vehicleParts/`), validés par les tests (#54)
 - [ ] Autocollants générés par IA, à poser sur la voiture (#55)
 
 **Plus tard**

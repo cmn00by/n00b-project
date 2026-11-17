@@ -1,5 +1,6 @@
 // La concession et le garage décrits en données : où ils sont sur la carte, ce qu'on y vend, où l'on y gare.
-// Expose : ParkingSpot, DealershipOffer, DealershipDef, GarageDef, validateDealershipDef(), validateGaragePlaces(), validateDealershipPlaces().
+// Expose : ParkingSpot, DealershipOffer, DealershipDef, GarageDef, WorkshopDef, validateDealershipDef(), validateGaragePlaces(), validateDealershipPlaces(),
+// validateWorkshopPlaces().
 // Pourquoi : comme les missions, ce sont UNIQUEMENT des données (textes, cases, prix) : ajouter une concession ou changer un prix ne touche pas au code.
 // La brique garage les lit sans en connaître aucun par son nom.
 
@@ -42,6 +43,14 @@ export interface GarageDef extends ContentDef {
   parking: ParkingSpot
 }
 
+/** Un atelier : on y entre au volant, et on installe des pièces sur la voiture qu'on conduit. */
+export interface WorkshopDef extends ContentDef {
+  name: string
+  mapId: string
+  /** Là où la voiture doit se trouver (un repère le signale). */
+  place: MissionPlace
+}
+
 /** Vérifie une concession sans sa carte : au moins une offre, des modèles qui existent, des prix entiers positifs, pas de modèle en double. */
 export function validateDealershipDef(def: DealershipDef, vehicles: Registry<VehicleDef>): string[] {
   const errors: string[] = []
@@ -71,6 +80,13 @@ function checkPlaces(def: { mapId: string; place: MissionPlace }, spotLabel: str
 /** Vérifie que le lieu et la place de livraison d'une concession sont dans la carte, sur des cases libres. */
 export function validateDealershipPlaces(def: DealershipDef, map: TileMap): string[] {
   return checkPlaces(def, 'livraison', def.delivery, map)
+}
+
+/** Vérifie que le lieu d'un atelier est dans la carte, sur une case libre. */
+export function validateWorkshopPlaces(def: WorkshopDef, map: TileMap): string[] {
+  const errors: string[] = []
+  if (def.mapId !== map.mapId) errors.push(`se trouve sur '${def.mapId}', pas sur '${map.mapId}'`)
+  return [...errors, ...checkTile('lieu', def.place, map)]
 }
 
 /** Vérifie que le lieu et la place d'un garage sont dans la carte, sur des cases libres. */

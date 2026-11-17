@@ -5,6 +5,8 @@
 // Règle : un composant contient des données simples (nombres, textes, ids), jamais de fonction ni d'objet d'affichage (three.js),
 // pour que l'état complet se sauvegarde et s'envoie sur le réseau tel quel. Ajouter un type de composant est un ajout permis.
 
+import type { VehicleCustomization } from './vehiclePart'
+
 /** L'identifiant d'une entité. Une entité en référence une autre par son id, jamais par un pointeur. */
 export type EntityId = number
 
@@ -47,6 +49,7 @@ export interface Vehicle {
   driverId?: EntityId // l'entité au volant, s'il y en a une
   ownerId?: EntityId // le joueur à qui il appartient (acheté, ou volé puis rangé au garage)
   ownedKey?: number // son numéro dans la collection de ce joueur (OwnedVehicle.key)
+  customization?: VehicleCustomization // les pièces installées à l'atelier (absent : d'origine)
 }
 
 /** Une entité qui conduit un véhicule. Son corps est mis de côté pendant la conduite (elle est dans la voiture) et lui est rendu à la sortie. */
@@ -119,6 +122,8 @@ export interface OwnedVehicle {
   storedIn?: string
   /** L'entité du véhicule quand il est dans la ville. */
   entityId?: EntityId
+  /** Ses pièces, gardées pendant qu'il est rangé (dans la ville, elles sont sur son composant vehicle). */
+  customization?: VehicleCustomization
 }
 
 /** Les véhicules d'un joueur (brique garage). Des données simples, sauvegardables telles quelles. */

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { TUNING, createRegistry, createTestWorld, loadMap, spawnEntity, spawnVehicleEntity } from '../sim/core'
-import type { DealershipDef, EntityWith, GarageDef, TileMap, VehicleDef } from '../sim/core'
+import type { DealershipDef, EntityWith, GarageDef, TileMap, VehicleDef, VehiclePartDef, WorkshopDef } from '../sim/core'
 import { describeShops } from './shopGuide'
 
 const TILE = 32
@@ -15,7 +15,18 @@ const DEALERSHIP: DealershipDef = {
   offers: [{ modelId: 'auto', price: 100 }],
 }
 const GARAGE: GarageDef = { id: 'garage', name: 'Garage', mapId: 'test', place: { tileX: 15, tileY: 1 }, parking: { tileX: 15, tileY: 4, facing: 'right' } }
-const CONTENT = { vehicles: createRegistry('Véhicule', [CAR]), dealerships: createRegistry('Concession', [DEALERSHIP]), garages: createRegistry('Garage', [GARAGE]) }
+const WORKSHOP: WorkshopDef = { id: 'atelier', name: 'Atelier', mapId: 'test', place: { tileX: 8, tileY: 4 } }
+const PARTS: VehiclePartDef[] = [
+  { id: 'rose', name: 'Rose', slot: 'paint', price: 60, color: '#ff6fa8' },
+  { id: 'or', name: 'Or', slot: 'paint', price: 900, color: '#ffd23f' },
+]
+const CONTENT = {
+  vehicles: createRegistry('Véhicule', [CAR]),
+  dealerships: createRegistry('Concession', [DEALERSHIP]),
+  garages: createRegistry('Garage', [GARAGE]),
+  workshops: createRegistry('Atelier', [WORKSHOP]),
+  parts: createRegistry('Pièce', PARTS),
+}
 const center = (tile: number) => (tile + 0.5) * TILE
 
 function scene(tileX: number, money = 300) {
@@ -29,7 +40,7 @@ describe('describeShops', () => {
   it('montre toujours les repères de la concession et du garage, sans panneau loin d’eux', () => {
     const { world, player } = scene(8)
     const guide = describeShops(world, player, CONTENT)
-    expect(guide.markers.map((marker) => marker.kind)).toEqual(['dealership', 'garage'])
+    expect(guide.markers.map((marker) => marker.kind)).toEqual(['workshop', 'dealership', 'garage'])
     expect(guide.panel).toBeUndefined()
   })
 
@@ -54,9 +65,51 @@ describe('describeShops', () => {
     ])
   })
 
-  it('pas de panneau au volant', () => {
+  it('pas de panneau de concession au volant', () => {
     const { world, player } = scene(2)
     player.driver = { vehicleId: 9, storedBody: { width: 24, height: 24, isSolid: true } }
     expect(describeShops(world, player, CONTENT).panel).toBeUndefined()
+  })
+})
+
+describe('describeShops : l’atelier', () => {
+  function inWorkshop() {
+    const { world, player } = scene(8)
+    player.position.y = center(4)
+    const car = spawnVehicleEntity(world, CAR, center(8), center(4), 'right')
+    player.driver = { vehicleId: car.id, storedBody: { width: 24, height: 24, isSolid: true } }
+    return { world, player, car }
+  }
+
+  it('au volant dans l’atelier : un choix par emplacement, et la voiture en vitrine', () => {
+    const { world, player, car } = inWorkshop()
+    const guide = describeShops(world, player, CONTENT)
+    expect(guide.panel?.choices).toHaveLength(9)
+    expect(guide.panel?.choices[0]).toEqual({ label: 'Peinture', detail: 'd’origine', uiAction: { kind: 'open-slot', slot: 'paint' } })
+    expect(guide.showcase).toEqual({ vehicleId: car.id, preview: undefined })
+  })
+
+  it('dans un emplacement : un appui pour essayer, un second pour acheter, et Retour', () => {
+    const { world, player } = inWorkshop()
+    const opened = describeShops(world, player, CONTENT, { slot: 'paint' }).panel?.choices
+    expect(opened?.[0]).toEqual({ label: 'Rose', detail: '60 € · essayer', uiAction: { kind: 'preview', partId: 'rose' } })
+    expect(opened?.at(-1)?.uiAction).toEqual({ kind: 'back' })
+    const tried = describeShops(world, player, CONTENT, { slot: 'paint', previewPartId: 'rose' })
+    expect(tried.panel?.choices[0]?.command).toEqual({ type: 'workshop:install', entityId: player.id, workshopId: 'atelier', partId: 'rose' })
+    expect(tried.showcase?.preview).toEqual({ paint: 'rose' })
+  })
+
+  it('une pièce trop chère s’essaie, mais ne s’achète pas', () => {
+    const { world, player } = inWorkshop()
+    const tried = describeShops(world, player, CONTENT, { slot: 'paint', previewPartId: 'or' }).panel?.choices[1]
+    expect(tried).toEqual({ label: 'Or', detail: '900 € (trop cher)', command: undefined })
+  })
+
+  it('propose de remettre d’origine un emplacement équipé', () => {
+    const { world, player, car } = inWorkshop()
+    car.vehicle!.customization = { paint: 'rose' }
+    const choices = describeShops(world, player, CONTENT, { slot: 'paint' }).panel?.choices
+    expect(choices?.[0]).toEqual({ label: 'Rose', detail: 'installée' })
+    expect(choices?.[2]?.command).toEqual({ type: 'workshop:remove', entityId: player.id, workshopId: 'atelier', slot: 'paint' })
   })
 })

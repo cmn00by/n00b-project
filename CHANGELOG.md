@@ -19,6 +19,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 
 ### Ajouté
 
+- L'atelier de Tonton, au coin de la place : on y entre au volant, la voiture tourne en vitrine, et on choisit parmi 9 emplacements (peinture, bandes de course, jantes, aileron, toit, pare-chocs, néons, moteur, pneus) ; un appui pour essayer, un second pour acheter, 0 pour revenir. Les pièces se voient sur la voiture (néons superbes la nuit), le moteur et les pneus changent la conduite, et tout est gardé au garage (#54)
 - La concession et le garage : deux nouveaux bâtiments (Bon Plan Auto au parking du centre-ville, avec sa vitrine et son enseigne ; un garage à porte basculante chez les pavillons), qui s'allument la nuit. À la concession, on achète la Mamie, la Livreuse ou la Frimeuse (touches 1 à 9 ou un clic) : la voiture attend au parking. Au garage, on range la voiture garée devant (même volée : elle devient à soi) et on la ressort plus tard (#53)
 - L'argent est réel : on commence avec 120 €, une mission réussie verse sa récompense, et le HUD affiche le vrai solde ; les futures boutiques paieront par la commande `economy:spend`, refusée s'il manque de l'argent (#52)
 - Les missions : un repère jaune marque leur départ, on y entre pour les lancer ; un repère turquoise montre où aller, un panneau affiche la consigne et le chrono ; réussite, échec (chrono écoulé) ou abandon. Une mission d'essai : récupérer un colis au parking et le livrer au port en deux minutes. Les missions s'écrivent en données, sans coder (`docs/missions.md`) (#9)
@@ -32,6 +33,10 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 - Bible visuelle en Gemini 3 Pro : 7 planches de référence (personnages, animation, portraits, véhicules, sol, bâtiments, scène) et leurs prompts (#4)
 - Le HUD : en haut à droite, la santé (cœurs), la recherche (trois étoiles) et l'argent, en petites icônes pixel art ; valeurs factices pour l'instant, en attendant que la simulation les fournisse (#11)
 - Commandes tactiles : sur téléphone, un joystick qui apparaît sous le pouce gauche pour marcher et conduire, un bouton rond (courir à pied, frein à main en voiture) et un bouton « E » pour monter et descendre ; le jeu reconnaît tout seul un écran tactile et suit la dernière entrée utilisée (un toucher, une touche) ; `?controls=touch` ou `?controls=keyboard` force le mode (#20)
+
+### Corrigé
+
+- Une voiture rangée au garage ne reste plus affichée dans la rue (#54)
 
 ### Modifié
 
