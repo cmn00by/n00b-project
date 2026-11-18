@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { TUNING, createRegistry, createSimulation, createTestWorld, findEntitiesWith, loadMap, spawnEntity } from '../../core'
+import { TUNING, createRegistry, createRng, createSimulation, createTestWorld, findEntitiesWith, loadMap, spawnEntity } from '../../core'
 import type { Command, NpcTypeDef, ReactionWeights, Simulation, World } from '../../core'
 import { createPedestriansSystem } from './pedestriansSystem'
 import { makeTestMap } from './testMap'
@@ -361,6 +361,220 @@ describe('réactions variées', () => {
       runAtPedestrian(simulation, player.id, 3)
       const states = new Set(crowd.map((pedestrian) => pedestrian.pedestrian?.state))
       expect(states.size).toBeGreaterThan(1)
+    })
+  })
+})
+
+describe('projeté par un véhicule', () => {
+  const PEDESTRIAN_X = 20 * 32 + 16
+
+  function spawnCar(world: World, x: number, y: number, vx: number, vy: number) {
+    return spawnEntity(world, 'vehicle', { position: { x, y, angle: 0 }, velocity: { vx, vy }, body: { width: 40, height: 20, isSolid: true }, vehicle: { modelId: 'test', headingX: 1, headingY: 0 } })
+  }
+
+  /** Un monde sans naissance, un seul piéton posé à (x, y), et un véhicule qui roule exactement sur lui. */
+  const ANGRY_ONLY: ReactionWeights = { stare: 0, curious: 0, filming: 0, angry: 1 }
+
+  function makeHitScene(rows: readonly string[], carVelocity: { vx: number; vy: number }, pedestrianState = 'walking', start = { x: PEDESTRIAN_X, y: 48 }, weights: ReactionWeights = ANGRY_ONLY) {
+    const world = createTestWorld()
+    loadMap(world, makeTestMap(rows))
+    const base = createPedestrian(PASSANT, world.rng)
+    const pedestrian = spawnEntity(world, 'pedestrian', { position: { x: start.x, y: start.y, angle: 0 }, pedestrian: { ...base, state: pedestrianState, heading: { x: 1, y: 0 } } })
+    const car = spawnCar(world, start.x, start.y, carVelocity.vx, carVelocity.vy)
+    const simulation = createSimulation(world, [createPedestriansSystem(createRegistry('Type de PNJ', [{ ...PASSANT, reactionWeights: weights }]))])
+    const hits: { entityId: number; vehicleId: number; impactSpeed: number }[] = []
+    world.events.on('pedestrian:hit', (hit) => hits.push(hit))
+    // Après le choc la voiture est déjà loin : elle ne fonce plus sur le piéton (sinon il resterait en colère contre elle).
+    const carDrivesAway = (): void => {
+      if (car.velocity !== undefined) car.velocity = { vx: 0, vy: 0 }
+    }
+    return { world, pedestrian, car, simulation, hits, carDrivesAway }
+  }
+
+  /** Avance jusqu'à ce que le piéton reprenne sa promenade, en notant chaque état traversé. Renvoie la liste des états, sans doublons consécutifs. */
+  function runUntilWalking(simulation: Simulation, state: () => string | undefined, maxSteps = 600): string[] {
+    const seen: string[] = []
+    for (let step = 0; step < maxSteps; step++) {
+      simulation.step()
+      const current = state()
+      if (current !== undefined && seen[seen.length - 1] !== current) seen.push(current)
+      if (current === 'walking' && seen.length > 1) break
+    }
+    return seen
+  }
+
+  it('un véhicule qui roule projette le piéton qu’il touche, et annonce le choc', () => {
+    withTuning({ maxCount: 0, launchSpread: 0, launchPowerJitter: 0 }, () => {
+      const { pedestrian, car, simulation, hits } = makeHitScene(STREET_ROWS, { vx: 300, vy: 0 })
+      simulation.step()
+      expect(pedestrian.pedestrian?.state).toBe('launched')
+      expect(hits).toEqual([{ entityId: pedestrian.id, vehicleId: car.id, impactSpeed: 300 }])
+      for (let step = 0; step < 15; step++) simulation.step()
+      // Sans écart aléatoire, il vole pile dans le sens du véhicule.
+      expect((pedestrian.position?.x ?? 0) - PEDESTRIAN_X).toBeGreaterThan(30)
+      expect(pedestrian.position?.y).toBe(48)
+    })
+  })
+
+  it('vole à peu près dans le sens du véhicule, avec un petit écart qui change d’un choc à l’autre', () => {
+    withTuning({ maxCount: 0 }, () => {
+      const landings = [1, 2, 3, 4, 5, 6].map((seed) => {
+        const { world, pedestrian, simulation } = makeHitScene(['r'.repeat(60), 'r'.repeat(60), 'r'.repeat(60)], { vx: 300, vy: 0 })
+        world.rng = createRng(seed)
+        for (let step = 0; step < 21; step++) simulation.step()
+        return { dx: (pedestrian.position?.x ?? 0) - PEDESTRIAN_X, dy: (pedestrian.position?.y ?? 0) - 48 }
+      })
+      for (const landing of landings) expect(landing.dx).toBeGreaterThan(Math.abs(landing.dy) * 2)
+      expect(new Set(landings.map((landing) => Math.round(landing.dy))).size).toBeGreaterThan(2)
+    })
+  })
+
+  it('ne touche pas au véhicule : ni sa position ni sa vitesse', () => {
+    withTuning({ maxCount: 0 }, () => {
+      const { car, simulation } = makeHitScene(STREET_ROWS, { vx: 300, vy: -20 })
+      for (let step = 0; step < 40; step++) simulation.step()
+      expect(car.position).toEqual({ x: PEDESTRIAN_X, y: 48, angle: 0 })
+      expect(car.velocity).toEqual({ vx: 300, vy: -20 })
+    })
+  })
+
+  it('un véhicule à l’arrêt ou trop lent ne projette personne', () => {
+    withTuning({ maxCount: 0 }, () => {
+      for (const speed of [0, T.hitMinSpeed - 1]) {
+        const { pedestrian, simulation, hits } = makeHitScene(STREET_ROWS, { vx: speed, vy: 0 })
+        for (let step = 0; step < 20; step++) simulation.step()
+        expect(hits).toEqual([])
+        expect(pedestrian.pedestrian?.state).not.toBe('launched')
+      }
+    })
+  })
+
+  it('est projeté plus loin par un véhicule plus rapide', () => {
+    withTuning({ maxCount: 0 }, () => {
+      const distances = [100, 400].map((speed) => {
+        const { pedestrian, simulation } = makeHitScene(STREET_ROWS, { vx: speed, vy: 0 })
+        for (let step = 0; step < 60; step++) simulation.step()
+        return (pedestrian.position?.x ?? 0) - PEDESTRIAN_X
+      })
+      expect(distances[1]).toBeGreaterThan((distances[0] ?? 0) + 20)
+    })
+  })
+
+  it('même en train de fuir, un piéton touché est projeté', () => {
+    withTuning({ maxCount: 0 }, () => {
+      const { pedestrian, simulation, hits } = makeHitScene(STREET_ROWS, { vx: 300, vy: 0 }, 'fleeing')
+      simulation.step()
+      expect(pedestrian.pedestrian?.state).toBe('launched')
+      expect(hits).toHaveLength(1)
+    })
+  })
+
+  it('enchaîne : projeté, au sol, il se relève et râle, puis reprend sa promenade (un seul choc annoncé)', () => {
+    withTuning({ maxCount: 0, launchSpread: 0 }, () => {
+      const { pedestrian, simulation, hits, carDrivesAway } = makeHitScene(STREET_ROWS, { vx: 300, vy: 0 })
+      simulation.step()
+      carDrivesAway()
+      const states = runUntilWalking(simulation, () => pedestrian.pedestrian?.state)
+      expect(states).toEqual(['launched', 'down', 'angry', 'walking'])
+      expect(hits).toHaveLength(1)
+      expect(pedestrian.pedestrian?.flight).toBeUndefined()
+    })
+  })
+
+  it('se relève selon son type : râle, filme ou reste sonné à regarder', () => {
+    withTuning({ maxCount: 0, launchSpread: 0 }, () => {
+      const cases: [ReactionWeights, string][] = [
+        [{ stare: 0, curious: 0, filming: 0, angry: 1 }, 'angry'],
+        [{ stare: 0, curious: 0, filming: 1, angry: 0 }, 'filming'],
+        [{ stare: 1, curious: 0, filming: 0, angry: 0 }, 'noticing'],
+      ]
+      for (const [weights, expected] of cases) {
+        const { pedestrian, simulation, carDrivesAway } = makeHitScene(STREET_ROWS, { vx: 300, vy: 0 }, 'walking', { x: PEDESTRIAN_X, y: 48 }, weights)
+        simulation.step()
+        carDrivesAway()
+        const states = runUntilWalking(simulation, () => pedestrian.pedestrian?.state)
+        expect(states).toEqual(['launched', 'down', expected, 'walking'])
+      }
+    })
+  })
+
+  it('un type qui ne fait que de la curiosité râle en se relevant : il n’y a plus rien vers quoi s’approcher', () => {
+    withTuning({ maxCount: 0, launchSpread: 0 }, () => {
+      const { pedestrian, simulation, carDrivesAway } = makeHitScene(STREET_ROWS, { vx: 300, vy: 0 }, 'walking', { x: PEDESTRIAN_X, y: 48 }, { stare: 0, curious: 1, filming: 0, angry: 0 })
+      simulation.step()
+      carDrivesAway()
+      expect(runUntilWalking(simulation, () => pedestrian.pedestrian?.state)).toEqual(['launched', 'down', 'angry', 'walking'])
+    })
+  })
+
+  it('deux piétons du même type ne se relèvent pas tous pareil', () => {
+    withTuning({ maxCount: 0 }, () => {
+      const reactions = new Set<string | undefined>()
+      for (let seed = 1; seed <= 12; seed++) {
+        const { world, pedestrian, simulation, carDrivesAway } = makeHitScene(STREET_ROWS, { vx: 300, vy: 0 }, 'walking', { x: PEDESTRIAN_X, y: 48 }, { stare: 1, curious: 0, filming: 1, angry: 1 })
+        world.rng = createRng(seed)
+        simulation.step()
+        carDrivesAway()
+        while (pedestrian.pedestrian?.state !== 'down') simulation.step()
+        while (pedestrian.pedestrian?.state === 'down') simulation.step()
+        reactions.add(pedestrian.pedestrian?.state)
+      }
+      expect(reactions.size).toBeGreaterThan(1)
+    })
+  })
+
+  it('reste immobile au sol', () => {
+    withTuning({ maxCount: 0 }, () => {
+      const { pedestrian, simulation } = makeHitScene(STREET_ROWS, { vx: 300, vy: 0 })
+      while (pedestrian.pedestrian?.state !== 'down') simulation.step()
+      const landedX = pedestrian.position?.x
+      for (let step = 0; step < 10; step++) simulation.step()
+      expect(pedestrian.pedestrian?.state).toBe('down')
+      expect(pedestrian.position?.x).toBe(landedX)
+    })
+  })
+
+  it('est arrêté par un mur : il ne le traverse jamais', () => {
+    withTuning({ maxCount: 0 }, () => {
+      const { pedestrian, simulation } = makeHitScene(['rrrrrrrrrr', 'ssssss#sss', 'rrrrrrrrrr'], { vx: 300, vy: 0 }, 'walking', { x: 4 * 32 + 16, y: 48 })
+      for (let step = 0; step < 60; step++) {
+        simulation.step()
+        expect(pedestrian.position?.x ?? 0).toBeLessThanOrEqual(6 * 32 - T.bodySize / 2)
+      }
+    })
+  })
+
+  it('projeté sur la route, il revient sur le trottoir le plus proche puis reprend sa promenade', () => {
+    withTuning({ maxCount: 0 }, () => {
+      // Le véhicule va vers le bas : le piéton atterrit sur la route, sous le trottoir.
+      const { pedestrian, simulation, carDrivesAway } = makeHitScene(STREET_ROWS, { vx: 0, vy: 300 })
+      simulation.step()
+      carDrivesAway()
+      const states = runUntilWalking(simulation, () => pedestrian.pedestrian?.state)
+      expect(states).toEqual(['launched', 'down', 'angry', 'returning', 'walking'])
+      const tile = getTileAt(makeTestMap(STREET_ROWS), pedestrian.position?.x ?? 0, pedestrian.position?.y ?? 0)
+      expect(tile.tileY).toBe(1)
+    })
+  })
+
+  it('quitte la ville quand aucun trottoir n’est assez près pour y revenir', () => {
+    withTuning({ maxCount: 0 }, () => {
+      const { world, pedestrian, simulation, carDrivesAway } = makeHitScene(['r'.repeat(60), 'r'.repeat(60), 'r'.repeat(60)], { vx: 300, vy: 0 })
+      simulation.step()
+      carDrivesAway()
+      for (let step = 0; step < 400; step++) simulation.step()
+      expect(world.entities[pedestrian.id]).toBeUndefined()
+    })
+  })
+
+  it('donne la même scène avec la même graine', () => {
+    withTuning({ maxCount: 0 }, () => {
+      const replay = () => {
+        const { pedestrian, simulation } = makeHitScene(STREET_ROWS, { vx: 0, vy: 300 })
+        for (let step = 0; step < 250; step++) simulation.step()
+        return { ...pedestrian.position, state: pedestrian.pedestrian?.state }
+      }
+      expect(replay()).toEqual(replay())
     })
   })
 })

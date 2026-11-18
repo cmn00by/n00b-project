@@ -65,3 +65,17 @@ describe('computeArmAngles', () => {
     expect(first[0]).not.toBeCloseTo(later[0])
   })
 })
+
+describe('computeArmAngles : projeté et au sol', () => {
+  it('agite les bras levés en l’air', () => {
+    const [left, right] = computeArmAngles('launched', 0, 0.05, PEDESTRIAN_VIEW)
+    expect(left).toBeGreaterThan(Math.PI / 2)
+    expect(right).toBeGreaterThan(Math.PI / 2)
+    expect(computeArmAngles('launched', 0, 0.2, PEDESTRIAN_VIEW)).not.toEqual([left, right])
+  })
+
+  it('laisse les bras ballants au sol, sans bouger', () => {
+    expect(computeArmAngles('down', 0, 0, PEDESTRIAN_VIEW)).toEqual(computeArmAngles('down', 0.5, 3, PEDESTRIAN_VIEW))
+    expect(Math.abs(computeArmAngles('down', 0, 0, PEDESTRIAN_VIEW)[0])).toBeLessThan(1)
+  })
+})

@@ -36,6 +36,15 @@ export const TUNING = {
     curiousStopDistance: 60, // un curieux s'approche jusqu'à cette distance de ce qui l'intrigue, puis s'arrête pour regarder, en px
     filmingSeconds: 4, // un piéton qui filme garde son téléphone levé au moins cette durée, en secondes
     angrySeconds: 2.5, // un piéton qui râle continue au moins cette durée, en secondes
+    hitMinSpeed: 40, // un véhicule qui roule au moins à cette vitesse projette le piéton qu'il touche, en px par seconde (à l'arrêt, il ne fait rien)
+    launchSpeedFactor: 0.9, // la vitesse de départ du piéton projeté, en proportion de celle du véhicule
+    launchMinSpeed: 120, // vitesse de départ minimale d'un piéton projeté, en px par seconde (même un véhicule lent le pousse)
+    launchMaxSpeed: 300, // ...et maximale : un véhicule très rapide ne l'envoie pas à l'autre bout de la ville
+    launchSeconds: 0.7, // durée du vol d'un piéton projeté (sa vitesse décroît jusqu'à zéro), en secondes
+    downSeconds: 1.2, // temps qu'il reste au sol après l'atterrissage, en secondes
+    launchSpread: 0.3, // écart aléatoire de la direction du vol, de part et d'autre du sens du véhicule : 0.3 ≈ ±17°. 0 = toujours pile dans son sens
+    launchPowerJitter: 0.15, // écart aléatoire de la vitesse de départ : 0.15 = ±15 % (avant les bornes min et max). 0 = toujours la même force
+    returnSearchTiles: 8, // jusqu'à cette distance (en cases) il cherche un trottoir où retourner ; sinon il quitte la ville
     spawnTries: 24, // nombre d'endroits tirés au hasard pour faire naître un piéton avant de laisser tomber (jusqu'à la prochaine tentative)
     walkableTileKinds: ['sidewalk'], // les types de case sur lesquels les piétons marchent (ids de src/data/tileKinds)
   },
