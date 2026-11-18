@@ -5,6 +5,45 @@ Une nouvelle décision s'ajoute **en haut**. Une décision remise en cause n'est
 
 ---
 
+## 2026-11-16 : Personnalisation des véhicules et du personnage : voxel en données, autocollants générés
+
+**Choix** : un véhicule personnalisé et le personnage du joueur sont des **recettes en données** (couleurs, pièces, tenue) que l'affichage assemble en blocs, comme les piétons.
+Les **autocollants** (logos, flammes, numéros) sont des images **générées par IA** puis pixelisées, plaquées sur les faces de la voiture. Blocs 19 et 20 de `features.md`.
+
+**Raison** : toutes les combinaisons sans dessiner une image par variante ; des recettes qui se sauvegardent et s'envoient sur le réseau (coop) ; des pièces qui s'ajoutent en données.
+
+**Alternatives écartées** : des sprites générés par variante (une image par couleur et par pièce : impossible à combiner, et une image plate tourne mal dans la vue 3D) ;
+des modèles 3D détaillés (hors du style pixel art, et chers à produire).
+
+---
+
+## 2026-11-16 : Les missions en données, et une brique par sorte d'objectif
+
+**Choix** : une mission est une **fiche en JSON pur** (`MissionDef` dans `sim/core/mission.ts` : départ, objectifs, chronos, récompense), écrite dans `src/data/missions/` en TypeScript
+pour être vérifiée par le compilateur. Le moteur (brique `missions`) reçoit leur registre et n'en connaît aucune par son nom. Chaque **sorte d'objectif** (`reach`, `pickup`, `deliver`)
+est un petit module de `missions/objectives/`. L'avancement est un composant du joueur (`missionProgress`), les chronos se comptent en pas de simulation.
+La récompense est **annoncée** par l'événement `mission:succeeded` ; l'argent viendra avec la brique d'économie.
+
+**Raison** : écrire une mission sans toucher au moteur (#13), la valider par les tests (cases dans la carte, objet livré après avoir été ramassé), et garder un état sauvegardable et partageable (coop).
+
+**Alternatives écartées** : des fichiers `.json` chargés à l'exécution (pas de vérification du compilateur, et rien à gagner tant qu'il n'y a pas d'éditeur) ; un script par mission
+(du code au lieu de données : impossible à éditer depuis le futur panneau admin) ; l'avancement dans une entité « mission » séparée (plus de liens à suivre pour rien).
+
+---
+
+## 2026-11-16 : Mise en ligne par Workers Builds, /api/ réservé aux salons multijoueurs
+
+**Choix** : un seul Worker (`n00b-project`) sert le jeu (`dist/`, en assets statiques) et réserve les adresses **`/api/`** au serveur du jeu.
+Le déploiement passe par **Workers Builds** (l'intégration Git de Cloudflare) : merge sur `main` = mise en ligne, autre branche = adresse de preview commentée sur la PR.
+Les parties à plusieurs passeront par `/api/salons/<code>` : **un Durable Object par salon**, où arrivent toutes les connexions du même code (2 à 4 joueurs, et la reconnexion).
+
+**Raison** : aucun secret à gérer dans GitHub, des previews sans rien écrire, et une seule adresse pour le jeu et son serveur (pas de souci de CORS ni de domaines multiples le jour du multijoueur).
+
+**Alternatives écartées** : GitHub Actions avec un jeton Cloudflare (un secret de plus, des previews à coder soi-même) ; Cloudflare Pages (les Workers le remplacent, et les Durable Objects y sont moins simples) ;
+un Worker séparé pour l'API (deux adresses, deux déploiements à garder synchrones).
+
+---
+
 ## 2026-11-16 : Les piétons : types en données pures, personnages voxel assemblés par le code
 
 **Choix** : un type de PNJ est une **fiche en JSON pur** (`NpcTypeDef` : vitesses, plages de courage, de patience et de pause, et une recette d'apparence `look`), sans aucune fonction.

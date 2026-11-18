@@ -13,4 +13,5 @@ export const deliveryVan: VehicleDef = {
   turnRate: 2,
   grip: 7,
   handbrakeGrip: 1.8,
+  look: { color: '#f2efe6', bodyHeight: 10, cabin: { length: 0.68, offset: 0.12, height: 12 } },
 }

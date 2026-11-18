@@ -6,6 +6,7 @@
 // Un écouteur ne suppose jamais qu'un autre écouteur existe.
 
 import type { EntityId } from './components'
+import type { VehiclePartSlot } from './vehiclePart'
 
 /**
  * Le catalogue de tous les événements du jeu : leur nom et les données qu'ils transportent.
@@ -22,6 +23,32 @@ export interface GameEvents {
   'vehicle:entered': { vehicleId: EntityId; driverId: EntityId }
   /** Une entité est descendue d'un véhicule (brique driving). */
   'vehicle:exited': { vehicleId: EntityId; driverId: EntityId }
+  /** Un joueur a commencé une mission (brique missions). */
+  'mission:started': { entityId: EntityId; missionId: string }
+  /** Un joueur a rempli un objectif de sa mission (brique missions). objectiveIndex : son rang, à partir de 0. */
+  'mission:objective-completed': { entityId: EntityId; missionId: string; objectiveIndex: number }
+  /** Un joueur a réussi sa mission (brique missions). L'économie, quand elle existera, versera `money`. */
+  'mission:succeeded': { entityId: EntityId; missionId: string; money: number }
+  /** La mission d'un joueur a échoué (brique missions) : chrono écoulé, ou abandon. */
+  'mission:failed': { entityId: EntityId; missionId: string; reason: 'time-out' | 'abandoned' }
+  /** De l'argent a été gagné (brique economy). balance : le nouveau solde. */
+  'economy:earned': { entityId: EntityId; amount: number; reason: string; balance: number }
+  /** De l'argent a été dépensé (brique economy). */
+  'economy:spent': { entityId: EntityId; amount: number; reason: string; balance: number }
+  /** Un véhicule a été acheté et attend sur la place de livraison (brique garage). */
+  'garage:bought': { entityId: EntityId; dealershipId: string; modelId: string; price: number; vehicleId: EntityId }
+  /** Un véhicule a été rangé au garage (brique garage). wasStolen : il n'appartenait pas encore au joueur, il est désormais à lui. */
+  'garage:stored': { entityId: EntityId; garageId: string; modelId: string; vehicleKey: number; wasStolen: boolean }
+  /** Un véhicule est sorti du garage (brique garage). */
+  'garage:taken-out': { entityId: EntityId; garageId: string; modelId: string; vehicleKey: number; vehicleId: EntityId }
+  /** Une action de concession, de garage ou d'atelier a été refusée (brique garage) : `why` le dit au joueur. */
+  'garage:refused': { entityId: EntityId; action: 'buy' | 'store' | 'take-out' | 'install' | 'remove'; why: string }
+  /** Une pièce a été installée à l'atelier (brique garage). */
+  'workshop:installed': { entityId: EntityId; vehicleId: EntityId; partId: string; price: number }
+  /** Un emplacement a été remis d'origine à l'atelier (brique garage). */
+  'workshop:removed': { entityId: EntityId; vehicleId: EntityId; slot: VehiclePartSlot }
+  /** Une dépense a été refusée : pas assez d'argent (brique economy). Le solde n'a pas changé. */
+  'economy:refused': { entityId: EntityId; amount: number; reason: string; balance: number }
 }
 
 /** Une fonction appelée quand l'événement a lieu. */

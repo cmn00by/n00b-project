@@ -41,14 +41,14 @@ Le jeu tourne avec des formes de couleur, sans visuels.
 
 **Phase 3 : une ville vivante**
 
-- [ ] #9 Moteur de missions (cmn00by)
+- [x] #9 Moteur de missions (cmn00by)
 - [x] #11 HUD (Baghorror12)
-- [ ] #21 Clavier ZQSD = WASD (Baghorror12)
+- [x] #21 Clavier ZQSD = WASD (Baghorror12)
 - [x] #20 Commandes tactiles (Baghorror12)
 
 **Phase 4 : en ligne**
 
-- [ ] #12 Mise en ligne sur Cloudflare (cmn00by)
+- [x] #12 Mise en ligne sur Cloudflare (cmn00by) : repo connecté, chaque merge sur `main` met le jeu en ligne (`docs/deploiement.md`)
 - [ ] #13 Première mission (Baghorror12)
 
 **Fini quand** : on lance le jeu en ligne, on marche, on vole une voiture, on dérape, les piétons fuient, et on réussit une livraison.
@@ -64,7 +64,8 @@ Le jeu tourne avec des formes de couleur, sans visuels.
 
 ## ⏳ V1 : solo
 
-Voir les cases **V1** de chaque bloc dans [features.md](features.md) : 4 quartiers, trafic, environnement interactif, police, missions, dialogues, interface, progression, sauvegarde, audio, admin.
+Voir les cases **V1** de chaque bloc dans [features.md](features.md) : 4 quartiers, trafic, environnement interactif, police, missions, dialogues, interface, progression, sauvegarde, audio, admin,
+**garage** (acheter et personnaliser ses véhicules) et **personnage** (création et garde-robe).
 
 ## ⏳ V2 : coop · V3 : mini online · Mobile
 

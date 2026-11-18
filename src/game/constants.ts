@@ -4,13 +4,6 @@
 /** Graine de la partie. Fixe pendant le prototype pour que deux lancements donnent la même partie ; une graine variable viendra avec les nouvelles parties. */
 export const GAME_SEED = 2026
 
-/** Couleur provisoire de chaque modèle de véhicule (id de src/data/vehicles), d'après la bible visuelle. */
-export const VEHICLE_COLORS: Readonly<Record<string, number>> = {
-  'mamie-car': 0x8ed4b4, // vert menthe pastel
-  'delivery-van': 0xf2efe6, // blanc
-  'sports-car': 0xffd23f, // jaune vif
-}
-
 /** Couleur d'un véhicule dont le modèle n'a pas (encore) de couleur : un rose voyant, pour qu'on la remarque. */
 export const MISSING_VEHICLE_COLOR = 0xff6fa8
 
@@ -32,13 +25,13 @@ export const DAY_NIGHT_TRANSITION_SECONDS = 1.6
 export const LAMP_GLOW_COLOR = 0xffc870
 
 /**
- * Le HUD : santé, argent, recherche. Ces systèmes n'existent pas encore dans la simulation (blocs 7 et 11) : en attendant, le HUD affiche ces valeurs factices.
+ * Le HUD : santé, argent, recherche. L'argent vient de la simulation (brique economy, #52) ; la santé et la recherche n'existent pas encore (bloc 7) :
+ * en attendant, le HUD affiche ces valeurs factices.
  * Quand ils existeront, seul ce qui fournit l'état au HUD change (main.ts), pas l'affichage.
  */
 export const HUD_PLACEHOLDER = {
   health: 3, // points de vie factices
   maxHealth: 5, // points de vie au maximum
-  money: 120, // argent factice, en euros
   wantedLevel: 1, // niveau de recherche factice, de 0 à maxWantedLevel
   maxWantedLevel: 3, // la jauge de recherche a 3 niveaux (docs/GDD.md)
 } as const
@@ -52,6 +45,88 @@ export const HUD_STYLE = {
   emptyColor: '#6f6488', // une icône vide (cœur perdu, étoile pas encore gagnée)
   iconScale: 3, // taille d'une « case » des icônes pixel art, en pixels d'écran
   margin: 12, // distance au bord de l'écran
+} as const
+
+/** Les repères sur la carte (missions, concession, garage) : un anneau au sol, une colonne de lumière et un losange qui flotte. */
+export const PLACE_MARKER_VIEW = {
+  // Une couleur de la palette par sorte de lieu.
+  colors: {
+    start: 0xffd23f, // un départ de mission (jaune)
+    objective: 0x2ec4b6, // l'objectif en cours (turquoise)
+    dealership: 0x3a86ff, // une concession (bleu)
+    garage: 0x8e5ce0, // un garage (violet)
+    workshop: 0xf28c28, // un atelier (orange)
+  },
+  // Les sortes de lieu qui ont une colonne de lumière, visible de loin. La concession et le garage n'en ont pas : leur bâtiment et son enseigne suffisent.
+  beamKinds: ['start', 'objective'],
+  beamHeight: 140, // hauteur de la colonne de lumière, en px
+  beamOpacity: 0.4,
+  diamondSize: 12, // taille du losange, en px
+  diamondHeight: 70, // hauteur du losange au-dessus du sol, en px
+  bobHeight: 6, // de combien il monte et descend, en px
+  bobSpeed: 2.5, // vitesse de ce mouvement, en radians par seconde
+  spinSpeed: 1.6, // vitesse de rotation du losange, en radians par seconde
+} as const
+
+/** Le panneau de la mission en cours, en haut au centre. */
+export const MISSION_PANEL_STYLE = {
+  titleColor: '#ffd23f',
+  textColor: '#fff8ec',
+  urgentColor: '#e5383b', // le chrono quand il reste peu de temps
+  urgentSeconds: 15, // en dessous, le chrono passe en rouge
+  panelFill: 'rgba(43, 30, 58, 0.7)',
+  messageSeconds: 6, // durée d'un message (mission réussie, échouée), en secondes
+} as const
+
+/** Les bâtiments remarquables (src/game/render/landmarks.ts) : la concession et les garages, en couleurs de la palette. */
+export const LANDMARK_VIEW = {
+  showroomName: 'BON PLAN AUTO', // l'enseigne (lettres de render/pixelFont.ts)
+  garageName: 'GARAGE',
+  workshopName: 'ATELIER',
+  showroomHeight: 64, // hauteur, en px du monde : un grand rez-de-chaussée vitré
+  garageHeight: 48,
+  workshopHeight: 52,
+  showroomWall: '#fff8ec', // blanc chaud
+  showroomSign: '#3a86ff', // bleu (comme le repère de la concession)
+  garageWall: '#bdb4a6', // béton
+  garageSign: '#8e5ce0', // violet (comme le repère du garage)
+  garageDoor: '#8a8797', // gris neutre
+  workshopWall: '#e3b676', // sable
+  workshopSign: '#f28c28', // orange (comme le repère de l'atelier)
+  workshopInside: '#3e4152', // l'intérieur sombre de la baie
+  workshopTools: '#9c9389', // l'établi et les outils
+  glass: '#7cc7f2', // eau-claire : la vitrine
+  glassGlow: '#ffd27a', // la vitrine allumée la nuit
+  frame: '#3e4152', // montants et lames
+  signTextColor: '#fff8ec',
+} as const
+
+/** À l'atelier, la voiture tourne sur elle-même pour qu'on la voie sous toutes ses coutures, en radians par seconde. */
+export const CAR_SHOWCASE_SPIN = 0.9
+
+/** La mini-carte, en haut à gauche (src/game/hud/minimapView.ts). */
+export const MINIMAP_STYLE = {
+  sizePx: 150, // côté de la mini-carte à l'écran, en pixels
+  viewTiles: 36, // côté du morceau de ville montré, en cases
+  pixelsPerTile: 2, // finesse de l'image de toute la ville, peinte une fois
+  margin: 12, // distance aux bords de l'écran
+  markerPx: 6, // taille d'un repère
+  edgeMarkerPx: 5, // taille d'un repère hors du cadre, ramené au bord
+  playerPx: 7, // longueur de la flèche du joueur
+  playerColor: '#fff8ec',
+  outlineColor: '#2b1e3a',
+  borderColor: '#fff8ec',
+} as const
+
+/** Le panneau de la concession et du garage, à droite, sous le HUD. */
+export const SHOP_PANEL_STYLE = {
+  titleColor: '#3a86ff',
+  textColor: '#fff8ec',
+  disabledColor: '#8a8797', // un choix impossible (trop cher, garage plein)
+  panelFill: 'rgba(43, 30, 58, 0.8)',
+  choiceFill: 'rgba(58, 134, 255, 0.25)',
+  margin: 12, // distance au bord droit de l'écran
+  top: 120, // distance au haut de l'écran : sous le HUD
 } as const
 
 /** Réglages des commandes tactiles (joystick virtuel et boutons), en pixels d'écran : ils ne dépendent pas du zoom de la caméra. */
@@ -81,6 +156,13 @@ export const TOUCH_STYLE = {
   /** Opacité du repère du joystick tant qu'aucun doigt n'est posé, et quand il est tenu. */
   hintOpacity: 0.55,
   heldOpacity: 0.95,
+} as const
+
+/** Les personnages (joueur et piétons) sont dessinés plus grands que leur place dans la simulation : on les lit mieux de loin (convention du genre). */
+export const CHARACTER_VIEW = {
+  scale: 1.4, // agrandissement à l'écran, sans effet sur les collisions
+  outlineColor: '#2b1e3a', // contour sombre (le contour de la palette, docs/style.md)
+  outlineThickness: 0.7, // épaisseur du contour, en unités du modèle (avant agrandissement)
 } as const
 
 /** Réglages de l'affichage des piétons (leur apparence vient de la recette de leur type, src/data/npcTypes). */

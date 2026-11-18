@@ -5,19 +5,22 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && tsc --noEmit -p worker && vite build",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",
     "check:cycles": "madge --circular --extensions ts --ts-config tsconfig.json src",
     "format": "prettier --write .",
-    "check": "npm run lint && npm run check:cycles && npm test && npm run build"
+    "check": "npm run lint && npm run check:cycles && npm test && npm run build",
+    "deploy": "wrangler deploy",
+    "preview:worker": "wrangler dev"
   },
   "dependencies": {
     "three": "^0.187.0"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261116.1",
     "@eslint/js": "^10.0.1",
     "@types/three": "^0.187.0",
     "eslint": "^10.15.0",
@@ -28,6 +31,7 @@
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.72.2",
     "vite": "^8.3.8",
-    "vitest": "^5.1.0"
+    "vitest": "^5.1.0",
+    "wrangler": "^4.163.0"
   }
 }

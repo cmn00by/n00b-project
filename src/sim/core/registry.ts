@@ -65,7 +65,7 @@ export function validateDefs<T extends ContentDef>(label: string, defs: readonly
   return errors
 }
 
-/** Un modèle de véhicule (src/data/vehicles). Les vitesses sont en px par seconde, les accélérations en px par seconde². */
+/** Un modèle de véhicule (src/data/vehicles) : ses réglages de conduite et sa silhouette. Les vitesses sont en px par seconde, les accélérations en px par seconde². */
 export interface VehicleDef extends ContentDef {
   /** Le nom affiché (en français). */
   name: string
@@ -84,4 +84,25 @@ export interface VehicleDef extends ContentDef {
   grip: number
   /** Adhérence quand le frein à main est tiré (plus basse : on dérape). */
   handbrakeGrip: number
+  /** Sa silhouette en blocs (lue par l'affichage seulement) : sans elle, une voiture simple et voyante. */
+  look?: VehicleLook
+}
+
+/** Les accessoires qu'on sait poser sur une silhouette de véhicule. */
+export const VEHICLE_EXTRAS = ['taxi-sign', 'siren', 'pickup-bed', 'golf-roof', 'side-windows'] as const
+export type VehicleExtra = (typeof VEHICLE_EXTRAS)[number]
+
+/**
+ * La silhouette d'un modèle, en données : l'affichage assemble les blocs d'après elle (une caisse, un habitacle, des accessoires).
+ * Les longueurs de l'habitacle sont des parts de la longueur du véhicule ; les hauteurs sont en px.
+ */
+export interface VehicleLook {
+  /** La couleur de la caisse (`#rrggbb`), et de l'habitacle s'il en a une autre. */
+  color: string
+  cabinColor?: string
+  /** La hauteur de la caisse, en px (9 pour une voiture, beaucoup plus pour un bus). */
+  bodyHeight: number
+  /** L'habitacle : sa longueur (part de la longueur), son décalage vers l'arrière (part de la longueur, négatif : vers l'avant) et sa hauteur en px. Hauteur 0 : pas d'habitacle. */
+  cabin: { length: number; offset: number; height: number }
+  extras?: VehicleExtra[]
 }

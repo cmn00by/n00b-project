@@ -4,7 +4,7 @@
 // garde un moment sa direction : c'est le dérapage. L'adhérence ramène peu à peu la vitesse dans l'axe de la voiture ; le frein à main
 // la coupe, et la voiture glisse. Tout est calculé avec + − × ÷ et des racines carrées : même résultat sur toutes les machines (coop).
 
-import { TUNING } from '../../core'
+import { TUNING, computeVehicleBodySize } from '../../core'
 import type { VehicleDef } from '../../core'
 
 /** Ce que demande le conducteur pour ce pas. */
@@ -77,9 +77,5 @@ export function computeVelocity(motion: VehicleMotion, input: DriveInput, def: V
   return { vx: headingX * forward + rightX * sideways, vy: headingY * forward + rightY * sideways }
 }
 
-/** La taille du rectangle (aligné sur la grille) qui contient la voiture tournée selon son cap : c'est son corps pour les collisions. */
-export function computeBodySize(def: VehicleDef, headingX: number, headingY: number): { width: number; height: number } {
-  const ax = Math.abs(headingX)
-  const ay = Math.abs(headingY)
-  return { width: ax * def.length + ay * def.width, height: ay * def.length + ax * def.width }
-}
+/** La taille du corps de la voiture selon son cap (la recette est dans le noyau, partagée avec la brique garage). */
+export const computeBodySize = computeVehicleBodySize

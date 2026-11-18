@@ -39,6 +39,18 @@
         line-height: 1.5;
         pointer-events: none;
       }
+      #notice {
+        position: fixed;
+        left: 50%;
+        top: 12px;
+        transform: translateX(-50%);
+        color: #fff8ec;
+        font: 12px monospace;
+        text-shadow: 1px 1px 0 #2b1e3a;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
       #loading {
         position: fixed;
         inset: 0;
@@ -52,10 +64,11 @@
   </head>
   <body>
     <div id="game"></div>
+    <div id="notice"></div>
     <div id="loading">Chargement de la ville…</div>
     <div id="help">
       Flèches, ZQSD ou WASD : se déplacer · Maj : courir · E / Entrée : monter, descendre · Espace : frein à main<br />
-      N : jour / nuit · C : inclinaison de la caméra · P : taille des pixels
+      1 à 9 : choisir (concession, garage, atelier), 0 : retour · N : jour / nuit · C : inclinaison de la caméra · P : taille des pixels
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

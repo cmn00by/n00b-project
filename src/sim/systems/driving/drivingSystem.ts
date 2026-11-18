@@ -3,8 +3,9 @@
 // Pourquoi : il lit les commandes du conducteur (jamais le clavier) et fait avancer chaque véhicule selon sa physique arcade.
 // Il ne gère pas les murs : la brique collision passe après lui et arrête les véhicules (et coupe leur vitesse) comme n'importe quelle entité.
 
-import { SYSTEM_ORDER, findCommands, findEntitiesWith, findEntity, isSpaceClear } from '../../core'
+import { SYSTEM_ORDER, findCommands, findEntitiesWith, findEntity, isSpaceClear, applyVehicleParts } from '../../core'
 import type { CommandOf, EntityId, System } from '../../core'
+import { VEHICLE_PART_REGISTRY } from '../../../data/vehicleParts'
 import { VEHICLE_REGISTRY } from '../../../data/vehicles'
 import { tryEnterVehicle, tryExitVehicle } from './vehicleSeat'
 import { NO_INPUT, computeBodySize, computeVelocity, steerHeading } from './vehiclePhysics'
@@ -26,7 +27,8 @@ export const drivingSystem: System = {
     for (const command of findCommands(world.commands, 'vehicle:drive')) driveByDriverId.set(command.entityId, command)
 
     for (const vehicle of findEntitiesWith(world, ['position', 'velocity', 'body', 'vehicle'])) {
-      const def = VEHICLE_REGISTRY.get(vehicle.vehicle.modelId)
+      // Les réglages du modèle, modifiés par les pièces de l'atelier (moteur, pneus…).
+      const def = applyVehicleParts(VEHICLE_REGISTRY.get(vehicle.vehicle.modelId), vehicle.vehicle.customization, VEHICLE_PART_REGISTRY)
       const driverId = vehicle.vehicle.driverId
       const command = driverId === undefined ? undefined : driveByDriverId.get(driverId)
       const input: DriveInput = command ?? NO_INPUT

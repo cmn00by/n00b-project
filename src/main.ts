@@ -9,16 +9,46 @@ import { SYSTEMS } from './sim/systems'
 import { spawnVehicle } from './sim/systems/driving'
 import { MAP_REGISTRY } from './data/maps'
 import { TILE_KIND_REGISTRY } from './data/tileKinds'
+import { DEALERSHIP_REGISTRY } from './data/dealerships'
+import { GARAGE_REGISTRY } from './data/garages'
+import { MISSION_REGISTRY } from './data/missions'
+import { VEHICLE_PART_REGISTRY } from './data/vehicleParts'
+import { WORKSHOP_REGISTRY } from './data/workshops'
 import { VEHICLE_REGISTRY } from './data/vehicles'
-import { CAMERA_LOOKAHEAD_MAX_PX, CAMERA_LOOKAHEAD_SECONDS, CAMERA_LOOKAHEAD_SMOOTHING, DAY_NIGHT_TRANSITION_SECONDS, GAME_SEED, HUD_PLACEHOLDER } from './game/constants'
+import {
+  CAMERA_LOOKAHEAD_MAX_PX,
+  CAMERA_LOOKAHEAD_SECONDS,
+  CAMERA_LOOKAHEAD_SMOOTHING,
+  DAY_NIGHT_TRANSITION_SECONDS,
+  GAME_SEED,
+  HUD_PLACEHOLDER,
+  MINIMAP_STYLE,
+  PLACE_MARKER_VIEW,
+} from './game/constants'
 import { createFixedStepLoop } from './game/fixedStepLoop'
-import { createHudView, createTouchControlsView } from './game/hud'
+import { createHudView, createMinimapView, createMissionPanelView, createShopPanelView, createTouchControlsView, formatMoney } from './game/hud'
 import { chooseStartMode, createKeyboard, createTouchInput, parseControlsOverride, switchMode, toDriveCommand, toMoveCommand } from './game/input'
 import type { ControlMode } from './game/input'
-import { createActors, createBuildings, createCamera, createDecor, createGround, createLighting, loadTextures } from './game/render'
+import { describeMissions } from './game/missionGuide'
+import { describeShops } from './game/shopGuide'
+import type { ShopPanel, WorkshopMenu } from './game/shopGuide'
+import {
+  PIXEL_SCALE_CHOICES,
+  choosePixelScale,
+  createActors,
+  createBuildings,
+  createCamera,
+  createDecor,
+  createGround,
+  createLandmarks,
+  createLighting,
+  createPlaceMarkers,
+  describePixelScale,
+  loadTextures,
+} from './game/render'
 
-/** Combien de pixels de la fenêtre pour un pixel de la scène : c'est ce qui donne le grain pixel art. P passe de l'un à l'autre. */
-const PIXEL_SCALES = [3, 4, 2] as const
+/** Combien de temps le message d'un réglage (touche P) reste affiché, en millisecondes. */
+const NOTICE_MILLISECONDS = 1500
 const MAP_ID = 'test-town'
 
 async function start() {
@@ -31,10 +61,11 @@ async function start() {
   container.appendChild(renderer.domElement)
   const scene = new THREE.Scene()
   const camera3d = createCamera(16 / 9)
+  // Combien de pixels de la fenêtre pour un pixel de la scène : c'est ce qui donne le grain pixel art. Automatique par défaut, P passe aux tailles fixes.
   let pixelScaleIndex = 0
   let lowHeight = 270
   const resize = () => {
-    const scale = PIXEL_SCALES[pixelScaleIndex] ?? 3
+    const scale = choosePixelScale(PIXEL_SCALE_CHOICES[pixelScaleIndex] ?? 'auto', window.innerHeight)
     const lowWidth = Math.max(160, Math.floor(window.innerWidth / scale))
     lowHeight = Math.max(90, Math.floor(window.innerHeight / scale))
     renderer.setSize(lowWidth, lowHeight, false)
@@ -62,10 +93,53 @@ async function start() {
   const ground = createGround(scene, map, textures)
   const buildings = createBuildings(scene, map, textures)
   const decor = createDecor(scene, map, textures)
+  const landmarks = createLandmarks(scene, map, textures)
   const actors = createActors(scene)
   const lighting = createLighting(scene, renderer)
   const keyboard = createKeyboard(window)
   const hud = createHudView(document.body)
+  const minimap = createMinimapView(document.body, map)
+  // Le cap du joueur à pied, pour la flèche de la mini-carte : le sens de son dernier déplacement.
+  let walkHeading = { x: 0, y: -1 }
+  let lastFocus = { x: spawn.x, y: spawn.y }
+  const placeMarkers = createPlaceMarkers(scene)
+  const missionPanel = createMissionPanelView(document.body)
+  // Les messages de mission : le panneau écoute la simulation, il ne décide de rien.
+  world.events.on('mission:started', ({ missionId }) => missionPanel.showMessage(MISSION_REGISTRY.get(missionId).briefing, true))
+  world.events.on('mission:succeeded', ({ money }) => missionPanel.showMessage(`Mission réussie ! +${money} €`, true))
+  world.events.on('mission:failed', ({ reason }) => missionPanel.showMessage(reason === 'time-out' ? 'Trop tard… Mission échouée' : 'Mission abandonnée', false))
+  // La concession et le garage : un panneau de choix quand le joueur s'y trouve. Un choix devient une commande, envoyée au prochain pas de simulation.
+  const shopContent = { vehicles: VEHICLE_REGISTRY, dealerships: DEALERSHIP_REGISTRY, garages: GARAGE_REGISTRY, workshops: WORKSHOP_REGISTRY, parts: VEHICLE_PART_REGISTRY }
+  // Le menu de l'atelier : quel emplacement est ouvert, quelle pièce on essaie. C'est un état d'interface, la simulation n'en sait rien.
+  let workshopMenu: WorkshopMenu = {}
+  const shopPanelView = createShopPanelView(document.body)
+  const pendingCommands: Command[] = []
+  let shopPanel: ShopPanel | undefined
+  const chooseInShop = (index: number) => {
+    const choice = shopPanel?.choices[index]
+    if (choice?.command !== undefined) pendingCommands.push(choice.command)
+    const action = choice?.uiAction
+    if (action?.kind === 'open-slot') workshopMenu = { slot: action.slot }
+    if (action?.kind === 'back') workshopMenu = {}
+    if (action?.kind === 'preview') workshopMenu = { ...workshopMenu, previewPartId: action.partId }
+  }
+  // 0, Échap ou Retour arrière : revenir à la liste des emplacements de l'atelier.
+  for (const code of ['Digit0', 'Numpad0', 'Escape', 'Backspace']) keyboard.onPress(code, () => (workshopMenu = {}))
+  shopPanelView.onChoose(chooseInShop)
+  for (let digit = 1; digit <= 9; digit++) {
+    keyboard.onPress(`Digit${digit}`, () => chooseInShop(digit - 1))
+    keyboard.onPress(`Numpad${digit}`, () => chooseInShop(digit - 1))
+  }
+  const vehicleName = (modelId: string) => VEHICLE_REGISTRY.find(modelId)?.name ?? modelId
+  world.events.on('garage:bought', ({ modelId, price }) => missionPanel.showMessage(`${vehicleName(modelId)} achetée ${formatMoney(price)} : elle t'attend au parking !`, true))
+  world.events.on('garage:stored', ({ modelId, wasStolen }) => missionPanel.showMessage(`${vehicleName(modelId)} rangée au garage${wasStolen ? ' : elle est à toi maintenant' : ''}`, true))
+  world.events.on('garage:taken-out', ({ modelId }) => missionPanel.showMessage(`${vehicleName(modelId)} sortie du garage`, true))
+  world.events.on('garage:refused', ({ why }) => missionPanel.showMessage(`Impossible : ${why}`, false))
+  world.events.on('workshop:installed', ({ partId, price }) => {
+    missionPanel.showMessage(`${VEHICLE_PART_REGISTRY.find(partId)?.name ?? partId} installée (${formatMoney(price)})`, true)
+    workshopMenu = { slot: workshopMenu.slot }
+  })
+  world.events.on('workshop:removed', () => missionPanel.showMessage('Remis d’origine', true))
   const touch = createTouchInput(window)
   const touchView = createTouchControlsView(document.body)
   const fixedStepLoop = createFixedStepLoop(STEP_SECONDS)
@@ -74,12 +148,18 @@ async function start() {
   const lookahead = { x: 0, y: 0 }
   keyboard.onPress('KeyN', () => (nightTarget = nightTarget === 0 ? 1 : 0))
   keyboard.onPress('KeyC', () => camera3d.nextTilt())
+  const notice = document.getElementById('notice')
+  let noticeTimer: ReturnType<typeof setTimeout> | undefined
   keyboard.onPress('KeyP', () => {
-    pixelScaleIndex = (pixelScaleIndex + 1) % PIXEL_SCALES.length
+    pixelScaleIndex = (pixelScaleIndex + 1) % PIXEL_SCALE_CHOICES.length
     resize()
+    const choice = PIXEL_SCALE_CHOICES[pixelScaleIndex] ?? 'auto'
+    if (notice === null) return
+    notice.textContent = describePixelScale(choice, choosePixelScale(choice, window.innerHeight))
+    notice.style.opacity = '1'
+    clearTimeout(noticeTimer)
+    noticeTimer = setTimeout(() => (notice.style.opacity = '0'), NOTICE_MILLISECONDS)
   })
-  // Santé, argent et recherche n'existent pas encore dans la simulation : le HUD affiche des valeurs factices (voir HUD_PLACEHOLDER).
-  hud.update(HUD_PLACEHOLDER)
 
   // Le mode de commandes : clavier ou tactile, choisi selon l'appareil, puis il suit la dernière entrée utilisée (un toucher, une touche). ?controls=touch|keyboard le force.
   const help = document.getElementById('help')
@@ -93,7 +173,8 @@ async function start() {
     if (help === null) return
     // Au toucher, l'aide passe en haut de l'écran : le bas est pris par les commandes.
     help.innerHTML = mode === 'touch' ? 'Joystick à gauche : se déplacer, conduire<br />Bouton rond : courir (à pied), frein à main (en voiture) · E : monter, descendre' : keyboardHelp
-    help.style.top = mode === 'touch' ? '10px' : 'auto'
+    // Au toucher, l'aide passe en haut, sous la mini-carte.
+    help.style.top = mode === 'touch' ? `calc(${MINIMAP_STYLE.margin + 12}px + min(${MINIMAP_STYLE.sizePx}px, 28vh))` : 'auto'
     help.style.bottom = mode === 'touch' ? 'auto' : '10px'
   }
   applyMode(mode)
@@ -103,7 +184,7 @@ async function start() {
 
   const runSimulationStep = () => {
     actors.rememberStates(world)
-    const commands: Command[] = []
+    const commands: Command[] = pendingCommands.splice(0)
     const input = mode === 'touch' ? touch : keyboard
     if (input.consumeInteract()) commands.push({ type: 'player:interact', entityId: player.id })
     const command = player.driver !== undefined ? toDriveCommand(player.id, input.readDriveKeys()) : toMoveCommand(player.id, input.readPressedKeys())
@@ -148,9 +229,32 @@ async function start() {
       headlight = { x: carPosition.x + headingX * halfLength, y: carPosition.y + headingY * halfLength, headingX, headingY }
     }
 
+    const missionGuide = describeMissions(player.missionProgress, MISSION_REGISTRY.all, map)
+    const shopGuide = describeShops(world, { ...player, position: player.position ?? { x: spawn.x, y: spawn.y, angle: 0 } }, shopContent, workshopMenu)
+    shopPanel = shopGuide.panel
+    // En quittant l'atelier, le menu se referme ; tant qu'on y est, la voiture tourne en vitrine.
+    if (shopGuide.showcase === undefined) workshopMenu = {}
+    actors.setShowcase(shopGuide.showcase === undefined ? undefined : { vehicleId: shopGuide.showcase.vehicleId, preview: shopGuide.showcase.preview })
+    const markers = [...missionGuide.markers, ...shopGuide.markers]
+    placeMarkers.update(markers, displaySeconds)
+    // La mini-carte : les mêmes repères, et le joueur dans le sens de sa voiture ou de sa marche.
+    const moved = { x: focus.x - lastFocus.x, y: focus.y - lastFocus.y }
+    if (Math.abs(moved.x) + Math.abs(moved.y) > 0.3) walkHeading = moved
+    lastFocus = focus
+    minimap.update({
+      playerX: focus.x,
+      playerY: focus.y,
+      heading: vehicle?.vehicle !== undefined ? { x: vehicle.vehicle.headingX, y: vehicle.vehicle.headingY } : walkHeading,
+      markers: markers.map((marker) => ({ x: marker.x, y: marker.y, color: `#${PLACE_MARKER_VIEW.colors[marker.kind].toString(16).padStart(6, '0')}` })),
+    })
+    missionPanel.update(missionGuide.panel)
+    shopPanelView.update(shopPanel)
+    // L'argent vient de la simulation (brique economy) ; la santé et la recherche n'existent pas encore : valeurs factices (HUD_PLACEHOLDER).
+    hud.update({ ...HUD_PLACEHOLDER, money: player.wallet?.money ?? 0 })
     ground.update(displaySeconds)
     decor.update(displaySeconds, night)
     buildings.setNight(night)
+    landmarks.setNight(night)
     lighting.update(cameraFocus, night, decor.lamps, headlight)
     if (mode === 'touch') touchView.update(touch.readState(), { isDriving: player.driver !== undefined, screenWidth: window.innerWidth, screenHeight: window.innerHeight })
     renderer.render(scene, camera3d.camera)

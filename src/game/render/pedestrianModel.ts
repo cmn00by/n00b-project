@@ -4,7 +4,8 @@
 // changer une couleur ou un accessoire dans la recette d'un type de PNJ suffit à varier toute la foule. Il regarde vers -z, comme les autres modèles.
 
 import * as THREE from 'three'
-import { PEDESTRIAN_VIEW } from '../constants'
+import { CHARACTER_VIEW, PEDESTRIAN_VIEW } from '../constants'
+import { addOutline } from './outline'
 import type { PedestrianAppearance } from './pedestrianAppearance'
 
 export interface PedestrianModel {
@@ -130,14 +131,16 @@ export function createPedestrianModel(appearance: PedestrianAppearance): Pedestr
   if (accessory !== undefined) body.add(...createAccessory(accessory, accessoryColor))
 
   // Le téléphone est sur le bras droit (index 1) : il suit le bras quand celui-ci se lève pour filmer. L'écran fait face à celui qui filme.
+  // Il est ajouté avant le contour pour avoir le même contour sombre que le reste du personnage.
   const phone = createPhone()
   arms[1]?.add(phone)
+  addOutline(body, CHARACTER_VIEW.outlineColor, CHARACTER_VIEW.outlineThickness)
 
   const alertMark = createAlertMark()
   const curiousMark = createGlyph(['XXX', '..X', '.XX', '...', '.X.'], PEDESTRIAN_VIEW.curiousColor)
   const angryMark = createGlyph(['X.X', '.X.', 'X.X'], PEDESTRIAN_VIEW.angryColor)
   const root = new THREE.Group()
   root.add(body, alertMark, curiousMark, angryMark)
-  root.scale.setScalar(appearance.heightScale)
+  root.scale.setScalar(appearance.heightScale * CHARACTER_VIEW.scale)
   return { root, body, legs, arms, alertMark, curiousMark, angryMark, phone }
 }

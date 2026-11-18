@@ -39,6 +39,13 @@ export const TUNING = {
     spawnTries: 24, // nombre d'endroits tirés au hasard pour faire naître un piéton avant de laisser tomber (jusqu'à la prochaine tentative)
     walkableTileKinds: ['sidewalk'], // les types de case sur lesquels les piétons marchent (ids de src/data/tileKinds)
   },
+  garage: {
+    capacity: 4, // nombre de véhicules qu'un garage peut contenir
+    parkingRadiusTiles: 1.6, // un véhicule à moins de cette distance de la place devant le garage (en cases) peut être rangé
+  },
+  economy: {
+    startingMoney: 600, // l'argent du joueur au début de la partie, en euros : de quoi s'offrir un premier véhicule (la Mamie, 250 €) et quelques pièces à l'atelier
+  },
   driving: {
     enterDistance: 48, // distance maximale entre le joueur et le centre d'un véhicule pour y monter, en px
     exitGap: 4, // espace laissé entre le flanc du véhicule et le joueur qui en descend, en px

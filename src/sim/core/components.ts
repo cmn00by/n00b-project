@@ -5,6 +5,8 @@
 // Règle : un composant contient des données simples (nombres, textes, ids), jamais de fonction ni d'objet d'affichage (three.js),
 // pour que l'état complet se sauvegarde et s'envoie sur le réseau tel quel. Ajouter un type de composant est un ajout permis.
 
+import type { VehicleCustomization } from './vehiclePart'
+
 /** L'identifiant d'une entité. Une entité en référence une autre par son id, jamais par un pointeur. */
 export type EntityId = number
 
@@ -45,6 +47,9 @@ export interface Vehicle {
   headingX: number // le nez pointe vers (headingX, headingY) ; (0, -1) = vers le haut
   headingY: number
   driverId?: EntityId // l'entité au volant, s'il y en a une
+  ownerId?: EntityId // le joueur à qui il appartient (acheté, ou volé puis rangé au garage)
+  ownedKey?: number // son numéro dans la collection de ce joueur (OwnedVehicle.key)
+  customization?: VehicleCustomization // les pièces installées à l'atelier (absent : d'origine)
 }
 
 /** Une entité qui conduit un véhicule. Son corps est mis de côté pendant la conduite (elle est dans la voiture) et lui est rendu à la sortie. */
@@ -79,6 +84,54 @@ export interface Pedestrian {
   heading: { x: number; y: number }
 }
 
+/** La mission en cours d'un joueur : laquelle, l'objectif atteint, les chronos (en pas de simulation) et les objets qu'il porte. */
+export interface ActiveMission {
+  /** L'id de sa fiche dans src/data/missions. */
+  missionId: string
+  /** L'objectif en cours (son rang dans la fiche, à partir de 0). */
+  objectiveIndex: number
+  /** Pas restants avant la fin du chrono de la mission (absent : pas de chrono). */
+  stepsLeft?: number
+  /** Pas restants avant la fin du chrono de l'objectif en cours (absent : pas de chrono). */
+  objectiveStepsLeft?: number
+  /** Les objets ramassés et pas encore livrés (ids libres, donnés par la fiche). */
+  carriedItems: string[]
+}
+
+/** Où en est un joueur dans les missions (brique missions). */
+export interface MissionProgress {
+  /** La mission en cours, s'il y en a une. */
+  active?: ActiveMission
+  /** Les missions réussies : elles ne sont plus proposées. */
+  completedIds: string[]
+  /** Une mission qui vient d'échouer alors que le joueur est sur son départ : elle ne repart que quand il en est sorti. */
+  waitingToLeaveId?: string
+}
+
+/** L'argent d'une entité (le joueur), en euros entiers : jamais de virgule, pour que le compte soit le même sur toutes les machines (coop). */
+export interface Wallet {
+  money: number
+}
+
+/** Un véhicule qui appartient au joueur : dans la ville (entityId) ou rangé dans un garage (storedIn). */
+export interface OwnedVehicle {
+  /** Son numéro dans la collection, unique pour ce joueur. */
+  key: number
+  modelId: string
+  /** L'id du garage où il est rangé (absent : il est dans la ville). */
+  storedIn?: string
+  /** L'entité du véhicule quand il est dans la ville. */
+  entityId?: EntityId
+  /** Ses pièces, gardées pendant qu'il est rangé (dans la ville, elles sont sur son composant vehicle). */
+  customization?: VehicleCustomization
+}
+
+/** Les véhicules d'un joueur (brique garage). Des données simples, sauvegardables telles quelles. */
+export interface VehicleCollection {
+  nextKey: number
+  vehicles: OwnedVehicle[]
+}
+
 /** Tous les composants possibles : chacun est facultatif sur une entité. */
 export interface Components {
   position?: Position
@@ -89,6 +142,9 @@ export interface Components {
   pedestrian?: Pedestrian
   vehicle?: Vehicle
   driver?: Driver
+  missionProgress?: MissionProgress
+  wallet?: Wallet
+  vehicleCollection?: VehicleCollection
 }
 
 /** Le nom d'un composant. */

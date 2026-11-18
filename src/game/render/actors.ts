@@ -6,9 +6,12 @@
 
 import * as THREE from 'three'
 import { findEntitiesWith } from '../../sim/core'
-import type { EntityId, World } from '../../sim/core'
+import type { EntityId, VehicleCustomization, World } from '../../sim/core'
 import { VEHICLE_REGISTRY } from '../../data/vehicles'
-import { MISSING_VEHICLE_COLOR, VEHICLE_COLORS } from '../constants'
+import { VEHICLE_PART_REGISTRY } from '../../data/vehicleParts'
+import { CAR_SHOWCASE_SPIN, CHARACTER_VIEW } from '../constants'
+import { createVehicleModel } from './vehicleModel'
+import { addOutline } from './outline'
 import { createPedestrianActors } from './pedestrianActors'
 import { computeYaw } from './pedestrianPose'
 
@@ -19,6 +22,8 @@ export interface Actors {
   update(world: World, alpha: number, deltaSeconds: number): void
   /** Où est l'entité à l'écran (interpolée), pour la caméra. */
   findDisplayedPosition(entityId: EntityId): { x: number; y: number } | undefined
+  /** L'atelier : la voiture montrée tourne sur elle-même et porte les pièces à essayer (`preview`). `undefined` arrête la vitrine. */
+  setShowcase(showcase: { vehicleId: EntityId; preview: VehicleCustomization | undefined } | undefined): void
 }
 
 interface Snapshot {
@@ -69,45 +74,27 @@ function createPlayerModel() {
     eye.position.set(side * 3, 27, -5.6)
     group.add(eye)
   }
+  addOutline(group, CHARACTER_VIEW.outlineColor, CHARACTER_VIEW.outlineThickness)
+  group.scale.setScalar(CHARACTER_VIEW.scale)
   return { group, legs, arms }
 }
 
-/** Une voiture : caisse, habitacle, pare-brise et roues, à la taille du modèle, nez vers l'avant (-z). */
-function createCarModel(modelId: string): THREE.Group {
-  const def = VEHICLE_REGISTRY.get(modelId)
-  const color = VEHICLE_COLORS[modelId] ?? MISSING_VEHICLE_COLOR
-  const group = new THREE.Group()
-  const chassis = box(def.width, 9, def.length, color)
-  chassis.position.y = 8
-  const cabin = box(def.width - 4, 8, def.length * 0.48, color)
-  cabin.position.set(0, 16.5, def.length * 0.06)
-  const windshield = box(def.width - 5, 6, 1.5, 0x3e4152)
-  windshield.position.set(0, 16, -def.length * 0.18)
-  const rearWindow = box(def.width - 5, 5, 1.5, 0x3e4152)
-  rearWindow.position.set(0, 16, def.length * 0.3)
-  group.add(chassis, cabin, windshield, rearWindow)
-  for (const [side, end] of [
-    [-1, -1],
-    [1, -1],
-    [-1, 1],
-    [1, 1],
-  ] as const) {
-    const wheel = box(3, 7, 9, 0x2b1e3a)
-    wheel.position.set(side * (def.width / 2), 4, end * def.length * 0.32)
-    group.add(wheel)
-  }
-  for (const side of [-1, 1]) {
-    const headlight = box(4, 3, 1, 0xfff8ec)
-    headlight.position.set(side * (def.width / 2 - 4), 9, -def.length / 2 - 0.5)
-    group.add(headlight)
-  }
-  return group
+/** Retire un modèle de la scène et libère ses blocs (une voiture repeinte est reconstruite). */
+function removeModel(scene: THREE.Scene, model: THREE.Group): void {
+  scene.remove(model)
+  model.traverse((object) => {
+    if (!(object instanceof THREE.Mesh)) return
+    object.geometry.dispose()
+    ;(object.material as THREE.Material).dispose()
+  })
 }
 
 export function createActors(scene: THREE.Scene): Actors {
   const previous = new Map<EntityId, Snapshot>()
   const displayed = new Map<EntityId, { x: number; y: number }>()
-  const cars = new Map<EntityId, THREE.Group>()
+  const cars = new Map<EntityId, { model: THREE.Group; lookKey: string }>()
+  let showcase: { vehicleId: EntityId; preview: VehicleCustomization | undefined } | undefined
+  let showcaseYaw = 0
   const players = new Map<EntityId, ReturnType<typeof createPlayerModel> & { walkPhase: number; yaw: number }>()
   const pedestrians = createPedestrianActors(scene)
 
@@ -123,19 +110,37 @@ export function createActors(scene: THREE.Scene): Actors {
 
     update(world, alpha, deltaSeconds) {
       pedestrians.update(world, alpha, deltaSeconds)
+      const stillThere = new Set<EntityId>()
+      showcaseYaw += deltaSeconds * CAR_SHOWCASE_SPIN
       for (const vehicle of findEntitiesWith(world, ['position', 'vehicle'])) {
-        let model = cars.get(vehicle.id)
-        if (model === undefined) {
-          model = createCarModel(vehicle.vehicle.modelId)
-          scene.add(model)
-          cars.set(vehicle.id, model)
+        stillThere.add(vehicle.id)
+        // La voiture est reconstruite quand ses pièces changent (ou quand on en essaie une à l'atelier).
+        const isShown = showcase?.vehicleId === vehicle.id
+        const customization = isShown && showcase?.preview !== undefined ? showcase.preview : vehicle.vehicle.customization
+        const lookKey = JSON.stringify(customization ?? {})
+        let entry = cars.get(vehicle.id)
+        if (entry === undefined || entry.lookKey !== lookKey) {
+          if (entry !== undefined) removeModel(scene, entry.model)
+          entry = { model: createVehicleModel(VEHICLE_REGISTRY.get(vehicle.vehicle.modelId), customization, VEHICLE_PART_REGISTRY), lookKey }
+          scene.add(entry.model)
+          cars.set(vehicle.id, entry)
         }
+        const model = entry.model
         const before = previous.get(vehicle.id) ?? snapshotOf(vehicle.position.x, vehicle.position.y, vehicle.vehicle.headingX, vehicle.vehicle.headingY)
         const x = before.x + (vehicle.position.x - before.x) * alpha
         const y = before.y + (vehicle.position.y - before.y) * alpha
         model.position.set(x, 0, y)
-        model.rotation.y = computeYaw(before.headingX + (vehicle.vehicle.headingX - before.headingX) * alpha, before.headingY + (vehicle.vehicle.headingY - before.headingY) * alpha)
+        model.rotation.y = isShown
+          ? showcaseYaw
+          : computeYaw(before.headingX + (vehicle.vehicle.headingX - before.headingX) * alpha, before.headingY + (vehicle.vehicle.headingY - before.headingY) * alpha)
         displayed.set(vehicle.id, { x, y })
+      }
+      // Une voiture qui a quitté la ville (rangée au garage) disparaît aussi de l'écran.
+      for (const [id, entry] of cars) {
+        if (stillThere.has(id)) continue
+        removeModel(scene, entry.model)
+        cars.delete(id)
+        previous.delete(id)
       }
 
       for (const player of findEntitiesWith(world, ['position'])) {
@@ -167,5 +172,10 @@ export function createActors(scene: THREE.Scene): Actors {
     },
 
     findDisplayedPosition: (entityId) => displayed.get(entityId),
+
+    setShowcase(next) {
+      if (next?.vehicleId !== showcase?.vehicleId) showcaseYaw = 0
+      showcase = next
+    },
   }
 }
