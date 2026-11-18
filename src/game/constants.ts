@@ -188,4 +188,12 @@ export const PEDESTRIAN_VIEW = {
   angryArmAngle: 2.5, // angle des bras d'un piéton qui râle : levés vers l'avant, en radians
   angryShakeSpeed: 16, // vitesse à laquelle il secoue les bras, en radians par seconde
   angryShake: 0.45, // amplitude de ce secouement, en radians
+  flailArmAngle: 2.7, // angle des bras d'un piéton projeté : en l'air, bras levés, en radians
+  flailShake: 0.5, // amplitude de leur battement en l'air, en radians
+  limpArmAngle: 0.35, // angle des bras d'un piéton assommé au sol : ballants, en radians
+  arcHeight: 20, // hauteur du saut du piéton projeté, au sommet de son vol, en px
+  pivotHeight: 16, // hauteur autour de laquelle il culbute (le milieu de son corps), en px
+  lyingDrop: 10, // de combien son corps descend une fois allongé, pour être posé au sol et non en l'air, en px
+  getUpSeconds: 0.35, // durée de son redressement à la fin du temps passé au sol, en secondes
+  maxSpinTurns: 2, // nombre maximal de tours qu'il fait sur lui-même en vol (1 à ce nombre)
 } as const

@@ -19,6 +19,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 
 ### Ajouté
 
+- Un véhicule qui roule projette les piétons qu'il touche, façon dessin animé : ils volent dans son sens en culbutant (sens, nombre de tours et pose sur le dos ou le ventre propres à chacun), restent au sol, puis se relèvent selon leur personnalité (râler, regarder, filmer) et reviennent sur le trottoir (#40)
 - Une mini-carte en haut à gauche : la ville autour du joueur, une flèche dans le sens de la marche ou de la voiture, et les repères (missions, concession, garage, atelier) ; un repère lointain apparaît au bord, dans sa direction (#65)
 - La ville est quatre fois plus grande (112 × 76 cases) : à l'est un quartier d'affaires et une banlieue autour d'un parc et de son étang, au sud la plage prolongée, la mer, et une île industrielle (entrepôts, parcs à conteneurs, quais) reliée par deux ponts ; des véhicules garés dans les nouveaux quartiers (#64)
 - Sept nouveaux véhicules, chacun avec sa silhouette et sa conduite : la Voiturette de golf, la Citadine électrique, le Pick-up et sa benne, le Taxi et son enseigne, la Limousine interminable, le Bus et la Patrouille avec ses gyrophares (pas encore de police). Ils sont garés en ville, et tous sauf la Patrouille sont en vente à la concession (#66)

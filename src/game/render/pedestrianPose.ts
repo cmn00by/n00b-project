@@ -21,10 +21,20 @@ export function turnToward(current: number, target: number, maxStep: number): nu
 export type ArmAngles = readonly [number, number]
 
 /**
- * Ce que font ses bras selon son état : celui qui filme tend le bras droit avec son téléphone, celui qui râle lève et secoue les deux bras,
+ * Ce que font ses bras selon son état : celui qui filme tend le bras droit avec son téléphone, celui qui râle lève et secoue les deux bras, celui qui est projeté les agite en l'air, celui qui est au sol les laisse ballants,
  * les autres balancent leurs bras en marchant (`walkSwing`, en radians). `timeSeconds` fait avancer le secouement.
  */
-export function computeArmAngles(state: string, walkSwing: number, timeSeconds: number, view: { filmArmAngle: number; angryArmAngle: number; angryShakeSpeed: number; angryShake: number }): ArmAngles {
+export function computeArmAngles(
+  state: string,
+  walkSwing: number,
+  timeSeconds: number,
+  view: { filmArmAngle: number; angryArmAngle: number; angryShakeSpeed: number; angryShake: number; flailArmAngle: number; flailShake: number; limpArmAngle: number },
+): ArmAngles {
+  if (state === 'launched') {
+    const flail = Math.sin(timeSeconds * view.angryShakeSpeed) * view.flailShake
+    return [view.flailArmAngle + flail, view.flailArmAngle - flail]
+  }
+  if (state === 'down') return [view.limpArmAngle, -view.limpArmAngle]
   if (state === 'filming') return [0, view.filmArmAngle]
   if (state === 'angry') {
     const shake = Math.sin(timeSeconds * view.angryShakeSpeed) * view.angryShake

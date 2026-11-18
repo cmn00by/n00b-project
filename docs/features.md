@@ -161,7 +161,7 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 - [x] 10 modèles avec des réglages et une silhouette différents (en données : `src/data/vehicles/`, champ `look`) : la Mamie, la Livreuse, la Frimeuse, la Voiturette, la Citadine, le Pick-up, le Taxi, la Limousine, le Bus, la Patrouille (#66)
 - [ ] Voler une voiture occupée : le conducteur est éjecté et proteste (avec le bloc 9)
 - [ ] Dégâts visibles (fumée, carrosserie), puis panne, puis explosion comique
-- [ ] Renverser un piéton : il est projeté de façon cartoon, se relève et râle (pas de violence réaliste)
+- [x] Renverser un piéton : il est projeté de façon cartoon, se relève et réagit selon sa personnalité (pas de violence réaliste) (#40)
 - [ ] Klaxon (et les PNJ réagissent)
 - [ ] Radio : changer de station (avec le bloc 13)
 

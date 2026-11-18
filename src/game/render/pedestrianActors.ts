@@ -4,12 +4,14 @@
 // comme le joueur et les voitures. Leur apparence vient de la recette de leur type (src/data/npcTypes), tirée d'après leur id : voir pedestrianAppearance.ts.
 
 import * as THREE from 'three'
-import { findEntitiesWith } from '../../sim/core'
+import { STEP_SECONDS, TUNING, findEntitiesWith } from '../../sim/core'
 import type { EntityId, World } from '../../sim/core'
 import { PEDESTRIAN_STATES } from '../../sim/systems/pedestrians'
 import { NPC_TYPE_REGISTRY } from '../../data/npcTypes'
 import { PEDESTRIAN_VIEW } from '../constants'
 import { chooseAppearance } from './pedestrianAppearance'
+import { computeFallPose, computeFallVariant } from './pedestrianFall'
+import type { FallVariant } from './pedestrianFall'
 import { createPedestrianModel } from './pedestrianModel'
 import type { PedestrianModel } from './pedestrianModel'
 import { computeArmAngles, computeYaw, turnToward } from './pedestrianPose'
@@ -25,6 +27,7 @@ interface Shown {
   model: PedestrianModel
   yaw: number
   walkPhase: number
+  fall: FallVariant
 }
 
 export function createPedestrianActors(scene: THREE.Scene): PedestrianActors {
@@ -49,8 +52,10 @@ export function createPedestrianActors(scene: THREE.Scene): PedestrianActors {
         let entry = shown.get(pedestrian.id)
         if (entry === undefined) {
           const model = createPedestrianModel(chooseAppearance(type.look, pedestrian.id))
+          // Ordre « Y puis X » : le corps s'incline autour de son propre axe, après avoir été tourné vers son cap.
+          model.body.rotation.order = 'YXZ'
           scene.add(model.root)
-          entry = { model, yaw: heading, walkPhase: 0 }
+          entry = { model, yaw: heading, walkPhase: 0, fall: computeFallVariant(pedestrian.id, PEDESTRIAN_VIEW) }
           shown.set(pedestrian.id, entry)
         }
 
@@ -70,6 +75,17 @@ export function createPedestrianActors(scene: THREE.Scene): PedestrianActors {
         model.arms.forEach((arm, index) => (arm.rotation.x = armAngles[index] ?? 0))
         model.root.position.set(x, isMoving ? Math.abs(Math.cos(entry.walkPhase)) * PEDESTRIAN_VIEW.bobHeight : 0, y)
         model.body.rotation.y = entry.yaw
+
+        // Projeté ou au sol : le corps culbute, vole en arc, s'allonge puis se redresse (pivote autour de l'axe avant/arrière du corps, déjà tourné vers son cap).
+        const fall = computeFallPose(
+          pedestrian.pedestrian.state,
+          pedestrian.pedestrian.stateStepsLeft * STEP_SECONDS,
+          { launchSeconds: TUNING.pedestrians.launchSeconds, downSeconds: TUNING.pedestrians.downSeconds },
+          entry.fall,
+          PEDESTRIAN_VIEW,
+        )
+        model.body.rotation.x = fall.pitch
+        model.body.position.set(Math.sin(entry.yaw) * fall.shift, fall.lift, Math.cos(entry.yaw) * fall.shift)
 
         // Une seule pastille au-dessus de la tête, selon ce qu'il fait : « ! » en fuyant, « ? » s'il est curieux, une croix s'il râle. Elle tressaute. Celui qui filme montre son téléphone.
         const state = pedestrian.pedestrian.state
