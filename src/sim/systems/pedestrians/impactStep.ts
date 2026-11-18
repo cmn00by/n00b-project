@@ -1,15 +1,16 @@
 // Les pas d'un piéton touché par un véhicule : être projeté, rester au sol, et revenir sur le trottoir.
 // Expose : ImpactContext, startFlight(), updateLaunched(), updateDown(), updateReturning().
 // Pourquoi : les règles du choc sont dans impact.ts (pures) ; ici on les applique au composant du piéton, et on annonce le choc (pedestrian:hit).
-// Il ne touche pas au véhicule : le choc est un dessin animé, pas une collision. L'enchaînement : projeté (launched) → au sol (down) → il se relève et râle (angry,
-// avec les autres réactions) → s'il est hors du trottoir, il revient (returning) puis reprend sa promenade.
+// Il ne touche pas au véhicule : le choc est un dessin animé, pas une collision. L'enchaînement : projeté (launched) → au sol (down) → il se relève et réagit selon
+// son type (râler, regarder sonné, filmer) → s'il est hors du trottoir, il revient (returning) puis reprend sa promenade.
 
 import { despawnEntity, getTileCenter } from '../../core'
-import type { EntityWith, TileMap, World } from '../../core'
+import type { EntityWith, NpcTypeDef, TileMap, World } from '../../core'
 import { computeLaunchVelocity, findNearestWalkableTile, stepFlight } from './impact'
 import type { VehicleHit } from './impact'
 import { computeAngleOf, computeHeadingToward, moveToward } from './movement'
-import { PEDESTRIAN_STATES } from './stateMachine'
+import { chooseGetUpState } from './reactionChoice'
+import { PEDESTRIAN_STATES, computeWatchSteps } from './stateMachine'
 import { secondsToSteps } from './stepTime'
 import type { PedestrianTuning } from './tuning'
 
@@ -28,7 +29,9 @@ export function startFlight(context: ImpactContext, entity: PedestrianEntity, hi
   const { pedestrian } = entity
   pedestrian.state = PEDESTRIAN_STATES.launched
   pedestrian.stateStepsLeft = secondsToSteps(context.tuning.launchSeconds)
-  pedestrian.flight = computeLaunchVelocity(hit, context.tuning)
+  // Deux tirages au hasard (du simulateur : même graine, même choc) : le vol dévie un peu de côté et part plus ou moins fort.
+  const rolls = { side: context.world.rng.nextFloat() * 2 - 1, power: context.world.rng.nextFloat() * 2 - 1 }
+  pedestrian.flight = computeLaunchVelocity(hit, context.tuning, rolls)
   // Il oublie la case qu'il visait : après le choc, il choisira un trottoir.
   delete pedestrian.targetTile
   context.world.events.emit('pedestrian:hit', { entityId: entity.id, vehicleId: hit.vehicleId, impactSpeed: hit.speed })
@@ -49,13 +52,14 @@ export function updateLaunched(context: ImpactContext, entity: PedestrianEntity)
   pedestrian.stateStepsLeft = secondsToSteps(tuning.downSeconds)
 }
 
-/** Un pas au sol ; quand il se relève, il râle. */
-export function updateDown(context: ImpactContext, entity: PedestrianEntity): void {
+/** Un pas au sol ; quand il se relève, il réagit selon la personnalité de son type (râler, regarder sonné, filmer), tirée au hasard selon ses poids. */
+export function updateDown(context: ImpactContext, entity: PedestrianEntity, type: NpcTypeDef): void {
   const { pedestrian } = entity
   pedestrian.stateStepsLeft -= 1
   if (pedestrian.stateStepsLeft > 0) return
-  pedestrian.state = PEDESTRIAN_STATES.angry
-  pedestrian.stateStepsLeft = secondsToSteps(context.tuning.angrySeconds)
+  const state = chooseGetUpState(type.reactionWeights, context.world.rng)
+  pedestrian.state = state
+  pedestrian.stateStepsLeft = computeWatchSteps(state, context.tuning)
 }
 
 /** Un pas de retour vers le trottoir le plus proche ; arrivé, il reprend sa promenade. Aucun trottoir assez près : il quitte la ville. */

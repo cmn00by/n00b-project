@@ -1,5 +1,5 @@
 // Le choc d'un véhicule contre un piéton : qui est touché, où il est projeté, et où il retourne ensuite.
-// Expose : MovingVehicle, VehicleHit, findMovingVehicles(), findVehicleHit(), computeLaunchVelocity(), stepFlight(), findNearestWalkableTile().
+// Expose : MovingVehicle, VehicleHit, LaunchRolls, findMovingVehicles(), findVehicleHit(), computeLaunchVelocity(), stepFlight(), findNearestWalkableTile().
 // Pourquoi : les piétons n'ont pas de corps solide (la brique collision ne les voit pas) : sans cela une voiture les traverserait. Ici, un véhicule qui roule
 // les projette à la façon d'un dessin animé : il vole dans le sens du véhicule, s'arrête contre un mur, reste au sol, puis revient sur le trottoir.
 // La brique lit seulement des composants (position, velocity, body, vehicle) : elle ne connaît pas la conduite. Fonctions pures, testées dans Node.
@@ -49,10 +49,24 @@ export function findVehicleHit(x: number, y: number, vehicles: readonly MovingVe
   return undefined
 }
 
-/** La vitesse de départ du piéton projeté : celle du véhicule en proportion, mais jamais moins que `launchMinSpeed` ni plus que `launchMaxSpeed`. */
-export function computeLaunchVelocity(hit: VehicleHit, tuning: PedestrianTuning): { vx: number; vy: number } {
-  const speed = Math.min(tuning.launchMaxSpeed, Math.max(tuning.launchMinSpeed, hit.speed * tuning.launchSpeedFactor))
-  return { vx: hit.directionX * speed, vy: hit.directionY * speed }
+/** Deux tirages au hasard, chacun de -1 à 1 : de quel côté et de combien le vol dévie du sens du véhicule, et s'il part plus ou moins fort. 0 et 0 : pile dans son sens, à force normale. */
+export interface LaunchRolls {
+  side: number
+  power: number
+}
+
+/**
+ * La vitesse de départ du piéton projeté : celle du véhicule en proportion, avec un petit écart de force (`launchPowerJitter`), mais jamais moins que `launchMinSpeed`
+ * ni plus que `launchMaxSpeed`. La direction dévie un peu (`launchSpread`) de côté. Sans trigonométrie (déterminisme) : on ajoute un peu de la perpendiculaire.
+ */
+export function computeLaunchVelocity(hit: VehicleHit, tuning: PedestrianTuning, rolls: LaunchRolls = { side: 0, power: 0 }): { vx: number; vy: number } {
+  const wanted = hit.speed * tuning.launchSpeedFactor * (1 + rolls.power * tuning.launchPowerJitter)
+  const speed = Math.min(tuning.launchMaxSpeed, Math.max(tuning.launchMinSpeed, wanted))
+  const deviation = rolls.side * tuning.launchSpread
+  const directionX = hit.directionX - hit.directionY * deviation
+  const directionY = hit.directionY + hit.directionX * deviation
+  const length = Math.sqrt(directionX ** 2 + directionY ** 2)
+  return { vx: (directionX / length) * speed, vy: (directionY / length) * speed }
 }
 
 /**

@@ -48,9 +48,33 @@ describe('computeLaunchVelocity', () => {
     expect(Math.abs(computeLaunchVelocity(hit(250), T).vy)).toBeGreaterThan(Math.abs(computeLaunchVelocity(hit(150), T).vy))
   })
 
+  it('dévie de côté avec le tirage de côté, d’autant plus qu’il est grand, sans changer la force', () => {
+    const straight = computeLaunchVelocity(hit(200), T, { side: 0, power: 0 })
+    const right = computeLaunchVelocity(hit(200), T, { side: 1, power: 0 })
+    const left = computeLaunchVelocity(hit(200), T, { side: -1, power: 0 })
+    expect(Math.abs(straight.vx)).toBeCloseTo(0)
+    expect(right.vx * left.vx).toBeLessThan(0)
+    expect(Math.abs(right.vx)).toBeGreaterThan(10)
+    expect(Math.sqrt(right.vx ** 2 + right.vy ** 2)).toBeCloseTo(Math.sqrt(straight.vx ** 2 + straight.vy ** 2))
+    expect(Math.abs(computeLaunchVelocity(hit(200), T, { side: 0.5, power: 0 }).vx)).toBeLessThan(Math.abs(right.vx))
+  })
+
+  it('part plus ou moins fort avec le tirage de force', () => {
+    const weak = Math.abs(computeLaunchVelocity(hit(200), T, { side: 0, power: -1 }).vy)
+    const strong = Math.abs(computeLaunchVelocity(hit(200), T, { side: 0, power: 1 }).vy)
+    expect(strong).toBeGreaterThan(weak)
+  })
+
+  it('sans écart (réglages à 0), les tirages ne changent rien', () => {
+    const none = { ...T, launchSpread: 0, launchPowerJitter: 0 }
+    expect(computeLaunchVelocity(hit(200), none, { side: 1, power: 1 })).toEqual(computeLaunchVelocity(hit(200), none, { side: 0, power: 0 }))
+  })
+
   it('reste entre le minimum et le maximum', () => {
     expect(Math.abs(computeLaunchVelocity(hit(T.hitMinSpeed), T).vy)).toBeCloseTo(T.launchMinSpeed)
     expect(Math.abs(computeLaunchVelocity(hit(5000), T).vy)).toBeCloseTo(T.launchMaxSpeed)
+    expect(Math.abs(computeLaunchVelocity(hit(5000), T, { side: 0, power: 1 }).vy)).toBeCloseTo(T.launchMaxSpeed)
+    expect(Math.abs(computeLaunchVelocity(hit(T.hitMinSpeed), T, { side: 0, power: -1 }).vy)).toBeCloseTo(T.launchMinSpeed)
   })
 })
 

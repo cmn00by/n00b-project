@@ -105,7 +105,7 @@ export function updatePedestrian(context: StepContext, entity: PedestrianEntity,
 
   // Un piéton en vol ou au sol ne réagit à rien : il subit son choc. Sinon, un véhicule qui roule et le touche le projette, quoi qu'il fasse.
   if (pedestrian.state === PEDESTRIAN_STATES.launched) return updateLaunched(context, entity)
-  if (pedestrian.state === PEDESTRIAN_STATES.down) return updateDown(context, entity)
+  if (pedestrian.state === PEDESTRIAN_STATES.down) return updateDown(context, entity, type)
   const hit = findVehicleHit(position.x, position.y, context.vehicles, tuning)
   if (hit !== undefined) return startFlight(context, entity, hit)
   if (pedestrian.state === PEDESTRIAN_STATES.returning) return updateReturning(context, entity, type.walkSpeed)

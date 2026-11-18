@@ -42,6 +42,8 @@ export const TUNING = {
     launchMaxSpeed: 300, // ...et maximale : un véhicule très rapide ne l'envoie pas à l'autre bout de la ville
     launchSeconds: 0.7, // durée du vol d'un piéton projeté (sa vitesse décroît jusqu'à zéro), en secondes
     downSeconds: 1.2, // temps qu'il reste au sol après l'atterrissage, en secondes
+    launchSpread: 0.3, // écart aléatoire de la direction du vol, de part et d'autre du sens du véhicule : 0.3 ≈ ±17°. 0 = toujours pile dans son sens
+    launchPowerJitter: 0.15, // écart aléatoire de la vitesse de départ : 0.15 = ±15 % (avant les bornes min et max). 0 = toujours la même force
     returnSearchTiles: 8, // jusqu'à cette distance (en cases) il cherche un trottoir où retourner ; sinon il quitte la ville
     spawnTries: 24, // nombre d'endroits tirés au hasard pour faire naître un piéton avant de laisser tomber (jusqu'à la prochaine tentative)
     walkableTileKinds: ['sidewalk'], // les types de case sur lesquels les piétons marchent (ids de src/data/tileKinds)

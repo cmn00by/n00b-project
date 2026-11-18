@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createRng } from '../../core'
-import { WATCH_STATES, chooseWatchState, isWatchState } from './reactionChoice'
+import { WATCH_STATES, chooseGetUpState, chooseWatchState, isWatchState } from './reactionChoice'
 import type { WatchState } from './reactionChoice'
 
 function countChoices(weights: { stare: number; curious: number; filming: number; angry: number }, times: number, seed = 1) {
@@ -44,5 +44,27 @@ describe('isWatchState', () => {
   it('reconnaît les états où on regarde, et seulement eux', () => {
     for (const state of WATCH_STATES) expect(isWatchState(state)).toBe(true)
     for (const state of ['walking', 'pausing', 'fleeing']) expect(isWatchState(state)).toBe(false)
+  })
+})
+
+describe('chooseGetUpState', () => {
+  it('ne choisit jamais la curiosité : il n’y a plus rien vers quoi s’approcher', () => {
+    const rng = createRng(3)
+    for (let index = 0; index < 500; index++) expect(chooseGetUpState({ stare: 1, curious: 5, filming: 1, angry: 1 }, rng)).not.toBe('curious')
+  })
+
+  it('râle quand son type ne fait que de la curiosité', () => {
+    expect(chooseGetUpState({ stare: 0, curious: 1, filming: 0, angry: 0 }, createRng(1))).toBe('angry')
+  })
+
+  it('respecte les autres poids', () => {
+    const rng = createRng(4)
+    const counts: Record<string, number> = { noticing: 0, filming: 0, angry: 0 }
+    for (let index = 0; index < 3000; index++) {
+      const state = chooseGetUpState({ stare: 1, curious: 3, filming: 2, angry: 0 }, rng)
+      counts[state] = (counts[state] ?? 0) + 1
+    }
+    expect(counts.angry).toBe(0)
+    expect(counts.filming ?? 0).toBeGreaterThan((counts.noticing ?? 0) * 1.6)
   })
 })

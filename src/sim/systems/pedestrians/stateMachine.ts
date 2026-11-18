@@ -1,5 +1,5 @@
 // La machine à états d'un piéton : se promener, s'arrêter, remarquer (regarder, être curieux, filmer, râler), fuir, être projeté puis revenir.
-// Expose : PEDESTRIAN_STATES, advanceState().
+// Expose : PEDESTRIAN_STATES, advanceState(), computeWatchSteps().
 // Pourquoi : un état est un simple texte stocké dans le composant pedestrian ; une réaction de plus est un état de plus ici, sans toucher au noyau.
 // La fuite l'emporte sur tout, puis la durée de chaque état s'écoule pas après pas. Quelle réaction un piéton choisit quand il remarque est décidé à part (reactionChoice.ts).
 
@@ -28,7 +28,7 @@ type StateFields = Pick<Pedestrian, 'state' | 'stateStepsLeft'>
 const WALKING: StateFields = { state: PEDESTRIAN_STATES.walking, stateStepsLeft: 0 }
 
 /** Combien de temps dure un état où il regarde, en pas. */
-function computeWatchSteps(state: WatchState, tuning: PedestrianTuning): number {
+export function computeWatchSteps(state: WatchState, tuning: PedestrianTuning): number {
   const seconds = { noticing: tuning.noticeSeconds, curious: tuning.curiousSeconds, filming: tuning.filmingSeconds, angry: tuning.angrySeconds }[state]
   return secondsToSteps(seconds)
 }
