@@ -36,6 +36,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 - Bible visuelle en Gemini 3 Pro : 7 planches de référence (personnages, animation, portraits, véhicules, sol, bâtiments, scène) et leurs prompts (#4)
 - Le HUD : en haut à droite, la santé (cœurs), la recherche (trois étoiles) et l'argent, en petites icônes pixel art ; valeurs factices pour l'instant, en attendant que la simulation les fournisse (#11)
 - Commandes tactiles : sur téléphone, un joystick qui apparaît sous le pouce gauche pour marcher et conduire, un bouton rond (courir à pied, frein à main en voiture) et un bouton « E » pour monter et descendre ; le jeu reconnaît tout seul un écran tactile et suit la dernière entrée utilisée (un toucher, une touche) ; `?controls=touch` ou `?controls=keyboard` force le mode (#20)
+- Les piétons réagissent de façons variées : face à quelqu'un qui fonce sur eux, certains regardent, d'autres s'approchent par curiosité (un « ? » jaune), filment avec leur téléphone ou râlent les bras en l'air (une croix rouge), selon la personnalité de leur type ; une voiture lancée vers eux leur fait peur comme un joueur qui court (#31)
 
 ### Corrigé
 

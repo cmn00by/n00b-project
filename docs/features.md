@@ -187,10 +187,11 @@ Grâce à l'architecture en briques ([architecture.md](architecture.md)), chaque
 
 **V1**
 
-- [ ] Réactions : peur (fuir), colère (insulter, frapper), curiosité (s'approcher), filmer avec son téléphone
-- [ ] Appeler la police quand ils voient un délit (avec le bloc 7)
+- [x] Réactions variées, tirées selon la personnalité du type : curiosité (s'approcher), filmer avec son téléphone, râler (sans coups) (#31)
+- [ ] Colère physique : bousculer, frapper, en cartoon (#47)
+- [ ] Appeler la police quand ils voient un délit (avec le bloc 7) (#45)
 - [ ] Types de PNJ par quartier (dockers, retraités, golfeurs, touristes…) avec un comportement propre
-- [ ] Bulles de texte au-dessus des PNJ (avec le bloc 9)
+- [ ] Bulles de texte au-dessus des PNJ (avec le bloc 9) (#46)
 - [ ] Personnages nommés qui donnent des missions (avec le bloc 8)
 
 **Plus tard**
