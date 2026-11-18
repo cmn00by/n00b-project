@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { TUNING, createRegistry, createSimulation, createTestWorld, findEntitiesWith, loadMap, spawnEntity } from '../../core'
-import type { Command, NpcTypeDef, Simulation, World } from '../../core'
+import type { Command, NpcTypeDef, ReactionWeights, Simulation, World } from '../../core'
 import { createPedestriansSystem } from './pedestriansSystem'
 import { makeTestMap } from './testMap'
 import { createPedestrian } from './personality'
@@ -16,6 +16,7 @@ const PASSANT: NpcTypeDef = {
   courage: { min: 0.5, max: 0.5 },
   patience: { min: 0.5, max: 0.5 },
   pauseSeconds: { min: 1, max: 2 },
+  reactionWeights: { stare: 1, curious: 0, filming: 0, angry: 0 }, // il regarde toujours : les tests de réaction restent prévisibles
 }
 const TYPES = createRegistry('Type de PNJ', [PASSANT])
 const NO_TYPES = createRegistry('Type de PNJ', [])
@@ -241,6 +242,125 @@ describe('peur', () => {
       expect(pedestrian.pedestrian?.state).toBe('fleeing')
       stepManyTimes(simulation, undefined, Math.round(T.fleeSeconds * 30) + 5)
       expect(pedestrian.pedestrian?.state).toBe('walking')
+    })
+  })
+})
+
+describe('réactions variées', () => {
+  /** Un monde sans naissance avec un piéton d'un type qui ne fait QUE la réaction demandée, et un joueur à `gap` px à sa gauche. */
+  function makeReactionScene(weights: ReactionWeights, courage: number, gap: number) {
+    const type: NpcTypeDef = { ...PASSANT, reactionWeights: weights }
+    const { world, player, simulation } = makeStreetWorld(createRegistry('Type de PNJ', [type]))
+    for (const pedestrian of listPedestrians(world)) delete world.entities[pedestrian.id]
+    const pedestrianX = 20 * 32 + 16
+    if (player.position === undefined) throw new Error('joueur sans position')
+    player.position.x = pedestrianX - gap
+    player.position.y = 48
+    const base = createPedestrian(type, world.rng)
+    const pedestrian = spawnEntity(world, 'pedestrian', { position: { x: pedestrianX, y: 48, angle: 0 }, pedestrian: { ...base, courage, heading: { x: 1, y: 0 } } })
+    return { world, player, simulation, pedestrian }
+  }
+
+  function runAtPedestrian(simulation: Simulation, playerId: number, count: number): void {
+    for (let step = 0; step < count; step++) simulation.step([runCommand(playerId, 1, 0, true)])
+  }
+
+  const ONLY = { stare: 0, curious: 0, filming: 0, angry: 0 }
+
+  it('filme quand son type ne fait que ça, sans bouger, tourné vers le joueur', () => {
+    withTuning({ maxCount: 0 }, () => {
+      const { player, simulation, pedestrian } = makeReactionScene({ ...ONLY, filming: 1 }, 1, 110)
+      runAtPedestrian(simulation, player.id, 3)
+      const filmingX = pedestrian.position?.x ?? 0
+      runAtPedestrian(simulation, player.id, 10)
+      expect(pedestrian.pedestrian?.state).toBe('filming')
+      expect(pedestrian.position?.x).toBe(filmingX)
+      expect(pedestrian.position?.angle).toBe(Math.PI)
+    })
+  })
+
+  it('râle quand son type ne fait que ça, sans bouger', () => {
+    withTuning({ maxCount: 0 }, () => {
+      const { player, simulation, pedestrian } = makeReactionScene({ ...ONLY, angry: 1 }, 1, 110)
+      runAtPedestrian(simulation, player.id, 3)
+      const angryX = pedestrian.position?.x ?? 0
+      runAtPedestrian(simulation, player.id, 10)
+      expect(pedestrian.pedestrian?.state).toBe('angry')
+      expect(pedestrian.position?.x).toBe(angryX)
+    })
+  })
+
+  it('un curieux s’approche du joueur, puis s’arrête à sa distance d’arrêt sans le traverser', () => {
+    withTuning({ maxCount: 0 }, () => {
+      const { simulation, pedestrian, player } = makeReactionScene({ ...ONLY, curious: 1 }, 1, 110)
+      if (player.position === undefined || pedestrian.position === undefined) throw new Error('position manquante')
+      const startX = pedestrian.position.x
+      runAtPedestrian(simulation, player.id, 400)
+      const distance = pedestrian.position.x - player.position.x
+      expect(pedestrian.pedestrian?.state).toBe('curious')
+      expect(startX - pedestrian.position.x).toBeGreaterThan(20)
+      expect(distance).toBeLessThanOrEqual(T.curiousStopDistance)
+      expect(distance).toBeGreaterThan(0)
+    })
+  })
+
+  it('ne s’éloigne jamais du trottoir en s’approchant', () => {
+    withTuning({ maxCount: 0 }, () => {
+      const { simulation, pedestrian, player } = makeReactionScene({ ...ONLY, curious: 1 }, 1, 110)
+      for (let step = 0; step < 300; step++) {
+        simulation.step([runCommand(player.id, 1, 0, true)])
+        expect(pedestrian.position?.y).toBe(48)
+      }
+    })
+  })
+
+  it('fuit quand même quand ça arrive tout près, même un filmeur', () => {
+    withTuning({ maxCount: 0 }, () => {
+      const { world, player, simulation, pedestrian } = makeReactionScene({ ...ONLY, filming: 1 }, 0, 145)
+      if (player.position === undefined) throw new Error('joueur sans position')
+      const scared: number[] = []
+      world.events.on('pedestrian:scared', ({ entityId }) => scared.push(entityId))
+      // Le joueur est loin : il filme. Puis le joueur s'avance en courant, et il fuit.
+      runAtPedestrian(simulation, player.id, 3)
+      expect(pedestrian.pedestrian?.state).toBe('filming')
+      for (let step = 0; step < 40; step++) {
+        player.position.x += 3
+        simulation.step([runCommand(player.id, 1, 0, true)])
+      }
+      expect(pedestrian.pedestrian?.state).toBe('fleeing')
+      expect(scared).toEqual([pedestrian.id])
+    })
+  })
+
+  it('une voiture lancée vers lui le fait réagir, une voiture garée non', () => {
+    withTuning({ maxCount: 0 }, () => {
+      const { world, simulation, pedestrian, player } = makeReactionScene({ ...ONLY, stare: 1 }, 0, 400)
+      if (player.position === undefined || pedestrian.position === undefined) throw new Error('position manquante')
+      const car = spawnEntity(world, 'vehicle', { position: { x: pedestrian.position.x - 120, y: 48, angle: 0 }, velocity: { vx: 0, vy: 0 }, vehicle: { modelId: 'test', headingX: 1, headingY: 0 } })
+      for (let step = 0; step < 10; step++) simulation.step()
+      expect(pedestrian.pedestrian?.state).toBe('walking')
+      if (car.velocity === undefined) throw new Error('voiture sans vitesse')
+      car.velocity.vx = 200
+      simulation.step()
+      expect(['noticing', 'fleeing']).toContain(pedestrian.pedestrian?.state)
+    })
+  })
+
+  it('deux piétons du même type ne réagissent pas tous pareil face au même événement', () => {
+    withTuning({ maxCount: 0 }, () => {
+      const type: NpcTypeDef = { ...PASSANT, reactionWeights: { stare: 1, curious: 1, filming: 1, angry: 1 } }
+      const { world, player, simulation } = makeStreetWorld(createRegistry('Type de PNJ', [type]))
+      for (const pedestrian of listPedestrians(world)) delete world.entities[pedestrian.id]
+      if (player.position === undefined) throw new Error('joueur sans position')
+      player.position.x = 20 * 32 + 16 - 110
+      player.position.y = 48
+      const crowd = [0, 1, 2, 3, 4, 5, 6, 7].map((index) => {
+        const base = createPedestrian(type, world.rng)
+        return spawnEntity(world, 'pedestrian', { position: { x: 20 * 32 + 16 + index * 40, y: 48, angle: 0 }, pedestrian: { ...base, courage: 1, heading: { x: 1, y: 0 } } })
+      })
+      runAtPedestrian(simulation, player.id, 3)
+      const states = new Set(crowd.map((pedestrian) => pedestrian.pedestrian?.state))
+      expect(states.size).toBeGreaterThan(1)
     })
   })
 })

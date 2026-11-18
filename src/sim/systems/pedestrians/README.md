@@ -22,25 +22,33 @@ son **courage** et sa **patience** (tirés à sa naissance dans les plages de so
 | `walking`  | se promène : tout droit, en tournant parfois, sans jamais quitter le trottoir |
 | `pausing`  | s'est arrêté un moment (plus longtemps s'il est patient)                      |
 | `noticing` | a remarqué quelqu'un qui fonce sur lui : il s'arrête et le regarde            |
+| `curious`  | s'approche de ce qui l'intrigue (sur le trottoir), puis regarde               |
+| `filming`  | s'arrête et filme avec son téléphone                                          |
+| `angry`    | s'arrête et râle, sans coups                                                  |
 | `fleeing`  | s'enfuit, plus vite, vers la case voisine la plus éloignée du danger          |
 
 - **Ce qui fait peur** : un joueur qui avance **plus vite que `scaringSpeed`** (le joueur qui court, pas celui qui marche), **vers** le piéton, à moins de `noticeDistance`.
-  Un courageux le regarde de loin et ne fuit que de près ; un peureux fuit de loin. Une voiture (#8) fournira sa vitesse de la même façon.
+  Un courageux le regarde de loin et ne fuit que de près ; un peureux fuit de loin. Un **véhicule en mouvement** compte aussi : sa vitesse est lue dans le composant `velocity`
+  (la brique ne connaît pas la conduite) ; une voiture à l'arrêt ne fait peur à personne. Le contact avec la voiture n'est pas géré (#40).
+- **Quelle réaction** : au moment où il remarque (et pas à chaque pas), il tire au hasard (`world.rng`) entre regarder, s'approcher, filmer et râler, selon les poids `reactionWeights`
+  de la fiche de son type (`reactionChoice.ts`). Un poids à 0 interdit la réaction. Il la garde tant que ça continue, et **fuit quand même** si ça se rapproche.
 - **Éviter les autres** : un piéton attend derrière un autre trop près de lui, seulement s'il a un id plus grand : deux piétons face à face ne s'attendent jamais l'un l'autre.
 - **Hasard** : tout passe par `world.rng`. Même graine et mêmes commandes : même foule.
 
 ## Ajouter un comportement
 
-Une nouvelle réaction (colère, curiosité, filmer : issue #31) est **un état de plus** dans `stateMachine.ts`, choisi selon la personnalité du type. Le noyau ne change pas.
+Une nouvelle réaction est **un état de plus** dans `stateMachine.ts`, **un poids de plus** dans `ReactionWeights` (`src/sim/core/npcType.ts`) et dans `reactionChoice.ts`, avec ses durées dans `TUNING.pedestrians`.
+Ce qui reste : la police (#45), les bulles de texte (#46) et les coups (#47).
 
 ## Fichiers
 
-| Fichier                                                     | Rôle                                                                               |
-| ----------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `pedestriansSystem.ts`                                      | le système : naissance, disparition, puis un pas de vie par piéton                 |
-| `pedestrianStep.ts`                                         | le pas d'un piéton : réagir, changer d'état, marcher, attendre, fuir               |
-| `population.ts`                                             | faire naître et retirer des piétons autour des joueurs                             |
-| `threats.ts`                                                | ce qui fait peur (les commandes des joueurs) et la position des joueurs            |
-| `reaction.ts`, `stateMachine.ts`, `tiles.ts`, `movement.ts` | les règles pures : réaction, états, choix de case, déplacement (testées dans Node) |
-| `personality.ts`, `stepTime.ts`, `tuning.ts`                | personnalité tirée à la naissance, secondes en pas, type des réglages              |
-| `testMap.ts`                                                | une petite carte dessinée en caractères, pour les tests                            |
+| Fichier                                               | Rôle                                                                                |
+| ----------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `pedestriansSystem.ts`                                | le système : naissance, disparition, puis un pas de vie par piéton                  |
+| `pedestrianStep.ts`                                   | le pas d'un piéton : réagir, changer d'état, marcher, attendre, fuir                |
+| `population.ts`                                       | faire naître et retirer des piétons autour des joueurs                              |
+| `threats.ts`                                          | ce qui fait peur (joueurs qui courent, véhicules lancés) et la position des joueurs |
+| `reaction.ts`, `reactionChoice.ts`, `stateMachine.ts` | les règles pures : réaction, choix de la réaction, états (testées dans Node)        |
+| `tiles.ts`, `movement.ts`                             | les règles pures : choix de case (marcher, fuir, approcher), déplacement            |
+| `personality.ts`, `stepTime.ts`, `tuning.ts`          | personnalité tirée à la naissance, secondes en pas, type des réglages               |
+| `testMap.ts`                                          | une petite carte dessinée en caractères, pour les tests                             |

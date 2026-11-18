@@ -1,4 +1,4 @@
-// Le pas d'un piéton : réagir à ce qui fonce sur lui, changer d'état, puis marcher, attendre ou fuir.
+// Le pas d'un piéton : réagir à ce qui fonce sur lui, changer d'état, puis marcher, regarder, approcher ou fuir.
 // Expose : StepContext, updatePedestrian().
 // Pourquoi : c'est la seule fonction qui modifie un piéton. Elle assemble les morceaux purs (réaction, états, choix de case, déplacement) ;
 // les règles elles-mêmes sont dans ces fichiers, testés à part.
@@ -9,8 +9,9 @@ import { computeAngleOf, computeHeadingToward, moveToward } from './movement'
 import { computePauseSteps } from './personality'
 import { decideReaction } from './reaction'
 import type { Reaction, Threat } from './reaction'
+import { chooseWatchState, isWatchState } from './reactionChoice'
 import { PEDESTRIAN_STATES, advanceState } from './stateMachine'
-import { chooseFleeTile, chooseNextTile, getTileAt } from './tiles'
+import { chooseApproachTile, chooseFleeTile, chooseNextTile, getTileAt } from './tiles'
 import type { TileStep } from './tiles'
 import type { PedestrianTuning } from './tuning'
 
@@ -54,7 +55,11 @@ function chooseTarget(context: StepContext, entity: PedestrianEntity, threat: Th
   const { pedestrian, position } = entity
   const tile = getTileAt(map, position.x, position.y)
   const isFleeing = pedestrian.state === PEDESTRIAN_STATES.fleeing
-  const step: TileStep | undefined = isFleeing && threat !== undefined ? chooseFleeTile(map, tile, threat, world.rng, tuning) : chooseNextTile(map, tile, pedestrian.heading, world.rng, tuning)
+  const isCurious = pedestrian.state === PEDESTRIAN_STATES.curious
+  let step: TileStep | undefined
+  if (isFleeing && threat !== undefined) step = chooseFleeTile(map, tile, threat, world.rng, tuning)
+  else if (isCurious && threat !== undefined) step = chooseApproachTile(map, tile, threat, world.rng, tuning)
+  else step = chooseNextTile(map, tile, pedestrian.heading, world.rng, tuning)
   if (step === undefined) return false
   pedestrian.targetTile = { tileX: step.tileX, tileY: step.tileY }
   pedestrian.heading = step.heading
@@ -75,10 +80,17 @@ function walk(context: StepContext, entity: PedestrianEntity, type: NpcTypeDef):
   if (!moved.arrived) return
 
   delete pedestrian.targetTile
-  if (!isFleeing && world.rng.rollChance(tuning.pauseChance)) {
+  // Seul celui qui se promène s'arrête de lui-même : un curieux qui arrive reste dans son état.
+  if (pedestrian.state === PEDESTRIAN_STATES.walking && world.rng.rollChance(tuning.pauseChance)) {
     pedestrian.state = PEDESTRIAN_STATES.pausing
     pedestrian.stateStepsLeft = computePauseSteps(type, pedestrian.patience)
   }
+}
+
+/** Un curieux continue d'approcher tant qu'il est plus loin que sa distance d'arrêt de ce qui l'intrigue. */
+function isStillApproaching(position: { x: number; y: number }, threat: Threat | undefined, tuning: PedestrianTuning): boolean {
+  if (threat === undefined) return false
+  return Math.sqrt((threat.x - position.x) ** 2 + (threat.y - position.y) ** 2) > tuning.curiousStopDistance
 }
 
 /** Un pas de vie d'un piéton. */
@@ -88,7 +100,10 @@ export function updatePedestrian(context: StepContext, entity: PedestrianEntity,
 
   const scare = findStrongestReaction(entity, threats, tuning)
   const wasFleeing = pedestrian.state === PEDESTRIAN_STATES.fleeing
-  const next = advanceState(pedestrian, scare.reaction, tuning)
+  // Il ne choisit sa réaction (regarder, s'approcher, filmer, râler) qu'au moment où il remarque : le hasard n'est tiré que ce pas-là.
+  const startsWatching = scare.reaction === 'notice' && !wasFleeing && !isWatchState(pedestrian.state)
+  const watchState = startsWatching ? chooseWatchState(type.reactionWeights, world.rng) : PEDESTRIAN_STATES.noticing
+  const next = advanceState(pedestrian, scare.reaction, tuning, watchState)
   pedestrian.state = next.state
   pedestrian.stateStepsLeft = next.stateStepsLeft
   if (!wasFleeing && pedestrian.state === PEDESTRIAN_STATES.fleeing) {
@@ -97,10 +112,13 @@ export function updatePedestrian(context: StepContext, entity: PedestrianEntity,
     delete pedestrian.targetTile
   }
 
-  if (pedestrian.state === PEDESTRIAN_STATES.noticing) {
-    // Il s'arrête et se tourne vers ce qui fonce sur lui (sans changer la direction de sa promenade).
-    if (scare.threat !== undefined) position.angle = computeAngleOf(computeHeadingToward(position.x, position.y, scare.threat.x, scare.threat.y))
-    return
+  if (isWatchState(pedestrian.state)) {
+    // Un curieux s'approche encore tant qu'il n'est pas assez près ; les autres s'arrêtent et se tournent vers ce qui fonce sur eux (sans changer la direction de leur promenade).
+    const isApproaching = pedestrian.state === PEDESTRIAN_STATES.curious && isStillApproaching(position, scare.threat, tuning)
+    if (!isApproaching) {
+      if (scare.threat !== undefined) position.angle = computeAngleOf(computeHeadingToward(position.x, position.y, scare.threat.x, scare.threat.y))
+      return
+    }
   }
   if (pedestrian.state === PEDESTRIAN_STATES.pausing) return
 

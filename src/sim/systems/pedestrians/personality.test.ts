@@ -13,6 +13,7 @@ const TYPE: NpcTypeDef = {
   courage: { min: 0.2, max: 0.8 },
   patience: { min: 0.1, max: 0.9 },
   pauseSeconds: { min: 1, max: 5 },
+  reactionWeights: { stare: 1, curious: 1, filming: 1, angry: 1 },
 }
 
 describe('createPedestrian', () => {

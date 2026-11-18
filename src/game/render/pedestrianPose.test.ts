@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { computeYaw, turnToward } from './pedestrianPose'
+import { PEDESTRIAN_VIEW } from '../constants'
+import { computeArmAngles, computeYaw, turnToward } from './pedestrianPose'
 
 describe('computeYaw', () => {
   it('regarde vers le haut de la carte (-y) sans tourner', () => {
@@ -38,5 +39,29 @@ describe('turnToward', () => {
 
   it('reste immobile quand il regarde déjà la cible', () => {
     expect(turnToward(1.2, 1.2, 0.5)).toBe(1.2)
+  })
+})
+
+describe('computeArmAngles', () => {
+  it('balance les bras en sens inverse quand il marche', () => {
+    expect(computeArmAngles('walking', 0.5, 0, PEDESTRIAN_VIEW)).toEqual([-0.5, 0.5])
+    expect(computeArmAngles('fleeing', 0.9, 3, PEDESTRIAN_VIEW)).toEqual([-0.9, 0.9])
+  })
+
+  it('tend le bras droit pour filmer, et laisse tomber l’autre, quoi que fasse le balancement', () => {
+    expect(computeArmAngles('filming', 0.7, 1.3, PEDESTRIAN_VIEW)).toEqual([0, PEDESTRIAN_VIEW.filmArmAngle])
+  })
+
+  it('lève les deux bras quand il râle, en les secouant en sens inverse', () => {
+    const [left, right] = computeArmAngles('angry', 0, 0.1, PEDESTRIAN_VIEW)
+    expect(left).toBeGreaterThan(Math.PI / 2)
+    expect(right).toBeGreaterThan(Math.PI / 2)
+    expect(left - PEDESTRIAN_VIEW.angryArmAngle).toBeCloseTo(-(right - PEDESTRIAN_VIEW.angryArmAngle))
+  })
+
+  it('secoue les bras : ils ne restent pas figés au cours du temps', () => {
+    const first = computeArmAngles('angry', 0, 0.05, PEDESTRIAN_VIEW)
+    const later = computeArmAngles('angry', 0, 0.15, PEDESTRIAN_VIEW)
+    expect(first[0]).not.toBeCloseTo(later[0])
   })
 })

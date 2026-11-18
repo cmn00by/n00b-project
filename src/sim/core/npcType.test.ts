@@ -19,6 +19,7 @@ const VALID: NpcTypeDef = {
   courage: { min: 0.2, max: 0.8 },
   patience: { min: 0.1, max: 0.9 },
   pauseSeconds: { min: 1, max: 4 },
+  reactionWeights: { stare: 1, curious: 1, filming: 1, angry: 1 },
 }
 
 describe('validateNpcTypeDef', () => {
@@ -98,5 +99,18 @@ describe('validateNpcTypeDef', () => {
       expect(validateNpcTypeDef({ ...VALID, look: { ...VALID.look, heightScale: { min: 0.2, max: 1 } } })).toEqual(['look.heightScale : doit rester entre 0.5 et 1.5'])
       expect(validateNpcTypeDef({ ...VALID, look: { ...VALID.look, heightScale: { min: 1.2, max: 0.9 } } })).toEqual(['look.heightScale : min (1.2) dépasse max (0.9)'])
     })
+  })
+
+  it('refuse des poids de réaction négatifs ou qui ne sont pas des nombres', () => {
+    expect(validateNpcTypeDef({ ...VALID, reactionWeights: { stare: -1, curious: 1, filming: 1, angry: 1 } })).toEqual(['reactionWeights : chaque poids doit être un nombre supérieur ou égal à 0'])
+    expect(validateNpcTypeDef({ ...VALID, reactionWeights: { stare: Number.NaN, curious: 1, filming: 1, angry: 1 } })).toHaveLength(1)
+  })
+
+  it('refuse des poids de réaction tous à 0 : le PNJ ne saurait pas quoi faire', () => {
+    expect(validateNpcTypeDef({ ...VALID, reactionWeights: { stare: 0, curious: 0, filming: 0, angry: 0 } })).toEqual(['reactionWeights : au moins un poids doit dépasser 0'])
+  })
+
+  it('accepte une seule réaction possible', () => {
+    expect(validateNpcTypeDef({ ...VALID, reactionWeights: { stare: 0, curious: 0, filming: 2, angry: 0 } })).toEqual([])
   })
 })

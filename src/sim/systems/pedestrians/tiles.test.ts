@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { TUNING, createRng } from '../../core'
-import { chooseFleeTile, chooseNextTile, chooseSpawnTile, getTileAt, isWalkableTile } from './tiles'
+import { chooseApproachTile, chooseFleeTile, chooseNextTile, chooseSpawnTile, getTileAt, isWalkableTile } from './tiles'
 import { makeTestMap } from './testMap'
 
 const TUNING_PEDESTRIANS = TUNING.pedestrians
@@ -152,5 +152,31 @@ describe('chooseSpawnTile', () => {
   it('renvoie undefined quand aucune case ne convient', () => {
     const buildings = makeTestMap(['#####', '#####'])
     expect(chooseSpawnTile(buildings, player, [], createRng(1), tuning)).toBeUndefined()
+  })
+})
+
+describe('chooseApproachTile', () => {
+  it('choisit la case voisine qui le rapproche de ce qui l’intrigue', () => {
+    const next = chooseApproachTile(CORRIDOR, { tileX: 2, tileY: 0 }, { x: 0, y: 16 }, createRng(1), TUNING_PEDESTRIANS)
+    expect(next).toEqual({ tileX: 1, tileY: 0, heading: { x: -1, y: 0 } })
+  })
+
+  it('va dans l’autre sens quand ce qui l’intrigue est de l’autre côté', () => {
+    const next = chooseApproachTile(CORRIDOR, { tileX: 2, tileY: 0 }, { x: 160, y: 16 }, createRng(1), TUNING_PEDESTRIANS)
+    expect(next).toEqual({ tileX: 3, tileY: 0, heading: { x: 1, y: 0 } })
+  })
+
+  it('reste sur place quand aucune case ne le rapproche (au bout du trottoir, ce qui l’intrigue étant plus loin)', () => {
+    expect(chooseApproachTile(CORRIDOR, { tileX: 4, tileY: 0 }, { x: 400, y: 16 }, createRng(1), TUNING_PEDESTRIANS)).toBeUndefined()
+  })
+
+  it('reste sur place quand il est coincé', () => {
+    const alone = makeTestMap(['#####', '##s##', '#####'])
+    expect(chooseApproachTile(alone, { tileX: 2, tileY: 1 }, { x: 0, y: 0 }, createRng(1), TUNING_PEDESTRIANS)).toBeUndefined()
+  })
+
+  it('ne quitte jamais le trottoir pour s’approcher', () => {
+    // La route est juste sous le trottoir, et ce qui l’intrigue est dessus : il ne descend pas sur la route.
+    expect(chooseApproachTile(CORRIDOR, { tileX: 2, tileY: 0 }, { x: 80, y: 80 }, createRng(1), TUNING_PEDESTRIANS)).toBeUndefined()
   })
 })

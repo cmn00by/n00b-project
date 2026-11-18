@@ -63,4 +63,32 @@ describe('advanceState', () => {
     for (let step = 0; step < NOTICE_STEPS; step++) current = advanceState(current, 'ignore', T)
     expect(current).toEqual(WALKING)
   })
+
+  it('prend la réaction choisie quand il remarque : curieux, filme ou râle', () => {
+    for (const watchState of ['curious', 'filming', 'angry'] as const) {
+      const next = advanceState(WALKING, 'notice', T, watchState)
+      expect(next.state).toBe(watchState)
+      expect(next.stateStepsLeft).toBeGreaterThan(0)
+    }
+  })
+
+  it('garde sa réaction tant que ça fonce sur lui, sans en changer en route', () => {
+    const filming = advanceState(WALKING, 'notice', T, 'filming')
+    expect(advanceState(filming, 'notice', T, 'angry')).toEqual(filming)
+  })
+
+  it('finit sa réaction puis reprend sa promenade quand ça ne le menace plus', () => {
+    for (const watchState of ['curious', 'filming', 'angry'] as const) {
+      let current = advanceState(WALKING, 'notice', T, watchState)
+      for (let step = 0; step < current.stateStepsLeft + 1000 && current.state !== PEDESTRIAN_STATES.walking; step++) current = advanceState(current, 'ignore', T)
+      expect(current).toEqual(WALKING)
+    }
+  })
+
+  it('fuit quand ça se rapproche, même en train de filmer ou de râler', () => {
+    for (const watchState of ['curious', 'filming', 'angry'] as const) {
+      const watching = advanceState(WALKING, 'notice', T, watchState)
+      expect(advanceState(watching, 'flee', T).state).toBe(PEDESTRIAN_STATES.fleeing)
+    }
+  })
 })

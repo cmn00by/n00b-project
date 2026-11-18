@@ -77,6 +77,17 @@ export function chooseFleeTile(map: TileMap, tile: TileCoords, threat: { x: numb
   return rng.pickOne(neighbours.filter((step) => squaredDistance(step) === farthest))
 }
 
+/** La case voisine qui le rapproche le plus de ce qui l'intrigue (au hasard entre celles à égalité). Undefined si coincé ou si aucune case ne le rapproche. */
+export function chooseApproachTile(map: TileMap, tile: TileCoords, target: { x: number; y: number }, rng: Rng, tuning: PedestrianTuning): TileStep | undefined {
+  const neighbours = findWalkableNeighbours(map, tile, tuning)
+  const squaredDistanceTo = (center: { x: number; y: number }): number => (center.x - target.x) ** 2 + (center.y - target.y) ** 2
+  const squaredDistance = (step: TileStep): number => squaredDistanceTo(getTileCenter(map, step))
+  const closest = Math.min(...neighbours.map(squaredDistance))
+  // Si aucune case voisine ne le rapproche, il reste où il est : il n'est pas utile de s'éloigner pour être « curieux ».
+  if (neighbours.length === 0 || closest >= squaredDistanceTo(getTileCenter(map, tile))) return undefined
+  return rng.pickOne(neighbours.filter((step) => squaredDistance(step) === closest))
+}
+
 /**
  * Une case où faire naître un piéton : un trottoir à la bonne distance du joueur (hors de l'écran, mais pas trop loin),
  * assez loin des piétons déjà là. Tire quelques endroits au hasard ; undefined si aucun ne convient (on réessayera plus tard).
