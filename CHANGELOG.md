@@ -42,6 +42,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 ### Corrigé
 
 - Une voiture rangée au garage ne reste plus affichée dans la rue (#54)
+- Un taxi ne bloque plus le pont ouest : il est garé sur l'île, et un test vérifie qu'aucun véhicule n'est garé sur un pont (#73)
 
 ### Modifié
 

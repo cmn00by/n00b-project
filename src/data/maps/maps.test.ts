@@ -19,6 +19,25 @@ describe('MAPS', () => {
     for (const def of MAPS) for (const spawn of def.spawns.vehicles ?? []) expect(VEHICLE_REGISTRY.has(spawn.modelId), spawn.modelId).toBe(true)
   })
 
+  it('ne gare aucun véhicule sur un pont : il bloquerait le passage (une route bordée d’eau)', () => {
+    for (const def of MAPS) {
+      const kindAt = (tileX: number, tileY: number): string | undefined => {
+        const symbol = def.rows[tileY]?.[tileX]
+        return symbol === undefined ? undefined : def.legend[symbol]
+      }
+      for (const spawn of def.spawns.vehicles ?? []) {
+        const isOnRoad = kindAt(spawn.tileX, spawn.tileY) === 'road'
+        const touchesWater = [
+          [1, 0],
+          [-1, 0],
+          [0, 1],
+          [0, -1],
+        ].some(([dx, dy]) => kindAt(spawn.tileX + (dx ?? 0), spawn.tileY + (dy ?? 0)) === 'water')
+        expect(isOnRoad && touchesWater, `${spawn.modelId} (${spawn.tileX}, ${spawn.tileY}) est sur un pont`).toBe(false)
+      }
+    }
+  })
+
   it('gare chaque véhicule sur une place assez grande, sans qu’il en touche un autre', () => {
     for (const def of MAPS) {
       const map = createTileMap(def, TILE_KIND_REGISTRY)
