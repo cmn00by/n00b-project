@@ -1,4 +1,4 @@
-// La machine à états d'un piéton : se promener, s'arrêter, remarquer (regarder, être curieux, filmer, râler), fuir.
+// La machine à états d'un piéton : se promener, s'arrêter, remarquer (regarder, être curieux, filmer, râler), fuir, être projeté puis revenir.
 // Expose : PEDESTRIAN_STATES, advanceState().
 // Pourquoi : un état est un simple texte stocké dans le composant pedestrian ; une réaction de plus est un état de plus ici, sans toucher au noyau.
 // La fuite l'emporte sur tout, puis la durée de chaque état s'écoule pas après pas. Quelle réaction un piéton choisit quand il remarque est décidé à part (reactionChoice.ts).
@@ -18,6 +18,9 @@ export const PEDESTRIAN_STATES = {
   filming: 'filming', // s'arrête et filme avec son téléphone
   angry: 'angry', // s'arrête et proteste (sans coups)
   fleeing: 'fleeing', // s'enfuit, plus vite que quand il se promène
+  launched: 'launched', // projeté par un véhicule : il vole dans le sens du véhicule
+  down: 'down', // au sol après l'atterrissage, avant de se relever et de râler
+  returning: 'returning', // hors du trottoir (après un choc) : il rejoint le trottoir le plus proche
 } as const
 
 type StateFields = Pick<Pedestrian, 'state' | 'stateStepsLeft'>

@@ -82,6 +82,8 @@ export interface Pedestrian {
   targetTile?: { tileX: number; tileY: number }
   /** Sa direction de marche, en cases (-1, 0 ou 1 par axe) : il continue tout droit tant qu'il ne décide pas de tourner. */
   heading: { x: number; y: number }
+  /** Sa vitesse de vol, en px par seconde, tant qu'il est projeté par un véhicule (état 'launched'). Absent le reste du temps. */
+  flight?: { vx: number; vy: number }
 }
 
 /** La mission en cours d'un joueur : laquelle, l'objectif atteint, les chronos (en pas de simulation) et les objets qu'il porte. */

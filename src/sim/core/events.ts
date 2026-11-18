@@ -17,6 +17,8 @@ export interface GameEvents {
   'world:stepped': { stepCount: number }
   /** Un piéton vient d'avoir peur et prend la fuite (émis par la brique pedestrians). Les effets (cri, bulle) pourront s'y brancher. */
   'pedestrian:scared': { entityId: EntityId }
+  /** Un véhicule en mouvement vient de projeter un piéton (émis par la brique pedestrians). impactSpeed : la vitesse du véhicule, en px/s. Dégâts, police et sons pourront s'y brancher. */
+  'pedestrian:hit': { entityId: EntityId; vehicleId: EntityId; impactSpeed: number }
   /** Une entité a été arrêtée par un obstacle (mur ou autre entité), émis par la brique collision. impactSpeed : la vitesse perdue, en px/s (0 si l'entité n'a pas de vitesse). */
   'entity:blocked': { entityId: EntityId; impactSpeed: number }
   /** Une entité est montée dans un véhicule (brique driving). */

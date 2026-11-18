@@ -1,17 +1,20 @@
-// Le pas d'un piéton : réagir à ce qui fonce sur lui, changer d'état, puis marcher, regarder, approcher ou fuir.
+// Le pas d'un piéton : être projeté par un véhicule, réagir à ce qui fonce sur lui, changer d'état, puis marcher, regarder, approcher ou fuir.
 // Expose : StepContext, updatePedestrian().
 // Pourquoi : c'est la seule fonction qui modifie un piéton. Elle assemble les morceaux purs (réaction, états, choix de case, déplacement) ;
 // les règles elles-mêmes sont dans ces fichiers, testés à part.
 
 import { getTileCenter } from '../../core'
 import type { EntityWith, NpcTypeDef, TileMap, World } from '../../core'
+import { findVehicleHit } from './impact'
+import type { MovingVehicle } from './impact'
+import { startFlight, updateDown, updateLaunched, updateReturning } from './impactStep'
 import { computeAngleOf, computeHeadingToward, moveToward } from './movement'
 import { computePauseSteps } from './personality'
 import { decideReaction } from './reaction'
 import type { Reaction, Threat } from './reaction'
 import { chooseWatchState, isWatchState } from './reactionChoice'
 import { PEDESTRIAN_STATES, advanceState } from './stateMachine'
-import { chooseApproachTile, chooseFleeTile, chooseNextTile, getTileAt } from './tiles'
+import { chooseApproachTile, chooseFleeTile, chooseNextTile, getTileAt, isWalkableTile } from './tiles'
 import type { TileStep } from './tiles'
 import type { PedestrianTuning } from './tuning'
 
@@ -20,6 +23,8 @@ export interface StepContext {
   map: TileMap
   tuning: PedestrianTuning
   threats: readonly Threat[]
+  /** Les véhicules qui roulent : l'un d'eux peut projeter un piéton. */
+  vehicles: readonly MovingVehicle[]
   /** La durée d'un pas, en secondes. */
   dt: number
 }
@@ -95,8 +100,15 @@ function isStillApproaching(position: { x: number; y: number }, threat: Threat |
 
 /** Un pas de vie d'un piéton. */
 export function updatePedestrian(context: StepContext, entity: PedestrianEntity, type: NpcTypeDef, others: readonly PedestrianEntity[]): void {
-  const { world, tuning, threats } = context
+  const { world, map, tuning, threats } = context
   const { pedestrian, position } = entity
+
+  // Un piéton en vol ou au sol ne réagit à rien : il subit son choc. Sinon, un véhicule qui roule et le touche le projette, quoi qu'il fasse.
+  if (pedestrian.state === PEDESTRIAN_STATES.launched) return updateLaunched(context, entity)
+  if (pedestrian.state === PEDESTRIAN_STATES.down) return updateDown(context, entity)
+  const hit = findVehicleHit(position.x, position.y, context.vehicles, tuning)
+  if (hit !== undefined) return startFlight(context, entity, hit)
+  if (pedestrian.state === PEDESTRIAN_STATES.returning) return updateReturning(context, entity, type.walkSpeed)
 
   const scare = findStrongestReaction(entity, threats, tuning)
   const wasFleeing = pedestrian.state === PEDESTRIAN_STATES.fleeing
@@ -110,6 +122,13 @@ export function updatePedestrian(context: StepContext, entity: PedestrianEntity,
     world.events.emit('pedestrian:scared', { entityId: entity.id })
     // Il vise une nouvelle case, à l'opposé du danger, au lieu de finir son chemin.
     delete pedestrian.targetTile
+  }
+
+  // Revenu à la promenade mais hors d'un trottoir (après un choc) : il rejoint d'abord le trottoir le plus proche.
+  const tile = getTileAt(map, position.x, position.y)
+  if (pedestrian.state === PEDESTRIAN_STATES.walking && !isWalkableTile(map, tile.tileX, tile.tileY, tuning)) {
+    pedestrian.state = PEDESTRIAN_STATES.returning
+    return
   }
 
   if (isWatchState(pedestrian.state)) {
