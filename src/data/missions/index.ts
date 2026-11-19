@@ -3,7 +3,8 @@
 import { createRegistry } from '../../sim/core'
 import type { MissionDef } from '../../sim/core'
 import { essaiLivraison } from './essaiLivraison'
+import { mamieJosetteEtLeChat } from './mamieJosetteEtLeChat'
 
-export const MISSIONS: MissionDef[] = [essaiLivraison]
+export const MISSIONS: MissionDef[] = [essaiLivraison, mamieJosetteEtLeChat]
 
 export const MISSION_REGISTRY = createRegistry('Mission', MISSIONS)

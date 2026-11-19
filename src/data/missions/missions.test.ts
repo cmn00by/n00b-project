@@ -50,3 +50,31 @@ describe('la mission d’essai, dans la vraie ville et avec toutes les briques',
     expect(player.wallet?.money).toBe(TUNING.economy.startingMoney + mission.reward.money)
   })
 })
+
+describe('Mamie Josette et le chat de l’enfer, dans la vraie ville et avec toutes les briques', () => {
+  it('se joue de bout en bout, en alternant à pied et au volant, et rapporte 500 €', () => {
+    const mapDef = MAP_REGISTRY.get('test-town')
+    const map = createTileMap(mapDef, TILE_KIND_REGISTRY)
+    const world = createWorld(TEST_SEED)
+    loadMap(world, map)
+    const simulation = createSimulation(world, SYSTEMS)
+    const spawn = getTileCenter(map, mapDef.spawns.player)
+    const player = spawnEntity(world, 'player', { position: { x: spawn.x, y: spawn.y, angle: 0 }, body: { width: 24, height: 24, isSolid: true } })
+    const succeeded: string[] = []
+    world.events.on('mission:succeeded', ({ missionId }) => succeeded.push(missionId))
+    const visit = (place: { tileX: number; tileY: number }, isDriving: boolean) => {
+      const center = getTileCenter(map, place)
+      player.position!.x = center.x
+      player.position!.y = center.y
+      player.driver = isDriving ? { vehicleId: 99, storedBody: { width: 24, height: 24, isSolid: true } } : undefined
+      simulation.step()
+    }
+
+    const mission = MISSION_REGISTRY.get('mamie-josette-et-le-chat')
+    visit(mission.start, false)
+    expect(player.missionProgress?.active?.missionId).toBe('mamie-josette-et-le-chat')
+    for (const objective of mission.objectives) visit(objective.place, objective.travel === 'vehicle')
+    expect(succeeded).toEqual(['mamie-josette-et-le-chat'])
+    expect(player.wallet?.money).toBe(TUNING.economy.startingMoney + mission.reward.money)
+  })
+})
